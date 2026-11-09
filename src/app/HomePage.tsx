@@ -24,7 +24,7 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
   const percent = Math.min(100, Math.max(0, Math.round((progression.currentXP / Math.max(1, reqXP)) * 100)));
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-4 sm:p-6 pb-8">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-4 sm:p-6 pb-28">
       {/* Top Header: Branding with Zen Korean Calligraphic Title Logo Image */}
       <header className="w-full flex flex-col items-center justify-center mt-2 mb-2 select-none">
         <img

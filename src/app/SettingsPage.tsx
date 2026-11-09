@@ -23,7 +23,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto p-4 pb-12 select-none">
+    <div className="flex flex-col min-h-screen max-w-md mx-auto p-4 pb-28 select-none">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-4 pt-2">
         <Button variant="ghost" size="sm" onClick={onBack}>

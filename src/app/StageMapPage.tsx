@@ -49,7 +49,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
   };
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen max-w-lg mx-auto p-3 sm:p-4 pb-12 select-none">
+    <div className="relative z-10 flex flex-col min-h-screen max-w-lg mx-auto p-3 sm:p-4 pb-28 select-none">
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-3 pt-2">
         <Button variant="ghost" size="sm" pill onClick={onBack}>

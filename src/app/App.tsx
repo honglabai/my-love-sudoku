@@ -13,14 +13,16 @@ import { getStageById } from '../features/stages/stageData';
 import { sound } from '../audio/sound';
 
 import { ThemeBackground } from '../components/ThemeBackground';
+import { BottomNavigationBar } from '../components/BottomNavigationBar';
 import { HomePage } from './HomePage';
 import { StageMapPage } from './StageMapPage';
+import { DailyQuestPage } from './DailyQuestPage';
 import { GamePage } from './GamePage';
 import { ResultPage } from './ResultPage';
 import { ProfilePage } from './ProfilePage';
 import { SettingsPage } from './SettingsPage';
 
-export type AppView = 'home' | 'stage-map' | 'game' | 'result' | 'profile' | 'settings';
+export type AppView = 'home' | 'stage-map' | 'daily-quest' | 'game' | 'result' | 'profile' | 'settings';
 
 interface GameResultData {
   stageId: number;
@@ -175,6 +177,27 @@ export const App: React.FC = () => {
     setCurrentView('home');
   };
 
+  const handlePlayGame = () => {
+    if (data.activeGame) {
+      setSelectedStageId(data.activeGame.stageId);
+      const st = getStageById(data.activeGame.stageId);
+      if (st) setSelectedWorldId(st.worldId);
+    } else {
+      const nextStage = data.progression.unlockedStageMax || 1;
+      setSelectedStageId(nextStage);
+      const st = getStageById(nextStage);
+      if (st) setSelectedWorldId(st.worldId);
+    }
+    setCurrentView('game');
+  };
+
+  const handleStartDailyStage = (stageId: number) => {
+    setSelectedStageId(stageId);
+    const st = getStageById(stageId);
+    if (st) setSelectedWorldId(st.worldId);
+    setCurrentView('game');
+  };
+
   // Determine which background to show
   let currentBackgroundWorldId: number | undefined = undefined;
   if (currentView === 'game') {
@@ -210,6 +233,14 @@ export const App: React.FC = () => {
           onSelectStage={handleSelectStage}
           onBack={() => setCurrentView('home')}
           onWorldChange={(wId) => setSelectedWorldId(wId)}
+        />
+      )}
+
+      {currentView === 'daily-quest' && (
+        <DailyQuestPage
+          progression={data.progression}
+          onStartDailyStage={handleStartDailyStage}
+          onBack={() => setCurrentView('home')}
         />
       )}
 
@@ -272,6 +303,16 @@ export const App: React.FC = () => {
           settings={data.settings}
           onUpdateSettings={handleUpdateSettings}
           onBack={() => setCurrentView('home')}
+        />
+      )}
+
+      {/* Pin 3 Protruding Bottom Navigation Dock Bar */}
+      {currentView !== 'game' && currentView !== 'result' && (
+        <BottomNavigationBar
+          currentView={currentView}
+          onNavigate={(view) => setCurrentView(view)}
+          onPlayGame={handlePlayGame}
+          hasActiveGame={!!data.activeGame}
         />
       )}
     </div>
