@@ -270,6 +270,105 @@ class SoundManager {
       // AudioContext playback error ignored
     }
   }
+
+  public playGameOver() {
+    if (!this.enabled) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      // Melancholy descending minor tones
+      const notes = [440, 392, 349.23, 293.66];
+      const t = this.ctx.currentTime;
+
+      notes.forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteStart = t + idx * 0.16;
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, noteStart);
+
+        gain.gain.setValueAtTime(0.12, noteStart);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.35);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(noteStart);
+        osc.stop(noteStart + 0.35);
+      });
+    } catch {
+      // AudioContext error ignored
+    }
+  }
+
+  public playUseItem() {
+    if (!this.enabled) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      // Magical sparkling high bell chime
+      const freqs = [659.25, 880, 1174.66, 1760];
+      const t = this.ctx.currentTime;
+
+      freqs.forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteStart = t + idx * 0.06;
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, noteStart);
+
+        gain.gain.setValueAtTime(0.12, noteStart);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.25);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(noteStart);
+        osc.stop(noteStart + 0.25);
+      });
+    } catch {
+      // AudioContext error ignored
+    }
+  }
+
+  public playRevive() {
+    if (!this.enabled) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      // Rising resurrection flourish
+      const freqs = [329.63, 440, 554.37, 659.25, 880];
+      const t = this.ctx.currentTime;
+
+      freqs.forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteStart = t + idx * 0.08;
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, noteStart);
+
+        gain.gain.setValueAtTime(0.15, noteStart);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.4);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(noteStart);
+        osc.stop(noteStart + 0.4);
+      });
+    } catch {
+      // AudioContext error ignored
+    }
+  }
 }
 
 export const sound = new SoundManager();

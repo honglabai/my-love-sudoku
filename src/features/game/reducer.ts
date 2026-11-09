@@ -1,6 +1,6 @@
 import { GameState, GameAction, HistorySnapshot } from './types';
 import { Stage } from '../stages/stageData';
-import { getConflicts, isSolved, getCompletedUnits } from '../../domain/sudoku/engine';
+import { getConflicts, isSolved, getCompletedUnits, getCandidates } from '../../domain/sudoku/engine';
 import { getPeerIndices } from '../../domain/sudoku/types';
 
 export function createInitialState(stage: Stage): GameState {
@@ -25,6 +25,7 @@ export function createInitialState(stage: Stage): GameState {
     elapsedSeconds: 0,
     isPaused: false,
     isCompleted: false,
+    isFailed: false,
     conflicts: [],
     lastCompletedUnits: { rows: [], cols: [], boxes: [] },
     history: [],
@@ -35,7 +36,7 @@ export function createInitialState(stage: Stage): GameState {
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'SELECT_CELL': {
-      if (state.isPaused || state.isCompleted) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
       return {
         ...state,
         selectedCell: action.payload.index
@@ -43,6 +44,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'TOGGLE_NOTE_MODE': {
+      if (state.isFailed) return state;
       return {
         ...state,
         isNoteMode: !state.isNoteMode
@@ -50,6 +52,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'SET_NOTE_MODE': {
+      if (state.isFailed) return state;
       return {
         ...state,
         isNoteMode: action.payload.enabled
@@ -57,7 +60,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'INPUT_DIGIT': {
-      if (state.isPaused || state.isCompleted) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
       const { selectedCell, isNoteMode, givens, board, notes, solution } = state;
       if (selectedCell === null || givens[selectedCell]) return state;
 
@@ -102,6 +105,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       // Check for mistake (placing a number that doesn't match the unique solution)
       const isMistake = digit !== solution[selectedCell];
       const nextMistakes = isMistake ? state.mistakes + 1 : state.mistakes;
+      const nextIsFailed = nextMistakes >= 3;
 
       // Update notes: clear notes for this cell
       let nextNotes = notes.map((arr, idx) => (idx === selectedCell ? [] : [...arr]));
@@ -120,15 +124,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const conflicts = Array.from(conflictsSet);
       const completedUnits = getCompletedUnits(nextBoard);
 
-      // Check win condition
+      // Check win condition (cannot win if failed)
       const givensBoard = state.board.map((_, i) => (givens[i] ? solution[i] : 0));
-      const completed = isSolved(nextBoard, givensBoard);
+      const completed = !nextIsFailed && isSolved(nextBoard, givensBoard);
 
       return {
         ...state,
         board: nextBoard,
         notes: nextNotes,
         mistakes: nextMistakes,
+        isFailed: nextIsFailed,
         conflicts,
         lastCompletedUnits: completedUnits,
         isCompleted: completed,
@@ -138,7 +143,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'ERASE_CELL': {
-      if (state.isPaused || state.isCompleted) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
       const { selectedCell, givens, board, notes } = state;
       if (selectedCell === null || givens[selectedCell]) return state;
 
@@ -168,7 +173,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'UNDO': {
-      if (state.isPaused || state.isCompleted || state.history.length === 0) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed || state.history.length === 0) return state;
 
       const lastSnapshot = state.history[state.history.length - 1];
       const newHistory = state.history.slice(0, -1);
@@ -191,7 +196,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'REDO': {
-      if (state.isPaused || state.isCompleted || state.future.length === 0) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed || state.future.length === 0) return state;
 
       const nextSnapshot = state.future[0];
       const newFuture = state.future.slice(1);
@@ -214,7 +219,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'APPLY_HINT': {
-      if (state.isPaused || state.isCompleted) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
       const { cellIndex, digit } = action.payload;
       if (cellIndex < 0 || cellIndex >= 81 || state.givens[cellIndex]) return state;
 
@@ -251,8 +256,100 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'PAUSE': {
+    case 'ITEM_SOLVE_CELL': {
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
+      const { cellIndex } = action.payload;
+      if (cellIndex < 0 || cellIndex >= 81 || state.givens[cellIndex]) return state;
+
+      const correctDigit = state.solution[cellIndex];
+      const currentSnapshot: HistorySnapshot = {
+        board: [...state.board],
+        notes: state.notes.map(arr => [...arr])
+      };
+
+      const nextBoard = [...state.board];
+      nextBoard[cellIndex] = correctDigit;
+
+      const nextNotes = state.notes.map((arr, idx) => (idx === cellIndex ? [] : [...arr]));
+      const peers = getPeerIndices(cellIndex);
+      peers.forEach(peerIdx => {
+        if (nextNotes[peerIdx].length > 0) {
+          nextNotes[peerIdx] = nextNotes[peerIdx].filter(d => d !== correctDigit);
+        }
+      });
+
+      const conflicts = Array.from(getConflicts(nextBoard));
+      const completedUnits = getCompletedUnits(nextBoard);
+      const givensBoard = state.board.map((_, i) => (state.givens[i] ? state.solution[i] : 0));
+      const completed = isSolved(nextBoard, givensBoard);
+
+      return {
+        ...state,
+        selectedCell: cellIndex,
+        board: nextBoard,
+        notes: nextNotes,
+        conflicts,
+        lastCompletedUnits: completedUnits,
+        isCompleted: completed,
+        history: [...state.history, currentSnapshot],
+        future: []
+      };
+    }
+
+    case 'ITEM_HEAL_MISTAKE': {
+      const nextMistakes = Math.max(0, state.mistakes - 1);
+      return {
+        ...state,
+        mistakes: nextMistakes,
+        isFailed: false // Revives if game over!
+      };
+    }
+
+    case 'ITEM_CLEAR_ERRORS': {
       if (state.isCompleted) return state;
+      const currentSnapshot: HistorySnapshot = {
+        board: [...state.board],
+        notes: state.notes.map(arr => [...arr])
+      };
+      const nextBoard = [...state.board];
+      let changed = false;
+      for (let i = 0; i < 81; i++) {
+        if (!state.givens[i] && nextBoard[i] !== 0 && nextBoard[i] !== state.solution[i]) {
+          nextBoard[i] = 0;
+          changed = true;
+        }
+      }
+      if (!changed) return state;
+      const conflicts = Array.from(getConflicts(nextBoard));
+      return {
+        ...state,
+        board: nextBoard,
+        conflicts,
+        history: [...state.history, currentSnapshot],
+        future: []
+      };
+    }
+
+    case 'ITEM_AUTO_CANDIDATES': {
+      if (state.isCompleted || state.isFailed) return state;
+      const currentSnapshot: HistorySnapshot = {
+        board: [...state.board],
+        notes: state.notes.map(arr => [...arr])
+      };
+      const nextNotes = state.notes.map((_, idx) => {
+        if (state.board[idx] !== 0) return [];
+        return getCandidates(state.board, idx);
+      });
+      return {
+        ...state,
+        notes: nextNotes,
+        history: [...state.history, currentSnapshot],
+        future: []
+      };
+    }
+
+    case 'PAUSE': {
+      if (state.isCompleted || state.isFailed) return state;
       return {
         ...state,
         isPaused: true
@@ -267,7 +364,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'TICK_TIMER': {
-      if (state.isPaused || state.isCompleted) return state;
+      if (state.isPaused || state.isCompleted || state.isFailed) return state;
       return {
         ...state,
         elapsedSeconds: state.elapsedSeconds + 1
@@ -290,6 +387,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         elapsedSeconds: 0,
         isPaused: false,
         isCompleted: false,
+        isFailed: false,
         conflicts: [],
         history: [],
         future: []

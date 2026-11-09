@@ -218,6 +218,16 @@ export const App: React.FC = () => {
           stageId={selectedStageId}
           activeGameSave={data.activeGame}
           settings={data.settings}
+          inventory={data.progression.inventory}
+          onUpdateInventory={(nextInv) => {
+            updateData(prev => ({
+              ...prev,
+              progression: {
+                ...prev.progression,
+                inventory: nextInv
+              }
+            }));
+          }}
           onGameComplete={handleGameComplete}
           onSaveActiveGame={handleSaveActiveGame}
           onExit={() => setCurrentView('stage-map')}

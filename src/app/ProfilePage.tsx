@@ -98,6 +98,40 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </div>
       </Card>
 
+      {/* Item Inventory Section */}
+      <Card className="mb-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-amber-200/80 dark:border-amber-900/50 shadow-md">
+        <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5 flex items-center justify-between">
+          <span>🎒 보유 중인 아이템</span>
+          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">스도쿠 인게임에서 사용 가능</span>
+        </h3>
+        <div className="grid grid-cols-2 gap-2 text-center">
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+            <div className="text-lg mb-0.5">🔍</div>
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">천리안 돋보기</div>
+            <div className="text-xs font-black text-blue-600 dark:text-blue-400">{progression.inventory?.autoSolve ?? 3}개</div>
+            <div className="text-[9px] text-slate-400">정답 1칸 입력</div>
+          </div>
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+            <div className="text-lg mb-0.5">💊</div>
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">정심환 (부활)</div>
+            <div className="text-xs font-black text-rose-600 dark:text-rose-400">{progression.inventory?.healMistake ?? 3}개</div>
+            <div className="text-[9px] text-slate-400">실수 회복 / 부활</div>
+          </div>
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+            <div className="text-lg mb-0.5">🧹</div>
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">정화의 향</div>
+            <div className="text-xs font-black text-amber-600 dark:text-amber-400">{progression.inventory?.clearErrors ?? 3}개</div>
+            <div className="text-[9px] text-slate-400">오답 일괄 제거</div>
+          </div>
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+            <div className="text-lg mb-0.5">📜</div>
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">통찰의 부적</div>
+            <div className="text-xs font-black text-emerald-600 dark:text-emerald-400">{progression.inventory?.autoCandidates ?? 3}개</div>
+            <div className="text-[9px] text-slate-400">후보수 자동 메모</div>
+          </div>
+        </div>
+      </Card>
+
       {/* Achievements Section */}
       <div className="mb-6">
         <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 px-1">

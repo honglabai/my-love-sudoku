@@ -1,4 +1,4 @@
-import { PlayerProgression, createInitialProgression } from '../features/progression/progression';
+import { PlayerProgression, createInitialProgression, DEFAULT_INVENTORY } from '../features/progression/progression';
 
 export interface UserSettings {
   soundEnabled: boolean;
@@ -75,6 +75,12 @@ export function migrateOrSanitize(parsed: unknown): SaveDataV1 {
   progression.level = Math.max(1, Number(progression.level) || 1);
   progression.currentXP = Math.max(0, Number(progression.currentXP) || 0);
   progression.totalXP = Math.max(0, Number(progression.totalXP) || 0);
+
+  // Ensure inventory is valid with default values
+  progression.inventory = {
+    ...DEFAULT_INVENTORY,
+    ...(progression.inventory || {})
+  };
 
   const achievements: Record<string, number> =
     obj.achievements && typeof obj.achievements === 'object'

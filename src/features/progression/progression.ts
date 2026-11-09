@@ -6,6 +6,20 @@ export interface StageRecord {
   firstClearedAt: number; // timestamp
 }
 
+export interface PlayerInventory {
+  autoSolve: number;     // 천리안 돋보기 (정답 1칸 확정 입력)
+  healMistake: number;   // 정심환 (실수 1회 회복 / 부활)
+  clearErrors: number;   // 정화의 향 (오답 일괄 제거)
+  autoCandidates: number;// 통찰의 부적 (후보수 자동 메모)
+}
+
+export const DEFAULT_INVENTORY: PlayerInventory = {
+  autoSolve: 3,
+  healMistake: 3,
+  clearErrors: 3,
+  autoCandidates: 3
+};
+
 export interface PlayerProgression {
   level: number;
   currentXP: number; // XP within current level
@@ -15,6 +29,7 @@ export interface PlayerProgression {
   totalStars: number;
   equippedTitle: string;
   unlockedTitles: string[];
+  inventory: PlayerInventory;
 }
 
 export function createInitialProgression(): PlayerProgression {
@@ -26,7 +41,8 @@ export function createInitialProgression(): PlayerProgression {
     unlockedStageMax: 1, // Stage 1 starts unlocked
     totalStars: 0,
     equippedTitle: '스도쿠 입문자',
-    unlockedTitles: ['스도쿠 입문자']
+    unlockedTitles: ['스도쿠 입문자'],
+    inventory: { ...DEFAULT_INVENTORY }
   };
 }
 

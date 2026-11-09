@@ -132,4 +132,73 @@ describe('Step 4: Game State and Input System', () => {
     state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: correctVal } });
     expect(state.isCompleted).toBe(true);
   });
+
+  it('triggers round failure (isFailed) upon 3 mistakes and blocks further input', () => {
+    let state = createInitialState(stage1);
+    const emptyIndices = state.givens.map((g, i) => (!g ? i : -1)).filter(i => i !== -1);
+    const cell0 = emptyIndices[0];
+    const correctVal = stage1.solution[cell0];
+    const wrongVal = (correctVal % 9) + 1;
+
+    // 1st mistake
+    state = gameReducer(state, { type: 'SELECT_CELL', payload: { index: cell0 } });
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: wrongVal } });
+    expect(state.mistakes).toBe(1);
+    expect(state.isFailed).toBe(false);
+
+    // 2nd mistake
+    const wrongVal2 = ((correctVal + 1) % 9) + 1;
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: wrongVal2 } });
+    expect(state.mistakes).toBe(2);
+    expect(state.isFailed).toBe(false);
+
+    // 3rd mistake -> round failed!
+    const wrongVal3 = ((correctVal + 2) % 9) + 1;
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: wrongVal3 } });
+    expect(state.mistakes).toBe(3);
+    expect(state.isFailed).toBe(true);
+
+    // Further inputs are blocked while failed
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: correctVal } });
+    expect(state.board[cell0]).toBe(wrongVal3); // did not change to correctVal!
+    expect(state.isCompleted).toBe(false);
+
+    // Timer stops while failed
+    state = gameReducer(state, { type: 'TICK_TIMER' });
+    expect(state.elapsedSeconds).toBe(0);
+  });
+
+  it('supports item usage: heal mistake / revive, auto solve, clear errors, and auto candidates', () => {
+    let state = createInitialState(stage1);
+    const emptyIndices = state.givens.map((g, i) => (!g ? i : -1)).filter(i => i !== -1);
+    const cell0 = emptyIndices[0];
+    const cell1 = emptyIndices[1];
+    const wrongVal = (stage1.solution[cell0] % 9) + 1;
+
+    // Trigger 3 mistakes -> failed
+    state = gameReducer(state, { type: 'SELECT_CELL', payload: { index: cell0 } });
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: wrongVal } });
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: ((wrongVal % 9) + 1) } });
+    state = gameReducer(state, { type: 'INPUT_DIGIT', payload: { digit: ((wrongVal + 1) % 9) + 1 } });
+    expect(state.isFailed).toBe(true);
+    expect(state.mistakes).toBe(3);
+
+    // 1. Use ITEM_HEAL_MISTAKE (정심환 / 부활) -> revives to mistakes=2, isFailed=false
+    state = gameReducer(state, { type: 'ITEM_HEAL_MISTAKE' });
+    expect(state.mistakes).toBe(2);
+    expect(state.isFailed).toBe(false);
+
+    // 2. Use ITEM_CLEAR_ERRORS (정화의 향) -> clears wrongVal in cell0
+    state = gameReducer(state, { type: 'ITEM_CLEAR_ERRORS' });
+    expect(state.board[cell0]).toBe(0);
+
+    // 3. Use ITEM_SOLVE_CELL (천리안 돋보기) -> solves cell0 with 100% correct digit
+    state = gameReducer(state, { type: 'ITEM_SOLVE_CELL', payload: { cellIndex: cell0 } });
+    expect(state.board[cell0]).toBe(stage1.solution[cell0]);
+
+    // 4. Use ITEM_AUTO_CANDIDATES (통찰의 부적) -> computes and fills candidates in empty cells
+    state = gameReducer(state, { type: 'ITEM_AUTO_CANDIDATES' });
+    expect(state.notes[cell1].length).toBeGreaterThan(0);
+    expect(state.notes[cell1]).toContain(stage1.solution[cell1]);
+  });
 });

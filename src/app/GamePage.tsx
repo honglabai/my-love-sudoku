@@ -9,11 +9,15 @@ import { Badge } from '../components/Badge';
 import { TutorialOverlay } from '../features/tutorial/TutorialOverlay';
 import { findLogicalHint, HintResult } from '../features/hint/hintEngine';
 import { getRow, getCol, getBox } from '../domain/sudoku/types';
+import { PlayerInventory, DEFAULT_INVENTORY } from '../features/progression/progression';
+import { ItemDrawer } from '../components/ItemDrawer';
 
 interface GamePageProps {
   stageId: number;
   activeGameSave: ActiveGameSave | null;
   settings: UserSettings;
+  inventory?: PlayerInventory;
+  onUpdateInventory?: (inv: PlayerInventory) => void;
   onGameComplete: (result: {
     stageId: number;
     worldId: number;
@@ -29,11 +33,14 @@ export const GamePage: React.FC<GamePageProps> = ({
   stageId,
   activeGameSave,
   settings,
+  inventory,
+  onUpdateInventory,
   onGameComplete,
   onSaveActiveGame,
   onExit
 }) => {
   const stage = getStageById(stageId) || getStageById(1)!;
+  const currentInventory = inventory || DEFAULT_INVENTORY;
 
   const [state, dispatch] = useReducer(gameReducer, stage, (initialStage) => {
     const fresh = createInitialState(initialStage);
@@ -70,6 +77,8 @@ export const GamePage: React.FC<GamePageProps> = ({
   const [activeHint, setActiveHint] = useState<HintResult | null>(null);
   const [showHintModal, setShowHintModal] = useState(false);
   const [showPauseModal, setShowPauseModal] = useState(false);
+  const [showItemDrawer, setShowItemDrawer] = useState(false);
+  const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [completedUnitsFlashed, setCompletedUnitsFlashed] = useState<{ rows: number[]; cols: number[]; boxes: number[] }>({
     rows: [],
     cols: [],
@@ -141,6 +150,64 @@ export const GamePage: React.FC<GamePageProps> = ({
       });
     }
   }, [state.isCompleted, state.stageId, state.worldId, state.mistakes, state.hintsUsed, state.elapsedSeconds, onGameComplete]);
+
+  // Handle game over / defeat when 3 mistakes are reached
+  useEffect(() => {
+    if (state.isFailed) {
+      sound.playGameOver();
+      setShowGameOverModal(true);
+    }
+  }, [state.isFailed]);
+
+  // Handle Item activation
+  const handleUseItem = useCallback((itemType: keyof PlayerInventory) => {
+    if ((currentInventory[itemType] || 0) <= 0) return;
+
+    if (itemType === 'autoSolve') {
+      let targetIdx = state.selectedCell;
+      if (targetIdx === null || state.board[targetIdx] !== 0 || state.givens[targetIdx]) {
+        targetIdx = state.board.findIndex((val, i) => val === 0 && !state.givens[i]);
+      }
+      if (targetIdx !== -1) {
+        sound.playUseItem();
+        dispatch({ type: 'ITEM_SOLVE_CELL', payload: { cellIndex: targetIdx } });
+        if (onUpdateInventory) {
+          onUpdateInventory({
+            ...currentInventory,
+            autoSolve: currentInventory.autoSolve - 1
+          });
+        }
+      }
+    } else if (itemType === 'healMistake') {
+      sound.playRevive();
+      dispatch({ type: 'ITEM_HEAL_MISTAKE' });
+      setShowGameOverModal(false);
+      if (onUpdateInventory) {
+        onUpdateInventory({
+          ...currentInventory,
+          healMistake: currentInventory.healMistake - 1
+        });
+      }
+    } else if (itemType === 'clearErrors') {
+      sound.playUseItem();
+      dispatch({ type: 'ITEM_CLEAR_ERRORS' });
+      if (onUpdateInventory) {
+        onUpdateInventory({
+          ...currentInventory,
+          clearErrors: currentInventory.clearErrors - 1
+        });
+      }
+    } else if (itemType === 'autoCandidates') {
+      sound.playUseItem();
+      dispatch({ type: 'ITEM_AUTO_CANDIDATES' });
+      if (onUpdateInventory) {
+        onUpdateInventory({
+          ...currentInventory,
+          autoCandidates: currentInventory.autoCandidates - 1
+        });
+      }
+    }
+  }, [currentInventory, state.selectedCell, state.board, state.givens, onUpdateInventory]);
 
   // Keyboard navigation & inputs
   const handleKeyDown = useCallback(
@@ -281,6 +348,9 @@ export const GamePage: React.FC<GamePageProps> = ({
     }
   };
 
+  const totalItemCount = (currentInventory.autoSolve || 0) + (currentInventory.healMistake || 0) + (currentInventory.clearErrors || 0) + (currentInventory.autoCandidates || 0);
+  const hasErrorsOnBoard = state.board.some((val, i) => val !== 0 && !state.givens[i] && val !== state.solution[i]);
+
   const formatTimer = (sec: number) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
@@ -322,7 +392,10 @@ export const GamePage: React.FC<GamePageProps> = ({
             )}
           </div>
           <div className="text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-400">
-            시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3
+            시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3{' '}
+            <span className="tracking-tighter">
+              {state.mistakes === 0 ? '❤️❤️❤️' : state.mistakes === 1 ? '❤️❤️🖤' : state.mistakes === 2 ? '❤️🖤🖤' : '🖤🖤🖤'}
+            </span>
           </div>
         </div>
 
@@ -487,14 +560,14 @@ export const GamePage: React.FC<GamePageProps> = ({
       {/* Floating Bottom Card: Controls & Numpad */}
       <footer className="w-full max-w-[390px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl p-2.5 sm:p-3 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-2 mt-1">
         {/* Action Controls Row */}
-        <div className="grid grid-cols-5 gap-1.5 px-0.5">
+        <div className="grid grid-cols-6 gap-1 px-0.5">
           <Button
             variant="ghost"
             size="sm"
             pill
             onClick={() => dispatch({ type: 'UNDO' })}
             disabled={state.history.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">↩️</span>
             <span>취소</span>
@@ -506,7 +579,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             pill
             onClick={() => dispatch({ type: 'REDO' })}
             disabled={state.future.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">↪️</span>
             <span>다시</span>
@@ -520,7 +593,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">🧹</span>
             <span>지우기</span>
@@ -534,14 +607,14 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
-            className={`flex-col py-1 text-[11px] font-bold gap-0.5 ${
+            className={`flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 ${
               state.isNoteMode
                 ? 'shadow-md'
                 : 'bg-slate-100/90 dark:bg-slate-800/90 shadow-sm'
             }`}
           >
             <span className="text-sm">✏️</span>
-            <span>메모 {state.isNoteMode ? 'ON' : 'OFF'}</span>
+            <span>메모</span>
           </Button>
 
           <Button
@@ -549,10 +622,21 @@ export const GamePage: React.FC<GamePageProps> = ({
             size="sm"
             pill
             onClick={handleTriggerHint}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm text-amber-600 dark:text-amber-400"
+            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm text-amber-600 dark:text-amber-400"
           >
             <span className="text-sm">💡</span>
             <span>힌트</span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            pill
+            onClick={() => setShowItemDrawer(true)}
+            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-gradient-to-b from-amber-100/80 to-orange-100/80 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-sm text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
+          >
+            <span className="text-sm">🎒</span>
+            <span>아이템({totalItemCount})</span>
           </Button>
         </div>
 
@@ -678,6 +762,72 @@ export const GamePage: React.FC<GamePageProps> = ({
           >
             🗺️ 스테이지 선택으로 나가기
           </Button>
+        </div>
+      </Modal>
+
+      {/* Item Drawer */}
+      <ItemDrawer
+        isOpen={showItemDrawer}
+        onClose={() => setShowItemDrawer(false)}
+        inventory={currentInventory}
+        mistakes={state.mistakes}
+        hasErrorsOnBoard={hasErrorsOnBoard}
+        onUseItem={handleUseItem}
+      />
+
+      {/* Game Over / Stage Defeat Modal (실수 3회 실패) */}
+      <Modal
+        isOpen={showGameOverModal || state.isFailed}
+        onClose={() => {}}
+        title="💔 스테이지 실패 (실수 3/3)"
+      >
+        <div className="space-y-4 text-center">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/40 rounded-2xl border border-rose-200 dark:border-rose-900/60">
+            <div className="text-3xl mb-2">🖤 🖤 🖤</div>
+            <h3 className="text-base font-black text-rose-900 dark:text-rose-200 mb-1">
+              실수를 3번 하여 이번 판이 종료되었습니다
+            </h3>
+            <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed font-medium">
+              하지만 정심환 아이템을 사용하면 실수 1회를 차감하고 즉시 부활하여 이어서 풀 수 있습니다!
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              pill
+              disabled={(currentInventory.healMistake || 0) <= 0}
+              onClick={() => handleUseItem('healMistake')}
+              className="bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 shadow-lg text-white"
+            >
+              💊 정심환으로 부활하기 (보유: {currentInventory.healMistake || 0}개)
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="md"
+              fullWidth
+              pill
+              onClick={() => {
+                dispatch({ type: 'RESTART_CURRENT_STAGE' });
+                setShowGameOverModal(false);
+              }}
+            >
+              🔄 처음부터 다시 풀기
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="md"
+              fullWidth
+              pill
+              onClick={onExit}
+            >
+              🗺️ 스테이지 선택으로 나가기
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>

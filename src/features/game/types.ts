@@ -23,6 +23,7 @@ export interface GameState {
   elapsedSeconds: number;
   isPaused: boolean;
   isCompleted: boolean;
+  isFailed: boolean; // true if mistakes >= 3 (Round Failed / Game Over)
   conflicts: number[]; // indices of cells in conflict
   lastCompletedUnits: { rows: number[]; cols: number[]; boxes: number[] };
   history: HistorySnapshot[];
@@ -43,4 +44,8 @@ export type GameAction =
   | { type: 'APPLY_HINT'; payload: { cellIndex: number; digit: number } }
   | { type: 'INIT_STAGE'; payload: { stage: Stage } }
   | { type: 'RESTART_CURRENT_STAGE' }
-  | { type: 'RESTORE_GAME'; payload: { state: GameState } };
+  | { type: 'RESTORE_GAME'; payload: { state: GameState } }
+  | { type: 'ITEM_SOLVE_CELL'; payload: { cellIndex: number } }
+  | { type: 'ITEM_HEAL_MISTAKE' }
+  | { type: 'ITEM_CLEAR_ERRORS' }
+  | { type: 'ITEM_AUTO_CANDIDATES' };
