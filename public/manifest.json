@@ -1,0 +1,17 @@
+{
+  "name": "내사랑 스도쿠",
+  "short_name": "내사랑스도쿠",
+  "description": "한 칸씩 풀고, 한 단계씩 성장하는 스도쿠 웹게임",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e2cb0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
