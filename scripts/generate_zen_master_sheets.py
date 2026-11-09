@@ -152,8 +152,29 @@ for cfg in LEVEL_CONFIGS:
         x = BOARD_X + c * cell_size
         draw.line([(x, BOARD_Y), (x, BOARD_Y + BOARD_SIZE)], fill=(225, 218, 208), width=1)
 
-    # Top typography
-    draw.text((WIDTH // 2, 45), "내사랑 스도쿠", fill=INK_BLACK, font=FONT_TITLE, anchor="mm")
+    # 5. Top Header Typography with Artistic "내사랑 스도쿠" Title & Seal
+    t_love = "내사랑 "
+    t_sudoku = "스도쿠"
+    bbox_love = draw.textbbox((0, 0), t_love, font=FONT_TITLE)
+    bbox_sudoku = draw.textbbox((0, 0), t_sudoku, font=FONT_TITLE)
+    w_love = bbox_love[2] - bbox_love[0]
+    w_sudoku = bbox_sudoku[2] - bbox_sudoku[0]
+    seal_w = 28
+    
+    total_title_w = w_love + w_sudoku + 10 + seal_w
+    start_tx = (WIDTH - total_title_w) // 2
+    
+    # Draw "내사랑" in Rose Red
+    draw.text((start_tx, 45), t_love, fill=(205, 45, 75), font=FONT_TITLE, anchor="lm")
+    # Draw "스도쿠" in Ink Black
+    draw.text((start_tx + w_love, 45), t_sudoku, fill=INK_BLACK, font=FONT_TITLE, anchor="lm")
+    
+    # Mini Red Seal [愛] next to title
+    seal_tx = start_tx + w_love + w_sudoku + 10
+    draw.rectangle([seal_tx, 31, seal_tx + seal_w, 31 + seal_w], outline=SEAL_RED, width=2)
+    draw.rectangle([seal_tx + 2, 33, seal_tx + seal_w - 2, 31 + seal_w - 2], fill=(255, 240, 242))
+    draw.text((seal_tx + seal_w // 2, 31 + seal_w // 2), "愛", fill=SEAL_RED, font=FONT_SEAL, anchor="mm")
+    
     draw.text((WIDTH // 2, 88), cfg["sub_title"], fill=INK_MUTED, font=FONT_SUB, anchor="mm")
     
     pill_w, pill_h = 200, 24

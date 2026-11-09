@@ -25,18 +25,18 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-4 sm:p-6 pb-8">
-      {/* Top Header: Branding with Zen Korean aesthetic */}
-      <header className="w-full text-center mt-3 mb-2">
-        <div className="flex items-center justify-center gap-2 mb-1">
-          <span className="korean-seal">내사랑</span>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100 font-serif">
-            내사랑 스도쿠
-          </h1>
-          <span className="korean-seal">정심</span>
-        </div>
-        <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">
-          한 칸씩 풀고, 한 단계씩 성장하는 스도쿠
-        </p>
+      {/* Top Header: Branding with Zen Korean Calligraphic Title Logo Image */}
+      <header className="w-full flex flex-col items-center justify-center mt-2 mb-2 select-none">
+        <img
+          src="/assets/logo/title_logo.webp"
+          alt="내사랑 스도쿠"
+          className="dark:hidden w-full max-w-[320px] sm:max-w-[350px] h-auto object-contain drop-shadow-sm transition-transform duration-200 hover:scale-[1.02]"
+        />
+        <img
+          src="/assets/logo/title_logo_dark.webp"
+          alt="내사랑 스도쿠"
+          className="hidden dark:block w-full max-w-[320px] sm:max-w-[350px] h-auto object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:scale-[1.02]"
+        />
       </header>
 
       {/* Main Profile & Gamification Card (Inspired by Ridi Pin 2) */}
