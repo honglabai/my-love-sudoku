@@ -50,7 +50,23 @@ export const GamePage: React.FC<GamePageProps> = ({
     return fresh;
   });
 
-  const [showTutorial, setShowTutorial] = useState(stage.hasTutorial);
+  const [showTutorial, setShowTutorial] = useState(() => {
+    if (!stage.hasTutorial) return false;
+    try {
+      return !localStorage.getItem('my_love_sudoku_tutorial_seen');
+    } catch {
+      return false;
+    }
+  });
+
+  const handleCloseTutorial = () => {
+    setShowTutorial(false);
+    try {
+      localStorage.setItem('my_love_sudoku_tutorial_seen', 'true');
+    } catch {
+      // ignore
+    }
+  };
   const [activeHint, setActiveHint] = useState<HintResult | null>(null);
   const [showHintModal, setShowHintModal] = useState(false);
   const [showPauseModal, setShowPauseModal] = useState(false);
@@ -284,19 +300,19 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-4 select-none">
-      {/* Top Bar (Zen Header with Korean Stamp) */}
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-3 select-none">
+      {/* Top Floating Control Bar */}
       <header className="w-full flex items-center justify-between pt-1 pb-2 px-1">
-        <Button variant="ghost" size="sm" pill onClick={onExit} aria-label="이전 화면으로 이동">
+        <Button variant="ghost" size="sm" pill onClick={onExit} aria-label="이전 화면으로 이동" className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800">
           ← 나가기
         </Button>
 
-        <div className="text-center">
+        <div className="text-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200/60 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-center gap-1.5">
             <span className="korean-seal text-[9px] py-0 px-1">
               {stage.worldName}
             </span>
-            <h2 className="text-sm font-black text-slate-900 dark:text-slate-100">
+            <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100">
               {stage.id}단계. {stage.title}
             </h2>
             {stage.isBoss && (
@@ -305,136 +321,180 @@ export const GamePage: React.FC<GamePageProps> = ({
               </Badge>
             )}
           </div>
-          <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-0.5">
+          <div className="text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-400">
             시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3
           </div>
         </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          pill
-          onClick={() => {
-            dispatch({ type: 'PAUSE' });
-            setShowPauseModal(true);
-          }}
-          aria-label="게임 일시정지"
-        >
-          ⏸️
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            pill
+            onClick={() => setShowTutorial(true)}
+            aria-label="도움말 가이드"
+            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800 text-xs px-2.5"
+          >
+            ❓
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            pill
+            onClick={() => {
+              dispatch({ type: 'PAUSE' });
+              setShowPauseModal(true);
+            }}
+            aria-label="게임 일시정지"
+            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800 text-xs px-2.5"
+          >
+            ⏸️
+          </Button>
+        </div>
       </header>
 
-      {/* 9x9 Sudoku Board Container (Porcelain & Zen Glass Finish) */}
-      <main className="w-full flex items-center justify-center my-auto py-1">
-        <div
-          role="grid"
-          aria-label="스도쿠 게임 보드"
-          className="w-full aspect-square max-w-[390px] grid grid-cols-9 bg-slate-800/90 dark:bg-slate-950/90 backdrop-blur-md p-1 sm:p-1.5 rounded-3xl shadow-2xl border-4 border-slate-700/80 dark:border-slate-800 gap-[1px]"
-        >
-          {state.board.map((cellValue, idx) => {
-            const isGiven = state.givens[idx];
-            const isSelected = state.selectedCell === idx;
-            const r = getRow(idx);
-            const c = getCol(idx);
-            const b = getBox(idx);
+      {/* Authentic Zen Sudoku Sheet (Pinterest Reference Artwork Integration) */}
+      <main className="w-full flex items-center justify-center my-auto py-0.5">
+        <div className="relative w-full max-w-[min(385px,calc((100vh-185px)*0.75))] aspect-[720/960] rounded-2xl shadow-2xl overflow-hidden border border-amber-900/20 select-none bg-[#faf8f1]">
+          {/* Zen Level Watercolor Background Sheet */}
+          <picture>
+            <source srcSet={`/assets/backgrounds/zen_sheet_level_${stage.worldId}.webp`} type="image/webp" />
+            <img
+              src={`/assets/backgrounds/zen_sheet_level_${stage.worldId}.jpg`}
+              alt={`제 ${stage.worldId}월드 스도쿠 배경`}
+              className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
+            />
+          </picture>
 
-            const isPeer =
-              state.selectedCell !== null &&
-              !isSelected &&
-              (r === selectedRow || c === selectedCol || b === selectedBox);
+          {/* Dynamic Stage Header Subtitle Overlay */}
+          <div className="absolute top-[8.2%] left-[18%] right-[18%] text-center pointer-events-none select-none">
+            <div className="text-[10px] sm:text-[11px] font-bold text-stone-700 truncate tracking-wide">
+              제 {stage.id}단계 · {stage.title}
+            </div>
+          </div>
 
-            const isSameNumber =
-              settings.highlightSame &&
-              selectedValue !== 0 &&
-              cellValue === selectedValue &&
-              !isSelected;
+          {/* Interactive 9x9 Sudoku Grid mathematically aligned with the sheet frame */}
+          <div
+            role="grid"
+            aria-label="스도쿠 게임 보드"
+            className="absolute left-[11.1111%] top-[19.7917%] w-[77.7778%] h-[58.3333%] grid grid-cols-9"
+          >
+            {state.board.map((cellValue, idx) => {
+              const isGiven = state.givens[idx];
+              const isSelected = state.selectedCell === idx;
+              const r = getRow(idx);
+              const c = getCol(idx);
+              const b = getBox(idx);
 
-            const isConflict = settings.showErrors && state.conflicts.includes(idx);
-            const isHintTarget = activeHint && activeHint.cellIndex === idx;
+              const isPeer =
+                state.selectedCell !== null &&
+                !isSelected &&
+                (r === selectedRow || c === selectedCol || b === selectedBox);
 
-            // 3x3 block borders
-            const isRightBorder = c === 2 || c === 5;
-            const isBottomBorder = r === 2 || r === 5;
+              const isSameNumber =
+                settings.highlightSame &&
+                selectedValue !== 0 &&
+                cellValue === selectedValue &&
+                !isSelected;
 
-            // Line/box complete flash
-            const isFlashingUnit =
-              completedUnitsFlashed.rows.includes(r) ||
-              completedUnitsFlashed.cols.includes(c) ||
-              completedUnitsFlashed.boxes.includes(b);
+              const isConflict = settings.showErrors && state.conflicts.includes(idx);
+              const isHintTarget = activeHint && activeHint.cellIndex === idx;
 
-            let cellBg = 'bg-white/95 dark:bg-slate-900/95';
-            if (isSelected) {
-              cellBg = 'bg-amber-300 dark:bg-amber-600 text-slate-950 dark:text-white ring-2 ring-amber-400';
-            } else if (isHintTarget) {
-              cellBg = 'bg-emerald-200 dark:bg-emerald-900 ring-2 ring-emerald-500 animate-pulse';
-            } else if (isConflict) {
-              cellBg = 'bg-rose-200 dark:bg-rose-950/90 text-rose-700 dark:text-rose-300 animate-shake';
-            } else if (isSameNumber) {
-              cellBg = 'bg-blue-100 dark:bg-blue-900/70 font-black';
-            } else if (isPeer) {
-              cellBg = 'bg-slate-100/90 dark:bg-slate-800/80';
-            }
+              // 3x3 block dividers (thicker ink borders)
+              const isRight3x3 = c === 2 || c === 5;
+              const isBottom3x3 = r === 2 || r === 5;
 
-            if (isFlashingUnit) {
-              cellBg = 'bg-blue-300 dark:bg-blue-600 animate-flashLine';
-            }
+              // Regular cell borders matching Zen ink aesthetic
+              const borderRight = isRight3x3
+                ? 'border-r-2 border-r-slate-900'
+                : c < 8
+                ? 'border-r border-r-stone-400/35'
+                : '';
 
-            return (
-              <div
-                key={idx}
-                role="gridcell"
-                tabIndex={0}
-                aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
-                aria-selected={isSelected}
-                onClick={() => handleCellClick(idx)}
-                className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 ${cellBg} ${
-                  isRightBorder ? 'mr-0.5 sm:mr-1' : ''
-                } ${isBottomBorder ? 'mb-0.5 sm:mb-1' : ''}`}
-              >
-                {cellValue !== 0 ? (
-                  <span
-                    className={`font-black text-base sm:text-xl md:text-2xl font-serif ${
-                      isGiven
-                        ? 'text-slate-900 dark:text-slate-100'
-                        : isConflict
-                        ? 'text-rose-600 dark:text-rose-400'
-                        : 'text-blue-600 dark:text-blue-400'
-                    }`}
-                  >
-                    {cellValue}
-                  </span>
-                ) : (
-                  /* Candidate Notes 3x3 Grid */
-                  <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-none pointer-events-none">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                      <span
-                        key={num}
-                        className={`flex items-center justify-center ${
-                          state.notes[idx].includes(num) ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      >
-                        {num}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              const borderBottom = isBottom3x3
+                ? 'border-b-2 border-b-slate-900'
+                : r < 8
+                ? 'border-b border-b-stone-400/35'
+                : '';
+
+              // Line/box complete flash
+              const isFlashingUnit =
+                completedUnitsFlashed.rows.includes(r) ||
+                completedUnitsFlashed.cols.includes(c) ||
+                completedUnitsFlashed.boxes.includes(b);
+
+              let cellBg = 'bg-transparent';
+              if (isSelected) {
+                cellBg = 'bg-amber-300/80 text-slate-950 font-black ring-2 ring-amber-600 z-10';
+              } else if (isHintTarget) {
+                cellBg = 'bg-emerald-300/80 ring-2 ring-emerald-600 animate-pulse z-10';
+              } else if (isConflict) {
+                cellBg = 'bg-rose-400/80 text-rose-950 font-black animate-shake z-10';
+              } else if (isSameNumber) {
+                cellBg = 'bg-amber-200/60 font-black text-amber-950';
+              } else if (isPeer) {
+                cellBg = 'bg-amber-100/30';
+              }
+
+              if (isFlashingUnit) {
+                cellBg = 'bg-blue-300/80 animate-flashLine';
+              }
+
+              return (
+                <div
+                  key={idx}
+                  role="gridcell"
+                  tabIndex={0}
+                  aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
+                  aria-selected={isSelected}
+                  onClick={() => handleCellClick(idx)}
+                  className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg} ${borderRight} ${borderBottom}`}
+                >
+                  {cellValue !== 0 ? (
+                    <span
+                      className={`font-black text-lg sm:text-2xl font-serif select-none ${
+                        isGiven
+                          ? 'text-slate-950 font-black'
+                          : isConflict
+                          ? 'text-rose-700 font-black'
+                          : 'text-blue-800 font-extrabold'
+                      }`}
+                    >
+                      {cellValue}
+                    </span>
+                  ) : (
+                    /* Candidate Notes 3x3 Grid */
+                    <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 leading-none pointer-events-none">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                        <span
+                          key={num}
+                          className={`flex items-center justify-center ${
+                            state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900' : 'opacity-0'
+                          }`}
+                        >
+                          {num}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </main>
 
-      {/* Bottom Controls & Numpad (3D Tactile Buttons) */}
-      <footer className="w-full max-w-[390px] space-y-2 pb-2">
+      {/* Floating Bottom Card: Controls & Numpad */}
+      <footer className="w-full max-w-[390px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl p-2.5 sm:p-3 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-2 mt-1">
         {/* Action Controls Row */}
-        <div className="grid grid-cols-5 gap-1.5 px-1">
+        <div className="grid grid-cols-5 gap-1.5 px-0.5">
           <Button
             variant="ghost"
             size="sm"
             pill
             onClick={() => dispatch({ type: 'UNDO' })}
             disabled={state.history.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">↩️</span>
             <span>취소</span>
@@ -446,7 +506,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             pill
             onClick={() => dispatch({ type: 'REDO' })}
             disabled={state.future.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">↪️</span>
             <span>다시</span>
@@ -460,7 +520,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
           >
             <span className="text-sm">🧹</span>
             <span>지우기</span>
@@ -477,7 +537,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className={`flex-col py-1 text-[11px] font-bold gap-0.5 ${
               state.isNoteMode
                 ? 'shadow-md'
-                : 'bg-white/80 dark:bg-slate-800/80 shadow-sm'
+                : 'bg-slate-100/90 dark:bg-slate-800/90 shadow-sm'
             }`}
           >
             <span className="text-sm">✏️</span>
@@ -489,15 +549,15 @@ export const GamePage: React.FC<GamePageProps> = ({
             size="sm"
             pill
             onClick={handleTriggerHint}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm text-amber-600 dark:text-amber-400"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm text-amber-600 dark:text-amber-400"
           >
             <span className="text-sm">💡</span>
             <span>힌트</span>
           </Button>
         </div>
 
-        {/* Number Keypad 1~9 (Tactile Porcelain Aesthetic) */}
-        <div className="grid grid-cols-9 gap-1 sm:gap-1.5 px-0.5">
+        {/* Number Keypad 1~9 */}
+        <div className="grid grid-cols-9 gap-1 px-0.5">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => {
             const isCompletedNum = digitCounts[num] >= 9;
             return (
@@ -505,14 +565,14 @@ export const GamePage: React.FC<GamePageProps> = ({
                 key={num}
                 onClick={() => handleNumpadClick(num)}
                 disabled={isCompletedNum && !state.isNoteMode}
-                className={`flex flex-col items-center justify-center h-12 sm:h-14 rounded-2xl font-black font-serif transition-all active:translate-y-1 active:shadow-none ${
+                className={`flex flex-col items-center justify-center h-12 sm:h-13 rounded-2xl font-black font-serif transition-all active:translate-y-1 active:shadow-none ${
                   isCompletedNum && !state.isNoteMode
                     ? 'opacity-30 bg-slate-200 dark:bg-slate-800 pointer-events-none'
-                    : 'bg-white/95 dark:bg-slate-800/95 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_#cbd5e1] dark:shadow-[0_3px_0_#0f172a]'
+                    : 'bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-blue-800 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_#cbd5e1] dark:shadow-[0_3px_0_#0f172a]'
                 }`}
               >
                 <span className="text-lg sm:text-xl leading-none">{num}</span>
-                <span className="text-[9px] font-sans font-semibold text-slate-400 mt-0.5">
+                <span className="text-[9px] font-sans font-bold text-slate-400 mt-0.5">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>
@@ -522,7 +582,7 @@ export const GamePage: React.FC<GamePageProps> = ({
       </footer>
 
       {/* Tutorial Overlay */}
-      {showTutorial && <TutorialOverlay onClose={() => setShowTutorial(false)} />}
+      {showTutorial && <TutorialOverlay onClose={handleCloseTutorial} />}
 
       {/* Hint Explanation Modal */}
       <Modal

@@ -1,35 +1,33 @@
 import React from 'react';
 
 interface ThemeBackgroundProps {
-  worldId?: number; // 1..5, or undefined for home
-  dimmed?: boolean;
+  worldId?: number; // 1..5
+  isGameView?: boolean;
 }
 
 export const ThemeBackground: React.FC<ThemeBackgroundProps> = ({
   worldId = 1,
-  dimmed = false
+  isGameView = false
 }) => {
-  const bgName = worldId >= 1 && worldId <= 5 ? `world_${worldId}` : 'home_bg';
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none transition-opacity duration-700">
-      {/* Background Image Layer */}
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
+      {/* Zen Ambient Watercolor Background Halo */}
       <picture>
-        <source srcSet={`/assets/backgrounds/${bgName}.webp`} type="image/webp" />
+        <source srcSet={`/assets/backgrounds/zen_sheet_level_${worldId}.webp`} type="image/webp" />
         <img
-          src={`/assets/backgrounds/${bgName}.jpg`}
-          alt=""
+          src={`/assets/backgrounds/zen_sheet_level_${worldId}.jpg`}
+          alt="스도쿠 배경"
           aria-hidden="true"
           className={`w-full h-full object-cover object-center transition-all duration-700 ${
-            dimmed
-              ? 'opacity-35 dark:opacity-15 blur-[1px]'
-              : 'opacity-85 dark:opacity-20'
+            isGameView
+              ? 'opacity-20 dark:opacity-10 blur-xl scale-110'
+              : 'opacity-35 dark:opacity-20 blur-md scale-105'
           }`}
         />
       </picture>
 
-      {/* Subtle Warm Hanji & Ambient Vignette Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/70 dark:from-slate-950/70 dark:via-slate-950/50 dark:to-slate-950/90" />
+      {/* Gentle ambient lighting overlay */}
+      <div className="absolute inset-0 bg-stone-100/40 dark:bg-slate-950/80 pointer-events-none" />
     </div>
   );
 };

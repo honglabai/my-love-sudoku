@@ -191,8 +191,8 @@ export const App: React.FC = () => {
     <div className="relative min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Dynamic Zen Watercolor Theme Background */}
       <ThemeBackground
-        worldId={currentBackgroundWorldId}
-        dimmed={currentView === 'game'}
+        worldId={currentBackgroundWorldId || 1}
+        isGameView={currentView === 'game'}
       />
 
       {/* Screen Views */}
