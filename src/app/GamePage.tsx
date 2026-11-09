@@ -35,7 +35,6 @@ export const GamePage: React.FC<GamePageProps> = ({
 }) => {
   const stage = getStageById(stageId) || getStageById(1)!;
 
-  // Initialize state: restore from activeGameSave if matching, else fresh initial state
   const [state, dispatch] = useReducer(gameReducer, stage, (initialStage) => {
     const fresh = createInitialState(initialStage);
     if (activeGameSave && activeGameSave.stageId === stageId) {
@@ -76,7 +75,7 @@ export const GamePage: React.FC<GamePageProps> = ({
     return () => clearInterval(interval);
   }, [state.isPaused, state.isCompleted]);
 
-  // Auto-save active game on state change
+  // Auto-save active game
   useEffect(() => {
     if (state.isCompleted) {
       onSaveActiveGame(null);
@@ -285,15 +284,18 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-4 select-none">
-      {/* Top Bar */}
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-4 select-none">
+      {/* Top Bar (Zen Header with Korean Stamp) */}
       <header className="w-full flex items-center justify-between pt-1 pb-2 px-1">
-        <Button variant="ghost" size="sm" onClick={onExit} aria-label="이전 화면으로 이동">
+        <Button variant="ghost" size="sm" pill onClick={onExit} aria-label="이전 화면으로 이동">
           ← 나가기
         </Button>
 
         <div className="text-center">
           <div className="flex items-center justify-center gap-1.5">
+            <span className="korean-seal text-[9px] py-0 px-1">
+              {stage.worldName}
+            </span>
             <h2 className="text-sm font-black text-slate-900 dark:text-slate-100">
               {stage.id}단계. {stage.title}
             </h2>
@@ -303,7 +305,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               </Badge>
             )}
           </div>
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-0.5">
             시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3
           </div>
         </div>
@@ -311,6 +313,7 @@ export const GamePage: React.FC<GamePageProps> = ({
         <Button
           variant="ghost"
           size="sm"
+          pill
           onClick={() => {
             dispatch({ type: 'PAUSE' });
             setShowPauseModal(true);
@@ -321,12 +324,12 @@ export const GamePage: React.FC<GamePageProps> = ({
         </Button>
       </header>
 
-      {/* 9x9 Sudoku Board Container */}
-      <main className="w-full flex items-center justify-center my-auto py-2">
+      {/* 9x9 Sudoku Board Container (Porcelain & Zen Glass Finish) */}
+      <main className="w-full flex items-center justify-center my-auto py-1">
         <div
           role="grid"
           aria-label="스도쿠 게임 보드"
-          className="w-full aspect-square max-w-[390px] grid grid-cols-9 bg-slate-900 dark:bg-slate-950 p-1 sm:p-1.5 rounded-2xl shadow-xl border-4 border-slate-900 dark:border-slate-800 gap-[1px]"
+          className="w-full aspect-square max-w-[390px] grid grid-cols-9 bg-slate-800/90 dark:bg-slate-950/90 backdrop-blur-md p-1 sm:p-1.5 rounded-3xl shadow-2xl border-4 border-slate-700/80 dark:border-slate-800 gap-[1px]"
         >
           {state.board.map((cellValue, idx) => {
             const isGiven = state.givens[idx];
@@ -347,7 +350,6 @@ export const GamePage: React.FC<GamePageProps> = ({
               !isSelected;
 
             const isConflict = settings.showErrors && state.conflicts.includes(idx);
-
             const isHintTarget = activeHint && activeHint.cellIndex === idx;
 
             // 3x3 block borders
@@ -360,17 +362,17 @@ export const GamePage: React.FC<GamePageProps> = ({
               completedUnitsFlashed.cols.includes(c) ||
               completedUnitsFlashed.boxes.includes(b);
 
-            let cellBg = 'bg-white dark:bg-slate-900';
+            let cellBg = 'bg-white/95 dark:bg-slate-900/95';
             if (isSelected) {
               cellBg = 'bg-amber-300 dark:bg-amber-600 text-slate-950 dark:text-white ring-2 ring-amber-400';
             } else if (isHintTarget) {
               cellBg = 'bg-emerald-200 dark:bg-emerald-900 ring-2 ring-emerald-500 animate-pulse';
             } else if (isConflict) {
-              cellBg = 'bg-rose-200 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 animate-shake';
+              cellBg = 'bg-rose-200 dark:bg-rose-950/90 text-rose-700 dark:text-rose-300 animate-shake';
             } else if (isSameNumber) {
-              cellBg = 'bg-blue-100 dark:bg-blue-900/60 font-black';
+              cellBg = 'bg-blue-100 dark:bg-blue-900/70 font-black';
             } else if (isPeer) {
-              cellBg = 'bg-slate-100/90 dark:bg-slate-800/60';
+              cellBg = 'bg-slate-100/90 dark:bg-slate-800/80';
             }
 
             if (isFlashingUnit) {
@@ -391,7 +393,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               >
                 {cellValue !== 0 ? (
                   <span
-                    className={`font-black text-base sm:text-xl md:text-2xl ${
+                    className={`font-black text-base sm:text-xl md:text-2xl font-serif ${
                       isGiven
                         ? 'text-slate-900 dark:text-slate-100'
                         : isConflict
@@ -422,16 +424,17 @@ export const GamePage: React.FC<GamePageProps> = ({
         </div>
       </main>
 
-      {/* Bottom Controls & Numpad */}
+      {/* Bottom Controls & Numpad (3D Tactile Buttons) */}
       <footer className="w-full max-w-[390px] space-y-2 pb-2">
         {/* Action Controls Row */}
         <div className="grid grid-cols-5 gap-1.5 px-1">
           <Button
             variant="ghost"
             size="sm"
+            pill
             onClick={() => dispatch({ type: 'UNDO' })}
             disabled={state.history.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100 dark:bg-slate-800"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
           >
             <span className="text-sm">↩️</span>
             <span>취소</span>
@@ -440,9 +443,10 @@ export const GamePage: React.FC<GamePageProps> = ({
           <Button
             variant="ghost"
             size="sm"
+            pill
             onClick={() => dispatch({ type: 'REDO' })}
             disabled={state.future.length === 0}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100 dark:bg-slate-800"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
           >
             <span className="text-sm">↪️</span>
             <span>다시</span>
@@ -451,11 +455,12 @@ export const GamePage: React.FC<GamePageProps> = ({
           <Button
             variant="ghost"
             size="sm"
+            pill
             onClick={() => {
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100 dark:bg-slate-800"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm"
           >
             <span className="text-sm">🧹</span>
             <span>지우기</span>
@@ -464,14 +469,15 @@ export const GamePage: React.FC<GamePageProps> = ({
           <Button
             variant={state.isNoteMode ? 'accent' : 'ghost'}
             size="sm"
+            pill
             onClick={() => {
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
             className={`flex-col py-1 text-[11px] font-bold gap-0.5 ${
               state.isNoteMode
-                ? 'bg-amber-500 text-white shadow-md'
-                : 'bg-slate-100 dark:bg-slate-800'
+                ? 'shadow-md'
+                : 'bg-white/80 dark:bg-slate-800/80 shadow-sm'
             }`}
           >
             <span className="text-sm">✏️</span>
@@ -481,15 +487,16 @@ export const GamePage: React.FC<GamePageProps> = ({
           <Button
             variant="ghost"
             size="sm"
+            pill
             onClick={handleTriggerHint}
-            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400"
+            className="flex-col py-1 text-[11px] font-bold gap-0.5 bg-white/80 dark:bg-slate-800/80 shadow-sm text-amber-600 dark:text-amber-400"
           >
             <span className="text-sm">💡</span>
             <span>힌트</span>
           </Button>
         </div>
 
-        {/* Number Keypad 1~9 */}
+        {/* Number Keypad 1~9 (Tactile Porcelain Aesthetic) */}
         <div className="grid grid-cols-9 gap-1 sm:gap-1.5 px-0.5">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => {
             const isCompletedNum = digitCounts[num] >= 9;
@@ -498,14 +505,14 @@ export const GamePage: React.FC<GamePageProps> = ({
                 key={num}
                 onClick={() => handleNumpadClick(num)}
                 disabled={isCompletedNum && !state.isNoteMode}
-                className={`flex flex-col items-center justify-center h-12 sm:h-14 rounded-xl font-black transition-all active:scale-95 shadow-sm ${
+                className={`flex flex-col items-center justify-center h-12 sm:h-14 rounded-2xl font-black font-serif transition-all active:translate-y-1 active:shadow-none ${
                   isCompletedNum && !state.isNoteMode
                     ? 'opacity-30 bg-slate-200 dark:bg-slate-800 pointer-events-none'
-                    : 'bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-blue-200/50 dark:border-slate-700'
+                    : 'bg-white/95 dark:bg-slate-800/95 hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_#cbd5e1] dark:shadow-[0_3px_0_#0f172a]'
                 }`}
               >
-                <span className="text-lg sm:text-xl">{num}</span>
-                <span className="text-[9px] font-semibold text-slate-400">
+                <span className="text-lg sm:text-xl leading-none">{num}</span>
+                <span className="text-[9px] font-sans font-semibold text-slate-400 mt-0.5">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>
@@ -514,7 +521,7 @@ export const GamePage: React.FC<GamePageProps> = ({
         </div>
       </footer>
 
-      {/* Tutorial Overlay (Stages 1~3) */}
+      {/* Tutorial Overlay */}
       {showTutorial && <TutorialOverlay onClose={() => setShowTutorial(false)} />}
 
       {/* Hint Explanation Modal */}
@@ -525,11 +532,11 @@ export const GamePage: React.FC<GamePageProps> = ({
       >
         {activeHint && (
           <div className="space-y-4 text-center">
-            <div className="p-3 bg-blue-50 dark:bg-slate-800 rounded-xl">
+            <div className="p-3 bg-blue-50 dark:bg-slate-800 rounded-2xl">
               <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-1">
                 {activeHint.title}
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
                 {activeHint.explanation}
               </p>
             </div>
@@ -542,6 +549,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               <Button
                 variant="secondary"
                 size="md"
+                pill
                 onClick={() => setShowHintModal(false)}
                 className="flex-1"
               >
@@ -550,6 +558,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               <Button
                 variant="primary"
                 size="md"
+                pill
                 onClick={handleApplyHint}
                 className="flex-1"
               >
@@ -578,6 +587,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             variant="primary"
             size="lg"
             fullWidth
+            pill
             onClick={() => {
               setShowPauseModal(false);
               dispatch({ type: 'RESUME' });
@@ -590,6 +600,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             variant="secondary"
             size="md"
             fullWidth
+            pill
             onClick={() => {
               dispatch({ type: 'RESTART_CURRENT_STAGE' });
               setShowPauseModal(false);
@@ -602,6 +613,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             variant="ghost"
             size="md"
             fullWidth
+            pill
             onClick={onExit}
           >
             🗺️ 스테이지 선택으로 나가기

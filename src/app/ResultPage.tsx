@@ -55,25 +55,28 @@ export const ResultPage: React.FC<ResultPageProps> = ({
   const reqXP = getRequiredXPForLevel(rewardResult.updatedProgression.level);
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-4 sm:p-6 pb-8 select-none">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-4 sm:p-6 pb-8 select-none">
       {/* Top Victory Header */}
-      <header className="text-center mt-6">
-        <div className="text-4xl animate-bounce mb-2">🎉</div>
-        <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 bg-clip-text text-transparent">
-          스테이지 완료!
-        </h1>
-        <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mt-1">
+      <header className="text-center mt-4">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <span className="korean-seal">승리</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-serif">
+            스테이지 완료!
+          </h1>
+          <span className="korean-seal">축하</span>
+        </div>
+        <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 mt-1">
           스테이지 {stageId}. {stage?.title}
         </p>
       </header>
 
       {/* Main Result Card */}
-      <main className="w-full space-y-4 my-auto">
-        <Card className="text-center p-6 border-blue-200 dark:border-blue-900/60 shadow-xl bg-gradient-to-b from-white to-blue-50/30 dark:from-slate-900 dark:to-blue-950/20">
+      <main className="w-full space-y-3.5 my-auto">
+        <Card className="text-center p-6 border-blue-200/80 dark:border-blue-900/60 shadow-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
           {/* Star Rating */}
           <div className="mb-4">
             <StarRating stars={rewardResult.starsEarned} size="lg" animated />
-            <div className="text-xs font-bold text-amber-500 mt-2">
+            <div className="text-sm font-black text-amber-500 mt-2">
               {rewardResult.starsEarned === 3
                 ? '완벽한 추론! ★★★'
                 : rewardResult.starsEarned === 2
@@ -83,40 +86,40 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-2 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl mb-4 text-center">
+          <div className="grid grid-cols-3 gap-2 p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl mb-4 text-center border border-slate-100 dark:border-slate-800">
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">클리어 시간</div>
-              <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">클리어 시간</div>
+              <div className="text-sm font-black text-slate-900 dark:text-slate-100">
                 {formatTime(elapsedSeconds)}
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">실수 횟수</div>
-              <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">실수 횟수</div>
+              <div className="text-sm font-black text-slate-900 dark:text-slate-100">
                 {mistakes}회
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">사용한 힌트</div>
-              <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">사용한 힌트</div>
+              <div className="text-sm font-black text-slate-900 dark:text-slate-100">
                 {hintsUsed}회
               </div>
             </div>
           </div>
 
           {/* XP Gained Announcement */}
-          <div className="p-3 bg-blue-100/60 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 rounded-2xl mb-4">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-900 rounded-2xl mb-4">
             <div className="text-xs font-bold text-blue-600 dark:text-blue-400">획득 경험치</div>
             <div className="text-2xl font-black text-blue-700 dark:text-blue-300">
               +{rewardResult.xpEarned} <span className="text-xs font-semibold">XP</span>
             </div>
             {rewardResult.isFirstClear && (
-              <div className="text-[11px] text-blue-500 dark:text-blue-400 font-medium mt-0.5">
+              <div className="text-[11px] text-blue-500 dark:text-blue-400 font-bold mt-0.5">
                 최초 클리어 보너스 지급 완료!
               </div>
             )}
             {!rewardResult.isFirstClear && rewardResult.isNewStarRecord && (
-              <div className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
+              <div className="text-[11px] text-amber-600 dark:text-amber-400 font-bold mt-0.5">
                 별점 최고 기록 갱신 보너스 지급 완료!
               </div>
             )}
@@ -156,7 +159,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
             {newAchievements.map(ach => (
               <div
                 key={ach.id}
-                className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-slate-900 dark:to-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-2xl animate-pop"
+                className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-slate-900 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 rounded-2xl animate-pop shadow-sm"
               >
                 <span className="text-2xl">{ach.icon}</span>
                 <div className="flex-1 text-left">
@@ -168,7 +171,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
                       {ach.rewardTitle}
                     </Badge>
                   </div>
-                  <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                  <div className="text-sm font-black text-slate-900 dark:text-slate-100">
                     {ach.name}
                   </div>
                 </div>
@@ -177,15 +180,16 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           </div>
         )}
 
-        {/* Action Buttons */}
+        {/* Action Buttons (3D Tactile Pills) */}
         <div className="space-y-2 pt-2">
           {nextStageId && (
             <Button
               variant="primary"
               size="lg"
               fullWidth
+              pill
               onClick={() => onNextStage(nextStageId)}
-              className="text-base font-black shadow-lg shadow-blue-500/25"
+              className="text-base font-black shadow-lg"
             >
               다음 스테이지로 도전 (스테이지 {nextStageId}) ➔
             </Button>
@@ -195,6 +199,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
             <Button
               variant="secondary"
               size="md"
+              pill
               onClick={() => onReplay(stageId)}
               className="font-bold"
             >
@@ -204,8 +209,9 @@ export const ResultPage: React.FC<ResultPageProps> = ({
             <Button
               variant="ghost"
               size="md"
+              pill
               onClick={onGoToMap}
-              className="font-bold"
+              className="font-bold bg-white/70 dark:bg-slate-800/70"
             >
               🗺️ 스테이지 목록
             </Button>
@@ -213,7 +219,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         </div>
       </main>
 
-      <footer className="text-xs text-slate-400 dark:text-slate-500 text-center">
+      <footer className="text-xs text-slate-500 dark:text-slate-400 text-center">
         내사랑 스도쿠 · 자동 저장 완료
       </footer>
     </div>
