@@ -66,10 +66,14 @@ export const GamePage: React.FC<GamePageProps> = ({
     }
   });
 
-  const handleCloseTutorial = () => {
+  const handleCloseTutorial = (dontShowAgain: boolean) => {
     setShowTutorial(false);
     try {
-      localStorage.setItem('my_love_sudoku_tutorial_seen', 'true');
+      if (dontShowAgain) {
+        localStorage.setItem('my_love_sudoku_tutorial_seen', 'true');
+      } else {
+        localStorage.removeItem('my_love_sudoku_tutorial_seen');
+      }
     } catch {
       // ignore
     }

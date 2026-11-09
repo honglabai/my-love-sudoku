@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserSettings } from '../storage/storage';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -15,11 +15,24 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   onUpdateSettings,
   onBack
 }) => {
+  const [tutorialResetNotice, setTutorialResetNotice] = useState(false);
+
   const handleToggleSound = () => {
     const nextVal = !settings.soundEnabled;
     sound.setEnabled(nextVal);
     if (nextVal) sound.playTap();
     onUpdateSettings({ soundEnabled: nextVal });
+  };
+
+  const handleResetTutorial = () => {
+    try {
+      localStorage.removeItem('my_love_sudoku_tutorial_seen');
+      sound.playTap();
+      setTutorialResetNotice(true);
+      setTimeout(() => setTutorialResetNotice(false), 3000);
+    } catch {
+      // ignore
+    }
   };
 
   return (
@@ -179,6 +192,32 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               }`}
             />
           </button>
+        </Card>
+
+        {/* Tutorial Reset Option */}
+        <Card className="flex items-center justify-between">
+          <div>
+            <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              📖 초보자 가이드 안내
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">
+              {tutorialResetNotice ? (
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                  ✓ 안내가 초기화되었습니다. 다음 게임 시 다시 표시됩니다.
+                </span>
+              ) : (
+                '스도쿠 규칙 및 게임 조작법 가이드 다시 보기'
+              )}
+            </div>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            pill
+            onClick={handleResetTutorial}
+          >
+            안내 초기화
+          </Button>
         </Card>
 
         {/* Info Card */}

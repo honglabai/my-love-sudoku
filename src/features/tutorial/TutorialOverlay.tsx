@@ -3,7 +3,7 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 
 interface TutorialOverlayProps {
-  onClose: () => void;
+  onClose: (dontShowAgain: boolean) => void;
 }
 
 const STEPS = [
@@ -36,12 +36,29 @@ const STEPS = [
 
 export const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [dontShowAgain, setDontShowAgain] = useState(() => {
+    try {
+      return localStorage.getItem('my_love_sudoku_tutorial_seen') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   const step = STEPS[currentStep];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
       <Card className="w-full max-w-sm text-center relative border-blue-500/40 shadow-2xl">
+        {/* Top-right close button */}
+        <button
+          type="button"
+          onClick={() => onClose(dontShowAgain)}
+          aria-label="튜토리얼 닫기"
+          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold text-sm"
+        >
+          ✕
+        </button>
+
         <div className="text-4xl mb-3">{step.icon}</div>
         <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-1">
           초보자 가이드 ({currentStep + 1} / {STEPS.length})
@@ -77,7 +94,7 @@ export const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ onClose }) => 
             <Button
               variant="accent"
               size="md"
-              onClick={onClose}
+              onClick={() => onClose(dontShowAgain)}
               className="flex-1"
             >
               퍼즐 시작하기!
@@ -85,12 +102,26 @@ export const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ onClose }) => 
           )}
         </div>
 
-        <button
-          onClick={onClose}
-          className="mt-4 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline"
-        >
-          튜토리얼 건너뛰기
-        </button>
+        {/* Checkbox: 다음에 다시 보지 않기 & 건너뛰기 */}
+        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs px-1">
+          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+            <input
+              type="checkbox"
+              checked={dontShowAgain}
+              onChange={(e) => setDontShowAgain(e.target.checked)}
+              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer"
+            />
+            <span className="font-bold">다음에 다시 보지 않기</span>
+          </label>
+
+          <button
+            type="button"
+            onClick={() => onClose(dontShowAgain)}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline font-medium"
+          >
+            건너뛰기
+          </button>
+        </div>
       </Card>
     </div>
   );
