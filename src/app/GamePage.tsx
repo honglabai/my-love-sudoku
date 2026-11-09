@@ -12,6 +12,52 @@ import { getRow, getCol, getBox } from '../domain/sudoku/types';
 import { PlayerInventory, DEFAULT_INVENTORY } from '../features/progression/progression';
 import { ItemDrawer } from '../components/ItemDrawer';
 
+interface WorldZenMeta {
+  themeName: string;
+  pill: string;
+  pillColor: string;
+  motto: string;
+  seal: [string, string];
+}
+
+const WORLD_ZEN_META: Record<number, WorldZenMeta> = {
+  1: {
+    themeName: '평온의 정원',
+    pill: 'BEGINNER · 평온의 정원',
+    pillColor: 'text-rose-700 bg-rose-50/90 border-rose-300',
+    motto: '맑은 마음으로 첫 수를 놓아보세요.',
+    seal: ['평', '온']
+  },
+  2: {
+    themeName: '푸른 대나무숲',
+    pill: 'EASY · 푸른 대나무숲',
+    pillColor: 'text-emerald-800 bg-emerald-50/90 border-emerald-300',
+    motto: '차분한 시선으로 논리의 실마리를 찾으세요.',
+    seal: ['통', '찰']
+  },
+  3: {
+    themeName: '황혼의 석탑',
+    pill: 'NORMAL · 황혼의 석탑',
+    pillColor: 'text-amber-800 bg-amber-50/90 border-amber-300',
+    motto: '깊은 집중으로 숨겨진 한 수를 밝히세요.',
+    seal: ['정', '진']
+  },
+  4: {
+    themeName: '설산과 백매화',
+    pill: 'HARD · 설산과 백매화',
+    pillColor: 'text-sky-800 bg-sky-50/90 border-sky-300',
+    motto: '정교한 추론으로 복잡한 실타래를 푸세요.',
+    seal: ['지', '혜']
+  },
+  5: {
+    themeName: '붉은 달과 천년송',
+    pill: 'MASTER · 붉은 달과 천년송',
+    pillColor: 'text-purple-800 bg-purple-50/90 border-purple-300',
+    motto: '완전한 통찰로 최고의 경지를 이루세요.',
+    seal: ['극', '치']
+  }
+};
+
 interface GamePageProps {
   stageId: number;
   activeGameSave: ActiveGameSave | null;
@@ -41,6 +87,7 @@ export const GamePage: React.FC<GamePageProps> = ({
 }) => {
   const stage = getStageById(stageId) || getStageById(1)!;
   const currentInventory = inventory || DEFAULT_INVENTORY;
+  const zenMeta = WORLD_ZEN_META[stage.worldId] || WORLD_ZEN_META[1];
 
   const [state, dispatch] = useReducer(gameReducer, stage, (initialStage) => {
     const fresh = createInitialState(initialStage);
@@ -443,10 +490,36 @@ export const GamePage: React.FC<GamePageProps> = ({
             />
           </picture>
 
-          {/* Dynamic Stage Header Subtitle Overlay */}
-          <div className="absolute top-[8.2%] left-[18%] right-[18%] text-center pointer-events-none select-none">
-            <div className="text-[10px] sm:text-[11px] font-bold text-stone-700 truncate tracking-wide">
+          {/* Top Zen Sheet Header: Real HTML Typography */}
+          <div className="absolute top-0 left-0 right-0 h-[19.8%] flex flex-col items-center justify-center px-4 pointer-events-none select-none z-10">
+            {/* Title: 내사랑 스도쿠 + 愛 Seal */}
+            <div className="flex items-center justify-center gap-1.5 leading-none">
+              <span className="font-serif font-black text-sm sm:text-base text-rose-700 tracking-tight drop-shadow-xs">
+                내사랑
+              </span>
+              <span className="font-serif font-black text-sm sm:text-base text-slate-900 tracking-tight drop-shadow-xs">
+                스도쿠
+              </span>
+              <span className="inline-flex items-center justify-center w-4 h-4 border border-rose-600 rounded-2xs text-[8px] font-serif font-black text-rose-600 bg-rose-50/90 leading-none shadow-xs">
+                愛
+              </span>
+            </div>
+
+            {/* Stage Info: 제 1단계 · 첫 번째 퍼즐 */}
+            <div className="text-[10.5px] sm:text-[11.5px] font-black text-stone-900 tracking-wide mt-1 truncate max-w-[260px]">
               제 {stage.id}단계 · {stage.title}
+            </div>
+
+            {/* World Level Theme Pill Badge */}
+            <div className="mt-0.5">
+              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[8.5px] sm:text-[9.5px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
+                {zenMeta.pill}
+              </span>
+            </div>
+
+            {/* Zen Motto / 힐링 한마디 */}
+            <div className="text-[8.5px] sm:text-[9.5px] text-stone-600 font-serif italic mt-0.5 tracking-tight truncate max-w-[280px]">
+              “{zenMeta.motto}”
             </div>
           </div>
 
@@ -557,6 +630,33 @@ export const GamePage: React.FC<GamePageProps> = ({
                 </div>
               );
             })}
+          </div>
+
+          {/* Bottom Zen Sheet Footer: Traditional Rules Plaque & Red Seal Stamp */}
+          <div className="absolute top-[78.2%] left-0 right-0 bottom-0 flex items-center justify-between px-3 sm:px-4 pointer-events-none select-none z-10">
+            {/* Left spacer for background lantern artwork */}
+            <div className="w-10 sm:w-12 shrink-0" />
+
+            {/* Center: Rules Plaque */}
+            <div className="flex-1 max-w-[220px] sm:max-w-[250px] mx-auto px-2 py-1.5 rounded-xl bg-white/85 backdrop-blur-xs border border-amber-900/15 shadow-xs text-center">
+              <div className="text-[9px] sm:text-[10px] font-serif font-black text-stone-700 tracking-widest">
+                — 스 도 쿠  규 칙 —
+              </div>
+              <div className="text-[8px] sm:text-[8.5px] font-bold text-slate-900 mt-0.5 leading-tight">
+                가로줄 · 세로줄 · 3×3 박스에 1부터 9까지
+              </div>
+              <div className="text-[7.5px] sm:text-[8px] font-medium text-stone-600 mt-0.5 leading-tight">
+                숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
+              </div>
+            </div>
+
+            {/* Right: Traditional Korean Red Seal Stamp (인장) */}
+            <div className="w-10 sm:w-12 shrink-0 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xs border-2 border-red-700 bg-red-50/90 p-0.5 flex flex-col items-center justify-center text-red-700 font-serif font-black text-[9.5px] sm:text-[10px] leading-tight shadow-sm ring-1 ring-red-400/40">
+                <span>{zenMeta.seal[0]}</span>
+                <span>{zenMeta.seal[1]}</span>
+              </div>
+            </div>
           </div>
         </div>
       </main>
