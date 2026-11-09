@@ -632,13 +632,10 @@ export const GamePage: React.FC<GamePageProps> = ({
             })}
           </div>
 
-          {/* Bottom Zen Sheet Footer: Traditional Rules Plaque & Red Seal Stamp */}
-          <div className="absolute top-[78.2%] left-0 right-0 bottom-0 flex items-center justify-between px-3 sm:px-4 pointer-events-none select-none z-10">
-            {/* Left spacer for background lantern artwork */}
-            <div className="w-10 sm:w-12 shrink-0" />
-
+          {/* Bottom Zen Sheet Footer: Traditional Rules Plaque */}
+          <div className="absolute top-[78.2%] left-0 right-0 bottom-0 flex items-center justify-center px-4 pointer-events-none select-none z-10">
             {/* Center: Rules Plaque */}
-            <div className="flex-1 max-w-[220px] sm:max-w-[250px] mx-auto px-2 py-1.5 rounded-xl bg-white/85 backdrop-blur-xs border border-amber-900/15 shadow-xs text-center">
+            <div className="max-w-[260px] sm:max-w-[280px] mx-auto px-3 py-1.5 rounded-xl bg-white/85 backdrop-blur-xs border border-amber-900/15 shadow-xs text-center">
               <div className="text-[9px] sm:text-[10px] font-serif font-black text-stone-700 tracking-widest">
                 — 스 도 쿠  규 칙 —
               </div>
@@ -647,14 +644,6 @@ export const GamePage: React.FC<GamePageProps> = ({
               </div>
               <div className="text-[7.5px] sm:text-[8px] font-medium text-stone-600 mt-0.5 leading-tight">
                 숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
-              </div>
-            </div>
-
-            {/* Right: Traditional Korean Red Seal Stamp (인장) */}
-            <div className="w-10 sm:w-12 shrink-0 flex items-center justify-center">
-              <div className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xs border-2 border-red-700 bg-red-50/90 p-0.5 flex flex-col items-center justify-center text-red-700 font-serif font-black text-[9.5px] sm:text-[10px] leading-tight shadow-sm ring-1 ring-red-400/40">
-                <span>{zenMeta.seal[0]}</span>
-                <span>{zenMeta.seal[1]}</span>
               </div>
             </div>
           </div>
