@@ -99,7 +99,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             )}
           </button>
 
-          {/* Tab 5: My Page (프로필, 칭호, 보물함, 업적, 설정) */}
+          {/* Tab 5: 마이페이지 (프로필, 칭호, 보물함, 업적, 설정) */}
           <button
             onClick={() => onNavigate('profile')}
             className={`flex-1 flex flex-col items-center justify-center px-0.5 py-1 rounded-xl transition-all duration-150 ${
@@ -110,7 +110,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="마이페이지 화면으로 이동"
           >
             <span className="text-lg leading-none transition-transform active:scale-90">👤</span>
-            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">My Page</span>
+            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">마이페이지</span>
             {(currentView === 'profile' || currentView === 'settings') && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}

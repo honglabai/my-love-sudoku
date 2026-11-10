@@ -140,8 +140,8 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
           </Card>
         )}
 
-        {/* Tactile Sleek Action Buttons */}
-        <div className="space-y-2 pt-0.5">
+        {/* Tactile Sleek Action Button: Stage Journey */}
+        <div className="pt-0.5">
           <Button
             variant="primary"
             size="lg"
@@ -150,26 +150,6 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
             className="text-sm sm:text-base font-black shadow-md"
           >
             🗺️ 스테이지 여정 (5개 월드)
-          </Button>
-
-          <Button
-            variant="secondary"
-            size="md"
-            fullWidth
-            onClick={() => onNavigate('profile')}
-            className="text-xs sm:text-sm font-bold"
-          >
-            🏅 내 프로필 & 업적 수집
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="md"
-            fullWidth
-            onClick={() => onNavigate('settings')}
-            className="text-xs sm:text-sm font-semibold"
-          >
-            ⚙️ 게임 설정
           </Button>
         </div>
       </main>

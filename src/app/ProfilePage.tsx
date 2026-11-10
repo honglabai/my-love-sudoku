@@ -66,7 +66,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           ← 홈으로
         </Button>
         <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
-          마이페이지 (My Page)
+          마이페이지
         </h2>
         <div className="w-16" />
       </div>
@@ -132,8 +132,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               label={`경험치 (${progression.currentXP} / ${reqXP} XP)`}
               showPercent
               color="blue"
-              className="mb-3"
+              className="mb-2"
             />
+
+            {/* Checkpoint Tier Markers */}
+            <div className="grid grid-cols-4 gap-1 text-xs text-center mb-3 font-bold text-slate-500 dark:text-slate-400">
+              <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
+                <div>입문자</div>
+                <div className="text-[10px] opacity-75">Lv.1</div>
+              </div>
+              <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
+                <div>탐험가</div>
+                <div className="text-[10px] opacity-75">Lv.5</div>
+              </div>
+              <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
+                <div>수집가</div>
+                <div className="text-[10px] opacity-75">Lv.15</div>
+              </div>
+              <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
+                <div>마스터</div>
+                <div className="text-[10px] opacity-75">Lv.30+</div>
+              </div>
+            </div>
 
             <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
               <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
@@ -415,6 +435,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             >
               {tutorialResetNotice ? '초기화됨! ✓' : '다시 보기'}
             </Button>
+          </Card>
+
+          {/* App Info Card */}
+          <Card className="text-center p-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 space-y-1">
+            <div className="font-extrabold text-slate-800 dark:text-slate-200">내사랑 스도쿠</div>
+            <div>버전 1.0.0 (정식 배포판) · 한국 수묵 담채화 에디션</div>
+            <div className="text-[11px] text-slate-400">오프라인 PWA 및 고화질 벡터 스도쿠 보드 지원</div>
           </Card>
         </div>
       )}
