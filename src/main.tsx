@@ -3,12 +3,17 @@ import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
 import './styles/index.css';
 
-// Register Service Worker for offline playability
+// Register Service Worker with instant auto-update
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-      console.warn('Service worker registration failed:', err);
-    });
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        registration.update();
+      })
+      .catch((err) => {
+        console.warn('Service worker registration failed:', err);
+      });
   });
 }
 
