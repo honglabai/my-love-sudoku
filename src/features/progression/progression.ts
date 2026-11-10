@@ -206,3 +206,63 @@ export function claimStageReward(
     nextUnlockedStage
   };
 }
+
+/**
+ * Applies Level Test diagnostic placement results.
+ * Instantly unlocks the corresponding target world stage, auto-fills previous stage records
+ * with 3 stars, awards stars/levels, and equips the matching title.
+ */
+export function applyLevelTestPlacement(
+  progression: PlayerProgression,
+  targetStageId: number
+): PlayerProgression {
+  if (targetStageId <= 1) return progression;
+
+  const newRecords: Record<number, StageRecord> = { ...progression.stageRecords };
+
+  for (let s = 1; s < targetStageId; s++) {
+    if (!newRecords[s]) {
+      newRecords[s] = {
+        stageId: s,
+        stars: 3,
+        bestTime: 90,
+        clearCount: 1,
+        firstClearedAt: Date.now()
+      };
+    }
+  }
+
+  const newTotalStars = Object.values(newRecords).reduce((acc, r) => acc + r.stars, 0);
+
+  // Derive level and title based on target stage
+  let level = progression.level;
+  let title = progression.equippedTitle;
+  const titles = new Set(progression.unlockedTitles);
+
+  if (targetStageId >= 31) {
+    level = Math.max(level, 30);
+    title = '스도쿠 마스터';
+    titles.add('스도쿠 탐험가');
+    titles.add('스도쿠 수집가');
+    titles.add('스도쿠 마스터');
+  } else if (targetStageId >= 21) {
+    level = Math.max(level, 15);
+    title = '스도쿠 수집가';
+    titles.add('스도쿠 탐험가');
+    titles.add('스도쿠 수집가');
+  } else if (targetStageId >= 11) {
+    level = Math.max(level, 5);
+    title = '스도쿠 탐험가';
+    titles.add('스도쿠 탐험가');
+  }
+
+  return {
+    ...progression,
+    level,
+    stageRecords: newRecords,
+    unlockedStageMax: Math.max(progression.unlockedStageMax, targetStageId),
+    totalStars: newTotalStars,
+    equippedTitle: title,
+    unlockedTitles: Array.from(titles)
+  };
+}

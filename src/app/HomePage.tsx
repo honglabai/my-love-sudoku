@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PlayerProgression, getRequiredXPForLevel } from '../features/progression/progression';
 import { ActiveGameSave } from '../storage/storage';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { getStageById } from '../features/stages/stageData';
+import { TopHeader } from '../components/TopHeader';
+import { LevelTestModal } from '../components/LevelTestModal';
 
 interface HomePageProps {
   progression: PlayerProgression;
   activeGame: ActiveGameSave | null;
   onNavigate: (view: 'home' | 'stage-map' | 'game' | 'profile' | 'settings', stageId?: number) => void;
+  onApplyLevelTest: (stageId: number) => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onNavigate }) => {
+export const HomePage: React.FC<HomePageProps> = ({
+  progression,
+  activeGame,
+  onNavigate,
+  onApplyLevelTest
+}) => {
+  const [showLevelTest, setShowLevelTest] = useState(false);
   const reqXP = getRequiredXPForLevel(progression.level);
   const activeStage = activeGame ? getStageById(activeGame.stageId) : null;
 
@@ -24,20 +33,9 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
   const percent = Math.min(100, Math.max(0, Math.round((progression.currentXP / Math.max(1, reqXP)) * 100)));
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-3 sm:p-5 pb-20">
-      {/* Top Header: Branding with Zen Korean Calligraphic Title Logo Image */}
-      <header className="w-full flex flex-col items-center justify-center mt-2 mb-2 select-none">
-        <img
-          src="/assets/logo/title_logo.webp"
-          alt="내사랑 스도쿠"
-          className="dark:hidden w-full max-w-[320px] sm:max-w-[350px] h-auto object-contain drop-shadow-sm transition-transform duration-200 hover:scale-[1.02]"
-        />
-        <img
-          src="/assets/logo/title_logo_dark.webp"
-          alt="내사랑 스도쿠"
-          className="hidden dark:block w-full max-w-[320px] sm:max-w-[350px] h-auto object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:scale-[1.02]"
-        />
-      </header>
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-4 pb-20">
+      {/* Top Header: Title Logo Image with App Install Button */}
+      <TopHeader onLevelTestClick={() => setShowLevelTest(true)} />
 
       {/* Main Profile & Gamification Card (Inspired by Ridi Pin 2) */}
       <main className="w-full space-y-3.5 my-auto">
@@ -140,8 +138,8 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
           </Card>
         )}
 
-        {/* Tactile Sleek Action Button: Stage Journey */}
-        <div className="pt-0.5">
+        {/* Tactile Sleek Action Button: Stage Journey & Level Test */}
+        <div className="space-y-2 pt-0.5">
           <Button
             variant="primary"
             size="lg"
@@ -151,6 +149,16 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
           >
             🗺️ 스테이지 여정 (5개 월드)
           </Button>
+
+          <Button
+            variant="secondary"
+            size="md"
+            fullWidth
+            onClick={() => setShowLevelTest(true)}
+            className="text-xs sm:text-sm font-black bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-amber-950/30 text-amber-900 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-xs"
+          >
+            🎯 실력 진단 레벨 테스트 (원하는 단계부터 시작)
+          </Button>
         </div>
       </main>
 
@@ -158,6 +166,13 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
       <footer className="text-center text-xs text-slate-500 dark:text-slate-500 mt-4">
         <p>내사랑 스도쿠 · v1.0.0 · 한국 수묵 담채화 에디션</p>
       </footer>
+
+      {/* Diagnostic Level Test Modal */}
+      <LevelTestModal
+        isOpen={showLevelTest}
+        onClose={() => setShowLevelTest(false)}
+        onSelectPlacementStage={onApplyLevelTest}
+      />
     </div>
   );
 };

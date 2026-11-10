@@ -7,7 +7,7 @@ import {
   ActiveGameSave,
   UserSettings
 } from '../storage/storage';
-import { claimStageReward, RewardResult } from '../features/progression/progression';
+import { claimStageReward, RewardResult, applyLevelTestPlacement } from '../features/progression/progression';
 import { evaluateAchievements, Achievement } from '../features/achievements/achievements';
 import { getStageById } from '../features/stages/stageData';
 import { sound } from '../audio/sound';
@@ -84,6 +84,21 @@ export const App: React.FC = () => {
     if (st) setSelectedWorldId(st.worldId);
     setCurrentView('game');
   };
+
+  const handleApplyLevelTest = useCallback((targetStageId: number) => {
+    updateData(prev => {
+      const nextProgression = applyLevelTestPlacement(prev.progression, targetStageId);
+      return {
+        ...prev,
+        progression: nextProgression,
+        activeGame: null
+      };
+    });
+    setSelectedStageId(targetStageId);
+    const st = getStageById(targetStageId);
+    if (st) setSelectedWorldId(st.worldId);
+    setCurrentView('game');
+  }, [updateData]);
 
   const handleSaveActiveGame = useCallback((activeGame: ActiveGameSave | null) => {
     updateData(prev => ({
@@ -223,6 +238,7 @@ export const App: React.FC = () => {
           progression={data.progression}
           activeGame={data.activeGame}
           onNavigate={handleNavigate}
+          onApplyLevelTest={handleApplyLevelTest}
         />
       )}
 
@@ -232,6 +248,7 @@ export const App: React.FC = () => {
           onSelectStage={handleSelectStage}
           onBack={() => setCurrentView('home')}
           onWorldChange={(wId) => setSelectedWorldId(wId)}
+          onApplyLevelTest={handleApplyLevelTest}
         />
       )}
 
@@ -296,6 +313,7 @@ export const App: React.FC = () => {
           onEquipTitle={handleEquipTitle}
           onResetData={handleResetData}
           onBack={() => setCurrentView('home')}
+          onApplyLevelTest={handleApplyLevelTest}
           initialTab="profile"
         />
       )}
@@ -309,6 +327,7 @@ export const App: React.FC = () => {
           onEquipTitle={handleEquipTitle}
           onResetData={handleResetData}
           onBack={() => setCurrentView('home')}
+          onApplyLevelTest={handleApplyLevelTest}
           initialTab="settings"
         />
       )}

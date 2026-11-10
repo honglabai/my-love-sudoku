@@ -7,6 +7,7 @@ import { Button } from '../components/Button';
 import { Badge } from '../components/Badge';
 import { ProgressBar } from '../components/ProgressBar';
 import { Modal } from '../components/Modal';
+import { LevelTestModal } from '../components/LevelTestModal';
 import { sound } from '../audio/sound';
 
 interface ProfilePageProps {
@@ -17,6 +18,7 @@ interface ProfilePageProps {
   onEquipTitle: (title: string) => void;
   onResetData: () => void;
   onBack: () => void;
+  onApplyLevelTest?: (stageId: number) => void;
   initialTab?: 'profile' | 'settings';
 }
 
@@ -28,11 +30,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onEquipTitle,
   onResetData,
   onBack,
+  onApplyLevelTest,
   initialTab = 'profile'
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'settings'>(initialTab);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showLevelTest, setShowLevelTest] = useState(false);
   const [tutorialResetNotice, setTutorialResetNotice] = useState(false);
 
   const reqXP = getRequiredXPForLevel(progression.level);
@@ -437,6 +441,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </Button>
           </Card>
 
+          {/* Level Test Placement Retake */}
+          {onApplyLevelTest && (
+            <Card className="flex items-center justify-between bg-amber-50/50 dark:bg-amber-950/20 border-amber-200/80 dark:border-amber-900/40">
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                  🎯 실력 진단 레벨 테스트
+                </div>
+                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                  3문항 실력 테스트를 다시 치르고 원하는 단계로 바로 점프합니다
+                </div>
+              </div>
+              <Button
+                variant="accent"
+                size="sm"
+                onClick={() => setShowLevelTest(true)}
+                className="text-xs shrink-0 font-bold"
+              >
+                테스트 시작
+              </Button>
+            </Card>
+          )}
+
           {/* App Info Card */}
           <Card className="text-center p-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 space-y-1">
             <div className="font-extrabold text-slate-800 dark:text-slate-200">내사랑 스도쿠</div>
@@ -532,6 +558,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
       </Modal>
+
+      {/* Diagnostic Level Test Modal */}
+      {showLevelTest && onApplyLevelTest && (
+        <LevelTestModal
+          isOpen={showLevelTest}
+          onClose={() => setShowLevelTest(false)}
+          onSelectPlacementStage={onApplyLevelTest}
+        />
+      )}
     </div>
   );
 };

@@ -421,7 +421,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto pt-2 px-2 pb-0 sm:pt-3 sm:px-3 sm:pb-0 select-none">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto pt-1 px-1 pb-0 sm:pt-2 sm:px-2 sm:pb-0 select-none">
       {/* Top Sleek Control Bar - Compact Rounded-xl Buttons, Zero Text Wrapping */}
       <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
         <button
@@ -472,9 +472,9 @@ export const GamePage: React.FC<GamePageProps> = ({
         </div>
       </header>
 
-      {/* Authentic Zen Sudoku Sheet (Pinterest Reference Artwork Integration) */}
-      <main className="w-full flex items-center justify-center my-auto py-0.5">
-        <div className="relative w-full max-w-[min(385px,calc((100vh-190px)*0.75))] aspect-[720/960] rounded-2xl shadow-2xl overflow-hidden border border-stone-800/20 dark:border-stone-700/50 select-none bg-[#faf8f1] dark:bg-slate-900 flex flex-col justify-between items-center p-2.5 sm:p-3">
+      {/* Authentic Zen Sudoku Sheet - Maximized Grid for Ultimate Tap Comfort */}
+      <main className="w-full flex-1 flex flex-col items-center justify-center my-auto py-1 px-0.5">
+        <div className="relative w-full max-w-[min(385px,calc(100vw-8px))] rounded-2xl shadow-2xl overflow-hidden border border-stone-800/20 dark:border-stone-700/50 select-none bg-[#faf8f1] dark:bg-slate-900 flex flex-col items-center p-1.5 sm:p-2">
           {/* Mobile-Optimized Authentic Korean Minhwa Landscape Wallpaper */}
           <picture className="absolute inset-0 pointer-events-none select-none z-0">
             <source srcSet={`/assets/wallpapers/stage_${stage.id}.webp`} type="image/webp" />
@@ -488,42 +488,30 @@ export const GamePage: React.FC<GamePageProps> = ({
           {/* Subtle Hanji paper tint for contrast and readability */}
           <div className="absolute inset-0 bg-[#faf8f1]/65 dark:bg-slate-950/75 pointer-events-none select-none z-0 backdrop-blur-[0.5px]" />
 
-          {/* Top Zen Sheet Header: Real HTML Typography */}
-          <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
-            {/* Title: 내사랑 스도쿠 (Without '愛' seal) */}
-            <div className="flex items-center justify-center gap-1.5 leading-none">
-              <span className="font-serif font-black text-sm sm:text-base text-rose-700 dark:text-rose-500 tracking-tight drop-shadow-xs">
+          {/* Top Zen Sheet Header: Clean Single Row for Maximum Grid Area */}
+          <div className="relative z-10 w-full flex items-center justify-between px-2 pt-0.5 pb-1 pointer-events-none select-none">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-serif font-black text-xs sm:text-sm text-rose-700 dark:text-rose-500 tracking-tight">
                 내사랑
               </span>
-              <span className="font-serif font-black text-sm sm:text-base text-slate-900 dark:text-slate-100 tracking-tight drop-shadow-xs">
+              <span className="font-serif font-black text-xs sm:text-sm text-slate-900 dark:text-slate-100 tracking-tight">
                 스도쿠
               </span>
             </div>
 
-            {/* Stage Info: 제 1단계 · 첫 번째 퍼즐 */}
-            <div className="text-xs sm:text-sm font-black text-stone-900 dark:text-stone-100 tracking-wide mt-1 truncate max-w-[280px]">
-              제 {stage.id}단계 · {stage.title}
-            </div>
-
-            {/* World Level Theme Pill Badge */}
-            <div className="mt-0.5">
-              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[10.5px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
+            <div className="flex items-center gap-1.5">
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
                 {zenMeta.pill}
               </span>
             </div>
-
-            {/* Zen Motto / 힐링 한마디 */}
-            <div className="text-[9.5px] sm:text-[10.5px] text-stone-600 dark:text-stone-300 font-serif italic mt-0.5 tracking-tight truncate max-w-[290px]">
-              “{zenMeta.motto}”
-            </div>
           </div>
 
-          {/* Razor-Sharp Sudoku Grid: 81 Cells with Infallible Vector SVG Grid Overlay */}
-          <div className="relative z-10 w-full flex items-center justify-center my-auto">
+          {/* Maximized Sudoku Grid: 81 Large Cells with Infallible Vector SVG Grid Overlay */}
+          <div className="relative z-10 w-full flex items-center justify-center my-0.5">
             <div
               role="grid"
               aria-label="스도쿠 게임 보드"
-              className="relative w-full max-w-[min(300px,calc(100vw-64px))] aspect-square rounded-xl shadow-xl overflow-hidden border-[2.5px] border-slate-900 dark:border-stone-100 select-none bg-[#faf8f1] dark:bg-slate-900"
+              className="relative w-full max-w-[min(372px,calc(100vw-16px))] aspect-square rounded-xl shadow-xl overflow-hidden border-[2.5px] border-slate-900 dark:border-stone-100 select-none bg-[#faf8f1] dark:bg-slate-900"
             >
               {/* Layer 1: 9x9 Interactive Cells Grid */}
               <div className="w-full h-full grid grid-cols-9 grid-rows-9">
@@ -650,20 +638,11 @@ export const GamePage: React.FC<GamePageProps> = ({
             </div>
           </div>
 
-          {/* Bottom Zen Sheet Footer: Traditional Rules Plaque */}
-          <div className="relative z-10 w-full flex items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
-            {/* Center: Rules Plaque */}
-            <div className="max-w-[275px] sm:max-w-[295px] mx-auto px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
-              <div className="text-[9.5px] sm:text-[10.5px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest leading-none">
-                — 스 도 쿠  규 칙 —
-              </div>
-              <div className="text-[8.5px] sm:text-[9.5px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
-                가로줄 · 세로줄 · 3×3 박스에 1부터 9까지
-              </div>
-              <div className="text-[8px] sm:text-[8.5px] font-medium text-stone-600 dark:text-stone-400 mt-0.25 leading-tight">
-                숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
-              </div>
-            </div>
+          {/* Bottom Zen Motto */}
+          <div className="relative z-10 w-full text-center pt-1 pb-0.5 pointer-events-none select-none">
+            <span className="text-[10px] sm:text-[10.5px] text-stone-600 dark:text-stone-300 font-serif italic tracking-tight">
+              “{zenMeta.motto}”
+            </span>
           </div>
         </div>
       </main>
@@ -757,14 +736,14 @@ export const GamePage: React.FC<GamePageProps> = ({
                 key={num}
                 onClick={() => handleNumpadClick(num)}
                 disabled={isCompletedNum && !state.isNoteMode}
-                className={`flex flex-col items-center justify-center h-10 sm:h-10.5 rounded-xl font-black font-serif transition-all active:translate-y-0.5 active:shadow-none p-0.5 ${
+                className={`flex flex-col items-center justify-center h-11 sm:h-12 rounded-xl font-black font-serif transition-all active:translate-y-0.5 active:shadow-none p-0.5 ${
                   isCompletedNum && !state.isNoteMode
                     ? 'opacity-30 bg-slate-200 dark:bg-slate-800 pointer-events-none'
                     : 'bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-blue-800 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_2px_0_#cbd5e1] dark:shadow-[0_2px_0_#0f172a]'
                 }`}
               >
-                <span className="text-base sm:text-lg leading-none">{num}</span>
-                <span className="text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
+                <span className="text-lg sm:text-xl leading-none">{num}</span>
+                <span className="text-[9.5px] sm:text-[10px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>

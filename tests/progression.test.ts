@@ -5,7 +5,8 @@ import {
   getRequiredXPForLevel,
   applyXPGain,
   claimStageReward,
-  createInitialProgression
+  createInitialProgression,
+  applyLevelTestPlacement
 } from '../src/features/progression/progression';
 
 describe('Step 6: RPG Progression and Reward System', () => {
@@ -130,5 +131,25 @@ describe('Step 6: RPG Progression and Reward System', () => {
     const res2 = claimStageReward(res1.updatedProgression, 1, 1, 0, 0, 90);
     expect(res2.updatedProgression.unlockedStageMax).toBe(2);
     expect(res2.nextUnlockedStage).toBeNull();
+  });
+
+  it('correctly applies level test placement skipping ahead', () => {
+    const prog = createInitialProgression();
+    expect(prog.unlockedStageMax).toBe(1);
+
+    // Test placement to Stage 11 (World 2)
+    const placed11 = applyLevelTestPlacement(prog, 11);
+    expect(placed11.unlockedStageMax).toBe(11);
+    expect(placed11.level).toBeGreaterThanOrEqual(5);
+    expect(placed11.equippedTitle).toBe('스도쿠 탐험가');
+    expect(placed11.totalStars).toBe(30); // 10 stages * 3 stars
+    expect(placed11.stageRecords[10].stars).toBe(3);
+
+    // Test placement to Stage 31 (World 4)
+    const placed31 = applyLevelTestPlacement(prog, 31);
+    expect(placed31.unlockedStageMax).toBe(31);
+    expect(placed31.level).toBeGreaterThanOrEqual(30);
+    expect(placed31.equippedTitle).toBe('스도쿠 마스터');
+    expect(placed31.totalStars).toBe(90); // 30 stages * 3 stars
   });
 });

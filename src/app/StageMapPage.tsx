@@ -6,20 +6,24 @@ import { Card } from '../components/Card';
 import { Badge } from '../components/Badge';
 import { StarRating } from '../components/StarRating';
 import { StampBadge } from '../components/StampBadge';
+import { LevelTestModal } from '../components/LevelTestModal';
 
 interface StageMapPageProps {
   progression: PlayerProgression;
   onSelectStage: (stageId: number) => void;
   onBack: () => void;
   onWorldChange?: (worldId: number) => void;
+  onApplyLevelTest?: (stageId: number) => void;
 }
 
 export const StageMapPage: React.FC<StageMapPageProps> = ({
   progression,
   onSelectStage,
   onBack,
-  onWorldChange
+  onWorldChange,
+  onApplyLevelTest
 }) => {
+  const [showLevelTest, setShowLevelTest] = useState(false);
   const currentWorldId = Math.min(5, Math.floor((progression.unlockedStageMax - 1) / 10) + 1);
   const [selectedWorldId, setSelectedWorldId] = useState<number>(currentWorldId);
   const [viewMode, setViewMode] = useState<'roadmap' | 'list'>('roadmap');
@@ -118,6 +122,22 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
           </div>
         </div>
       </Card>
+
+      {/* Quick Level Test Placement Banner */}
+      {onApplyLevelTest && (
+        <div className="mb-3 text-center">
+          <button
+            onClick={() => setShowLevelTest(true)}
+            className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-300/80 dark:border-amber-700/60 text-amber-900 dark:text-amber-300 font-extrabold text-xs flex items-center justify-between shadow-2xs hover:bg-amber-100/40 active:scale-[0.99] transition-all"
+          >
+            <span className="flex items-center gap-1.5">
+              <span>🎯</span>
+              <span>스도쿠 실력자이신가요? 레벨 테스트로 원하는 단계 바로 해금</span>
+            </span>
+            <span className="text-amber-600 dark:text-amber-400 font-black">테스트 →</span>
+          </button>
+        </div>
+      )}
 
       {/* View Mode Toggle (Roadmap vs List) */}
       <div className="flex justify-center mb-4">
@@ -254,6 +274,15 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
             );
           })}
         </div>
+      )}
+
+      {/* Diagnostic Level Test Modal */}
+      {showLevelTest && onApplyLevelTest && (
+        <LevelTestModal
+          isOpen={showLevelTest}
+          onClose={() => setShowLevelTest(false)}
+          onSelectPlacementStage={onApplyLevelTest}
+        />
       )}
     </div>
   );
