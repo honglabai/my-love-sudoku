@@ -35,7 +35,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-4 pb-20">
       {/* Top Header: Title Logo Image with App Install Button */}
-      <TopHeader onLevelTestClick={() => setShowLevelTest(true)} />
+      <TopHeader />
 
       {/* Main Profile & Gamification Card (Inspired by Ridi Pin 2) */}
       <main className="w-full space-y-3.5 my-auto">

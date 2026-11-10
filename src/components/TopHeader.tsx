@@ -6,11 +6,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-interface TopHeaderProps {
-  onLevelTestClick?: () => void;
-}
-
-export const TopHeader: React.FC<TopHeaderProps> = ({ onLevelTestClick }) => {
+export const TopHeader: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
@@ -60,38 +56,27 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onLevelTestClick }) => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between gap-2 pt-1 pb-2 px-1 select-none">
-        {/* Left: Title Logo Image */}
-        <div className="flex-1 flex items-center">
+      <header className="w-full flex items-center justify-between gap-2 pt-1 pb-1.5 px-1 select-none min-h-[46px]">
+        {/* Left: Title Logo Image - Maximized to Fill the Header Height */}
+        <div className="flex-1 flex items-center min-w-0 pr-1">
           <img
-            src="/assets/logo/title_logo.webp"
+            src="/assets/logo/header_title_logo.webp"
             alt="내사랑 스도쿠"
-            className="dark:hidden h-10 sm:h-12 w-auto max-w-[210px] sm:max-w-[250px] object-contain drop-shadow-xs transition-transform duration-200 hover:scale-[1.02]"
+            className="dark:hidden h-10 sm:h-11 w-auto max-w-[280px] sm:max-w-[320px] object-contain drop-shadow-xs transition-transform duration-200 hover:scale-[1.02]"
           />
           <img
-            src="/assets/logo/title_logo_dark.webp"
+            src="/assets/logo/header_title_logo_dark.webp"
             alt="내사랑 스도쿠"
-            className="hidden dark:block h-10 sm:h-12 w-auto max-w-[210px] sm:max-w-[250px] object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:scale-[1.02]"
+            className="hidden dark:block h-10 sm:h-11 w-auto max-w-[280px] sm:max-w-[320px] object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:scale-[1.02]"
           />
         </div>
 
         {/* Right: Install App Button */}
         <div className="shrink-0 flex items-center gap-1.5">
-          {onLevelTestClick && (
-            <button
-              onClick={onLevelTestClick}
-              aria-label="실력 측정 레벨 테스트"
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-xs active:scale-95 transition-all"
-            >
-              <span>🎯</span>
-              <span className="whitespace-nowrap">레벨테스트</span>
-            </button>
-          )}
-
           <button
             onClick={handleInstallClick}
             aria-label="앱 설치 및 바탕화면에 추가"
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
+            className={`flex items-center gap-1 px-3 py-1.5 min-h-[34px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
               isStandalone
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-blue-500/30'
