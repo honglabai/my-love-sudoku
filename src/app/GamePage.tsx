@@ -531,7 +531,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             <div
               role="grid"
               aria-label="스도쿠 게임 보드"
-              className="w-full max-w-[min(320px,calc(100vw-54px))] aspect-square grid grid-cols-9 grid-rows-9 bg-[#faf8f1] dark:bg-slate-900 rounded-xl shadow-xl border-2 border-stone-800 dark:border-stone-200 overflow-hidden"
+              className="w-full max-w-[min(296px,calc(100vw-68px))] aspect-square grid grid-cols-9 grid-rows-9 bg-[#faf8f1] dark:bg-slate-900 rounded-xl shadow-xl border-2 border-stone-800 dark:border-stone-200 overflow-hidden"
             >
               {state.board.map((cellValue, idx) => {
                 const isGiven = state.givens[idx];
@@ -638,16 +638,16 @@ export const GamePage: React.FC<GamePageProps> = ({
           </div>
 
           {/* Bottom Zen Sheet Footer: Traditional Rules Plaque */}
-          <div className="relative z-10 w-full flex items-center justify-center pt-0.5 pb-0.5 pointer-events-none select-none">
+          <div className="relative z-10 w-full flex items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
             {/* Center: Rules Plaque */}
-            <div className="max-w-[270px] sm:max-w-[290px] mx-auto px-3 py-1 sm:py-1.5 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
-              <div className="text-[9px] sm:text-[10px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest">
+            <div className="max-w-[270px] sm:max-w-[290px] mx-auto px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
+              <div className="text-[8.5px] sm:text-[9.5px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest leading-none">
                 — 스 도 쿠  규 칙 —
               </div>
-              <div className="text-[8px] sm:text-[8.5px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
+              <div className="text-[7.5px] sm:text-[8px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
                 가로줄 · 세로줄 · 3×3 박스에 1부터 9까지
               </div>
-              <div className="text-[7.5px] sm:text-[8px] font-medium text-stone-600 dark:text-stone-400 mt-0.5 leading-tight">
+              <div className="text-[7px] sm:text-[7.5px] font-medium text-stone-600 dark:text-stone-400 mt-0.25 leading-tight">
                 숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
               </div>
             </div>
