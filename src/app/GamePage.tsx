@@ -656,86 +656,83 @@ export const GamePage: React.FC<GamePageProps> = ({
       </main>
 
       {/* Floating Bottom Card: Controls & Numpad */}
-      <footer className="w-full max-w-[390px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl p-2.5 sm:p-3 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-2 mt-1">
+      <footer className="w-full max-w-[385px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 sm:p-2 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-1 mt-0.5 select-none">
         {/* Action Controls Row */}
         <div className="grid grid-cols-6 gap-1 px-0.5">
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
-            onClick={() => dispatch({ type: 'UNDO' })}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              dispatch({ type: 'UNDO' });
+            }}
             disabled={state.history.length === 0}
-            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
-            <span className="text-sm">↩️</span>
-            <span>취소</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">↩️</span>
+            <span className="leading-tight mt-0.5">취소</span>
+          </button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
-            onClick={() => dispatch({ type: 'REDO' })}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              dispatch({ type: 'REDO' });
+            }}
             disabled={state.future.length === 0}
-            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
-            <span className="text-sm">↪️</span>
-            <span>다시</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">↪️</span>
+            <span className="leading-tight mt-0.5">다시</span>
+          </button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
+          <button
+            type="button"
             onClick={() => {
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
           >
-            <span className="text-sm">🧹</span>
-            <span>지우기</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">🧹</span>
+            <span className="leading-tight mt-0.5">지우기</span>
+          </button>
 
-          <Button
-            variant={state.isNoteMode ? 'accent' : 'ghost'}
-            size="sm"
-            pill
+          <button
+            type="button"
             onClick={() => {
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
-            className={`flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 ${
+            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 transition-all active:scale-95 ${
               state.isNoteMode
-                ? 'shadow-md'
-                : 'bg-slate-100/90 dark:bg-slate-800/90 shadow-sm'
+                ? 'bg-amber-500 text-white shadow-md ring-2 ring-amber-400'
+                : 'bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs'
             }`}
           >
-            <span className="text-sm">✏️</span>
-            <span>메모</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">✏️</span>
+            <span className="leading-tight mt-0.5">메모</span>
+          </button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
+          <button
+            type="button"
             onClick={handleTriggerHint}
-            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-slate-100/90 dark:bg-slate-800/90 shadow-sm text-amber-600 dark:text-amber-400"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
           >
-            <span className="text-sm">💡</span>
-            <span>힌트</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">💡</span>
+            <span className="leading-tight mt-0.5">힌트</span>
+          </button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
-            onClick={() => setShowItemDrawer(true)}
-            className="flex-col py-1 text-[10px] sm:text-[11px] font-bold gap-0.5 bg-gradient-to-b from-amber-100/80 to-orange-100/80 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-sm text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              setShowItemDrawer(true);
+            }}
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
           >
-            <span className="text-sm">🎒</span>
-            <span>아이템({totalItemCount})</span>
-          </Button>
+            <span className="text-xs sm:text-sm leading-none">🎒</span>
+            <span className="leading-tight mt-0.5 whitespace-nowrap">아이템({totalItemCount})</span>
+          </button>
         </div>
 
         {/* Number Keypad 1~9 */}
@@ -747,14 +744,14 @@ export const GamePage: React.FC<GamePageProps> = ({
                 key={num}
                 onClick={() => handleNumpadClick(num)}
                 disabled={isCompletedNum && !state.isNoteMode}
-                className={`flex flex-col items-center justify-center h-12 sm:h-13 rounded-2xl font-black font-serif transition-all active:translate-y-1 active:shadow-none ${
+                className={`flex flex-col items-center justify-center h-10 sm:h-10.5 rounded-xl font-black font-serif transition-all active:translate-y-0.5 active:shadow-none p-0.5 ${
                   isCompletedNum && !state.isNoteMode
                     ? 'opacity-30 bg-slate-200 dark:bg-slate-800 pointer-events-none'
-                    : 'bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-blue-800 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_3px_0_#cbd5e1] dark:shadow-[0_3px_0_#0f172a]'
+                    : 'bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-blue-800 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_2px_0_#cbd5e1] dark:shadow-[0_2px_0_#0f172a]'
                 }`}
               >
-                <span className="text-lg sm:text-xl leading-none">{num}</span>
-                <span className="text-[9px] font-sans font-bold text-slate-400 mt-0.5">
+                <span className="text-base sm:text-lg leading-none">{num}</span>
+                <span className="text-[8px] sm:text-[8.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>

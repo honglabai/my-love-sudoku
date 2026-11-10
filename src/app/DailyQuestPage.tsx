@@ -43,7 +43,7 @@ export const DailyQuestPage: React.FC<DailyQuestPageProps> = ({
   const currentDayIndex = (today.getDay() + 6) % 7; // Monday = 0
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen max-w-md mx-auto p-4 sm:p-5 pb-28 select-none">
+    <div className="relative z-10 flex flex-col min-h-screen max-w-md mx-auto p-3 sm:p-4 pb-20 select-none">
       {/* Top Header */}
       <header className="flex items-center justify-between pt-2 pb-4">
         <Button variant="ghost" size="sm" pill onClick={onBack}>

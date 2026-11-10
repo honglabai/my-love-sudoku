@@ -31,7 +31,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const perfectClears = Object.values(progression.stageRecords).filter(r => r.stars === 3).length;
 
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto p-4 pb-28 select-none">
+    <div className="flex flex-col min-h-screen max-w-md mx-auto p-3 sm:p-4 pb-20 select-none">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-4 pt-2">
         <Button variant="ghost" size="sm" onClick={onBack}>
