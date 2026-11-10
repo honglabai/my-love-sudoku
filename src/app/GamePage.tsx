@@ -479,34 +479,37 @@ export const GamePage: React.FC<GamePageProps> = ({
 
       {/* Authentic Zen Sudoku Sheet (Pinterest Reference Artwork Integration) */}
       <main className="w-full flex items-center justify-center my-auto py-0.5">
-        <div className="relative w-full max-w-[min(385px,calc((100vh-185px)*0.75))] aspect-[720/960] rounded-2xl shadow-2xl overflow-hidden border border-amber-900/20 select-none bg-[#faf8f1]">
-          {/* Zen Level Watercolor Background Sheet */}
-          <picture>
-            <source srcSet={`/assets/backgrounds/zen_sheet_level_${stage.worldId}.webp`} type="image/webp" />
+        <div className="relative w-full max-w-[min(385px,calc((100vh-190px)*0.75))] aspect-[720/960] rounded-2xl shadow-2xl overflow-hidden border border-stone-800/20 dark:border-stone-700/50 select-none bg-[#faf8f1] dark:bg-slate-900 flex flex-col justify-between items-center p-2.5 sm:p-3">
+          {/* Mobile-Optimized Authentic Korean Minhwa Landscape Wallpaper */}
+          <picture className="absolute inset-0 pointer-events-none select-none z-0">
+            <source srcSet={`/assets/wallpapers/stage_${stage.id}.webp`} type="image/webp" />
             <img
-              src={`/assets/backgrounds/zen_sheet_level_${stage.worldId}.jpg`}
-              alt={`제 ${stage.worldId}월드 스도쿠 배경`}
-              className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
+              src={`/assets/wallpapers/stage_${stage.id}.jpg`}
+              alt={`제 ${stage.id}단계 배경`}
+              className="w-full h-full object-cover object-center"
             />
           </picture>
 
+          {/* Subtle Hanji paper tint for contrast and readability */}
+          <div className="absolute inset-0 bg-[#faf8f1]/65 dark:bg-slate-950/75 pointer-events-none select-none z-0 backdrop-blur-[0.5px]" />
+
           {/* Top Zen Sheet Header: Real HTML Typography */}
-          <div className="absolute top-0 left-0 right-0 h-[19.8%] flex flex-col items-center justify-center px-4 pointer-events-none select-none z-10">
+          <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
             {/* Title: 내사랑 스도쿠 + 愛 Seal */}
             <div className="flex items-center justify-center gap-1.5 leading-none">
-              <span className="font-serif font-black text-sm sm:text-base text-rose-700 tracking-tight drop-shadow-xs">
+              <span className="font-serif font-black text-sm sm:text-base text-rose-700 dark:text-rose-500 tracking-tight drop-shadow-xs">
                 내사랑
               </span>
-              <span className="font-serif font-black text-sm sm:text-base text-slate-900 tracking-tight drop-shadow-xs">
+              <span className="font-serif font-black text-sm sm:text-base text-slate-900 dark:text-slate-100 tracking-tight drop-shadow-xs">
                 스도쿠
               </span>
-              <span className="inline-flex items-center justify-center w-4 h-4 border border-rose-600 rounded-2xs text-[8px] font-serif font-black text-rose-600 bg-rose-50/90 leading-none shadow-xs">
+              <span className="inline-flex items-center justify-center w-4 h-4 border border-rose-600 rounded-2xs text-[8px] font-serif font-black text-rose-600 bg-rose-50/90 dark:bg-rose-950/80 leading-none shadow-xs">
                 愛
               </span>
             </div>
 
             {/* Stage Info: 제 1단계 · 첫 번째 퍼즐 */}
-            <div className="text-[10.5px] sm:text-[11.5px] font-black text-stone-900 tracking-wide mt-1 truncate max-w-[260px]">
+            <div className="text-[10.5px] sm:text-[11.5px] font-black text-stone-900 dark:text-stone-100 tracking-wide mt-1 truncate max-w-[280px]">
               제 {stage.id}단계 · {stage.title}
             </div>
 
@@ -518,131 +521,133 @@ export const GamePage: React.FC<GamePageProps> = ({
             </div>
 
             {/* Zen Motto / 힐링 한마디 */}
-            <div className="text-[8.5px] sm:text-[9.5px] text-stone-600 font-serif italic mt-0.5 tracking-tight truncate max-w-[280px]">
+            <div className="text-[8.5px] sm:text-[9.5px] text-stone-600 dark:text-stone-300 font-serif italic mt-0.5 tracking-tight truncate max-w-[290px]">
               “{zenMeta.motto}”
             </div>
           </div>
 
-          {/* Interactive 9x9 Sudoku Grid mathematically aligned with the sheet frame */}
-          <div
-            role="grid"
-            aria-label="스도쿠 게임 보드"
-            className="absolute left-[11.1111%] top-[19.7917%] w-[77.7778%] h-[58.3333%] grid grid-cols-9"
-          >
-            {state.board.map((cellValue, idx) => {
-              const isGiven = state.givens[idx];
-              const isSelected = state.selectedCell === idx;
-              const r = getRow(idx);
-              const c = getCol(idx);
-              const b = getBox(idx);
+          {/* Razor-Sharp 9x9 Vector Sudoku Grid mathematically aligned */}
+          <div className="relative z-10 w-full flex items-center justify-center my-auto">
+            <div
+              role="grid"
+              aria-label="스도쿠 게임 보드"
+              className="w-full max-w-[min(320px,calc(100vw-54px))] aspect-square grid grid-cols-9 grid-rows-9 bg-[#faf8f1] dark:bg-slate-900 rounded-xl shadow-xl border-2 border-stone-800 dark:border-stone-200 overflow-hidden"
+            >
+              {state.board.map((cellValue, idx) => {
+                const isGiven = state.givens[idx];
+                const isSelected = state.selectedCell === idx;
+                const r = getRow(idx);
+                const c = getCol(idx);
+                const b = getBox(idx);
 
-              const isPeer =
-                state.selectedCell !== null &&
-                !isSelected &&
-                (r === selectedRow || c === selectedCol || b === selectedBox);
+                const isPeer =
+                  state.selectedCell !== null &&
+                  !isSelected &&
+                  (r === selectedRow || c === selectedCol || b === selectedBox);
 
-              const isSameNumber =
-                settings.highlightSame &&
-                selectedValue !== 0 &&
-                cellValue === selectedValue &&
-                !isSelected;
+                const isSameNumber =
+                  settings.highlightSame &&
+                  selectedValue !== 0 &&
+                  cellValue === selectedValue &&
+                  !isSelected;
 
-              const isConflict = settings.showErrors && state.conflicts.includes(idx);
-              const isHintTarget = activeHint && activeHint.cellIndex === idx;
+                const isConflict = settings.showErrors && state.conflicts.includes(idx);
+                const isHintTarget = activeHint && activeHint.cellIndex === idx;
 
-              // 3x3 block dividers (thicker ink borders)
-              const isRight3x3 = c === 2 || c === 5;
-              const isBottom3x3 = r === 2 || r === 5;
+                // 3x3 block dividers (thicker ink borders)
+                const isRight3x3 = c === 2 || c === 5;
+                const isBottom3x3 = r === 2 || r === 5;
 
-              // Regular cell borders matching Zen ink aesthetic
-              const borderRight = isRight3x3
-                ? 'border-r-2 border-r-slate-900'
-                : c < 8
-                ? 'border-r border-r-stone-400/35'
-                : '';
+                // Vector cell borders: 100% straight, no subpixel drift
+                const borderRight = isRight3x3
+                  ? 'border-r-2 border-r-stone-800 dark:border-r-stone-200'
+                  : c < 8
+                  ? 'border-r border-r-stone-300 dark:border-r-stone-700'
+                  : '';
 
-              const borderBottom = isBottom3x3
-                ? 'border-b-2 border-b-slate-900'
-                : r < 8
-                ? 'border-b border-b-stone-400/35'
-                : '';
+                const borderBottom = isBottom3x3
+                  ? 'border-b-2 border-b-stone-800 dark:border-b-stone-200'
+                  : r < 8
+                  ? 'border-b border-b-stone-300 dark:border-b-stone-700'
+                  : '';
 
-              // Line/box complete flash
-              const isFlashingUnit =
-                completedUnitsFlashed.rows.includes(r) ||
-                completedUnitsFlashed.cols.includes(c) ||
-                completedUnitsFlashed.boxes.includes(b);
+                // Line/box complete flash
+                const isFlashingUnit =
+                  completedUnitsFlashed.rows.includes(r) ||
+                  completedUnitsFlashed.cols.includes(c) ||
+                  completedUnitsFlashed.boxes.includes(b);
 
-              let cellBg = 'bg-transparent';
-              if (isSelected) {
-                cellBg = 'bg-amber-300/80 text-slate-950 font-black ring-2 ring-amber-600 z-10';
-              } else if (isHintTarget) {
-                cellBg = 'bg-emerald-300/80 ring-2 ring-emerald-600 animate-pulse z-10';
-              } else if (isConflict) {
-                cellBg = 'bg-rose-400/80 text-rose-950 font-black animate-shake z-10';
-              } else if (isSameNumber) {
-                cellBg = 'bg-amber-200/60 font-black text-amber-950';
-              } else if (isPeer) {
-                cellBg = 'bg-amber-100/30';
-              }
+                let cellBg = 'bg-[#faf8f1] dark:bg-slate-900';
+                if (isSelected) {
+                  cellBg = 'bg-amber-300 dark:bg-amber-500 text-slate-950 font-black ring-2 ring-amber-600 ring-inset z-10';
+                } else if (isHintTarget) {
+                  cellBg = 'bg-emerald-300 dark:bg-emerald-500 ring-2 ring-emerald-600 ring-inset animate-pulse z-10';
+                } else if (isConflict) {
+                  cellBg = 'bg-rose-200 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 font-black animate-shake z-10';
+                } else if (isSameNumber) {
+                  cellBg = 'bg-amber-100 dark:bg-amber-900/40 font-black text-amber-950 dark:text-amber-100';
+                } else if (isPeer) {
+                  cellBg = 'bg-stone-100/90 dark:bg-slate-800/60';
+                }
 
-              if (isFlashingUnit) {
-                cellBg = 'bg-blue-300/80 animate-flashLine';
-              }
+                if (isFlashingUnit) {
+                  cellBg = 'bg-blue-300 dark:bg-blue-700 animate-flashLine';
+                }
 
-              return (
-                <div
-                  key={idx}
-                  role="gridcell"
-                  tabIndex={0}
-                  aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
-                  aria-selected={isSelected}
-                  onClick={() => handleCellClick(idx)}
-                  className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg} ${borderRight} ${borderBottom}`}
-                >
-                  {cellValue !== 0 ? (
-                    <span
-                      className={`font-black text-lg sm:text-2xl font-serif select-none ${
-                        isGiven
-                          ? 'text-slate-950 font-black'
-                          : isConflict
-                          ? 'text-rose-700 font-black'
-                          : 'text-blue-800 font-extrabold'
-                      }`}
-                    >
-                      {cellValue}
-                    </span>
-                  ) : (
-                    /* Candidate Notes 3x3 Grid */
-                    <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 leading-none pointer-events-none">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                        <span
-                          key={num}
-                          className={`flex items-center justify-center ${
-                            state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900' : 'opacity-0'
-                          }`}
-                        >
-                          {num}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={idx}
+                    role="gridcell"
+                    tabIndex={0}
+                    aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
+                    aria-selected={isSelected}
+                    onClick={() => handleCellClick(idx)}
+                    className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg} ${borderRight} ${borderBottom}`}
+                  >
+                    {cellValue !== 0 ? (
+                      <span
+                        className={`font-black text-lg sm:text-2xl font-serif select-none ${
+                          isGiven
+                            ? 'text-slate-950 dark:text-stone-100 font-black'
+                            : isConflict
+                            ? 'text-rose-700 dark:text-rose-400 font-black'
+                            : 'text-blue-800 dark:text-blue-400 font-extrabold'
+                        }`}
+                      >
+                        {cellValue}
+                      </span>
+                    ) : (
+                      /* Candidate Notes 3x3 Grid */
+                      <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 dark:text-stone-300 leading-none pointer-events-none">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                          <span
+                            key={num}
+                            className={`flex items-center justify-center ${
+                              state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900 dark:text-stone-100' : 'opacity-0'
+                            }`}
+                          >
+                            {num}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Bottom Zen Sheet Footer: Traditional Rules Plaque */}
-          <div className="absolute top-[78.2%] left-0 right-0 bottom-0 flex items-center justify-center px-4 pointer-events-none select-none z-10">
+          <div className="relative z-10 w-full flex items-center justify-center pt-0.5 pb-0.5 pointer-events-none select-none">
             {/* Center: Rules Plaque */}
-            <div className="max-w-[260px] sm:max-w-[280px] mx-auto px-3 py-1.5 rounded-xl bg-white/85 backdrop-blur-xs border border-amber-900/15 shadow-xs text-center">
-              <div className="text-[9px] sm:text-[10px] font-serif font-black text-stone-700 tracking-widest">
+            <div className="max-w-[270px] sm:max-w-[290px] mx-auto px-3 py-1 sm:py-1.5 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
+              <div className="text-[9px] sm:text-[10px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest">
                 — 스 도 쿠  규 칙 —
               </div>
-              <div className="text-[8px] sm:text-[8.5px] font-bold text-slate-900 mt-0.5 leading-tight">
+              <div className="text-[8px] sm:text-[8.5px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
                 가로줄 · 세로줄 · 3×3 박스에 1부터 9까지
               </div>
-              <div className="text-[7.5px] sm:text-[8px] font-medium text-stone-600 mt-0.5 leading-tight">
+              <div className="text-[7.5px] sm:text-[8px] font-medium text-stone-600 dark:text-stone-400 mt-0.5 leading-tight">
                 숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
               </div>
             </div>

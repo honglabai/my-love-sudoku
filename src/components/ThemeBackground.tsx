@@ -13,9 +13,9 @@ export const ThemeBackground: React.FC<ThemeBackgroundProps> = ({
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
       {/* Zen Ambient Watercolor Background Halo */}
       <picture>
-        <source srcSet={`/assets/backgrounds/zen_sheet_level_${worldId}.webp`} type="image/webp" />
+        <source srcSet={`/assets/wallpapers/world_${worldId}.webp`} type="image/webp" />
         <img
-          src={`/assets/backgrounds/zen_sheet_level_${worldId}.jpg`}
+          src={`/assets/wallpapers/world_${worldId}.jpg`}
           alt="스도쿠 배경"
           aria-hidden="true"
           className={`w-full h-full object-cover object-center transition-all duration-700 ${
