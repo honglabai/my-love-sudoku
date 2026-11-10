@@ -526,114 +526,113 @@ export const GamePage: React.FC<GamePageProps> = ({
             </div>
           </div>
 
-          {/* Razor-Sharp 9x9 Vector Sudoku Grid mathematically aligned */}
+          {/* Razor-Sharp Sudoku Grid: 9 Bold 3x3 Boxes with Clean Gray Inner Lines */}
           <div className="relative z-10 w-full flex items-center justify-center my-auto">
             <div
               role="grid"
               aria-label="스도쿠 게임 보드"
-              className="w-full max-w-[min(296px,calc(100vw-68px))] aspect-square grid grid-cols-9 grid-rows-9 bg-[#faf8f1] dark:bg-slate-900 rounded-xl shadow-xl border-2 border-stone-800 dark:border-stone-200 overflow-hidden"
+              className="w-full max-w-[min(300px,calc(100vw-64px))] aspect-square grid grid-cols-3 grid-rows-3 gap-[2.5px] bg-slate-900 dark:bg-stone-100 p-[2.5px] rounded-xl shadow-xl border-2 border-slate-900 dark:border-stone-100 select-none overflow-hidden"
             >
-              {state.board.map((cellValue, idx) => {
-                const isGiven = state.givens[idx];
-                const isSelected = state.selectedCell === idx;
-                const r = getRow(idx);
-                const c = getCol(idx);
-                const b = getBox(idx);
+              {[0, 1, 2].map(boxRow =>
+                [0, 1, 2].map(boxCol => {
+                  const boxIdx = boxRow * 3 + boxCol;
+                  return (
+                    <div
+                      key={boxIdx}
+                      className="grid grid-cols-3 grid-rows-3 gap-[1px] bg-stone-400 dark:bg-stone-600 overflow-hidden"
+                    >
+                      {[0, 1, 2].map(innerRow =>
+                        [0, 1, 2].map(innerCol => {
+                          const r = boxRow * 3 + innerRow;
+                          const c = boxCol * 3 + innerCol;
+                          const idx = r * 9 + c;
+                          const cellValue = state.board[idx];
+                          const isGiven = state.givens[idx];
+                          const isSelected = state.selectedCell === idx;
+                          const b = boxIdx;
 
-                const isPeer =
-                  state.selectedCell !== null &&
-                  !isSelected &&
-                  (r === selectedRow || c === selectedCol || b === selectedBox);
+                          const isPeer =
+                            state.selectedCell !== null &&
+                            !isSelected &&
+                            (r === selectedRow || c === selectedCol || b === selectedBox);
 
-                const isSameNumber =
-                  settings.highlightSame &&
-                  selectedValue !== 0 &&
-                  cellValue === selectedValue &&
-                  !isSelected;
+                          const isSameNumber =
+                            settings.highlightSame &&
+                            selectedValue !== 0 &&
+                            cellValue === selectedValue &&
+                            !isSelected;
 
-                const isConflict = settings.showErrors && state.conflicts.includes(idx);
-                const isHintTarget = activeHint && activeHint.cellIndex === idx;
+                          const isConflict = settings.showErrors && state.conflicts.includes(idx);
+                          const isHintTarget = activeHint && activeHint.cellIndex === idx;
 
-                // 3x3 block dividers (thicker ink borders)
-                const isRight3x3 = c === 2 || c === 5;
-                const isBottom3x3 = r === 2 || r === 5;
+                          // Line/box complete flash
+                          const isFlashingUnit =
+                            completedUnitsFlashed.rows.includes(r) ||
+                            completedUnitsFlashed.cols.includes(c) ||
+                            completedUnitsFlashed.boxes.includes(b);
 
-                // Vector cell borders: 100% straight, no subpixel drift
-                const borderRight = isRight3x3
-                  ? 'border-r-2 border-r-stone-800 dark:border-r-stone-200'
-                  : c < 8
-                  ? 'border-r border-r-stone-300 dark:border-r-stone-700'
-                  : '';
+                          let cellBg = 'bg-[#faf8f1] dark:bg-slate-900';
+                          if (isSelected) {
+                            cellBg = 'bg-amber-300 dark:bg-amber-500 text-slate-950 font-black ring-2 ring-amber-600 ring-inset z-10';
+                          } else if (isHintTarget) {
+                            cellBg = 'bg-emerald-300 dark:bg-emerald-500 ring-2 ring-emerald-600 ring-inset animate-pulse z-10';
+                          } else if (isConflict) {
+                            cellBg = 'bg-rose-200 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 font-black animate-shake z-10';
+                          } else if (isSameNumber) {
+                            cellBg = 'bg-amber-100 dark:bg-amber-900/40 font-black text-amber-950 dark:text-amber-100';
+                          } else if (isPeer) {
+                            cellBg = 'bg-stone-100/90 dark:bg-slate-800/60';
+                          }
 
-                const borderBottom = isBottom3x3
-                  ? 'border-b-2 border-b-stone-800 dark:border-b-stone-200'
-                  : r < 8
-                  ? 'border-b border-b-stone-300 dark:border-b-stone-700'
-                  : '';
+                          if (isFlashingUnit) {
+                            cellBg = 'bg-blue-300 dark:bg-blue-700 animate-flashLine';
+                          }
 
-                // Line/box complete flash
-                const isFlashingUnit =
-                  completedUnitsFlashed.rows.includes(r) ||
-                  completedUnitsFlashed.cols.includes(c) ||
-                  completedUnitsFlashed.boxes.includes(b);
-
-                let cellBg = 'bg-[#faf8f1] dark:bg-slate-900';
-                if (isSelected) {
-                  cellBg = 'bg-amber-300 dark:bg-amber-500 text-slate-950 font-black ring-2 ring-amber-600 ring-inset z-10';
-                } else if (isHintTarget) {
-                  cellBg = 'bg-emerald-300 dark:bg-emerald-500 ring-2 ring-emerald-600 ring-inset animate-pulse z-10';
-                } else if (isConflict) {
-                  cellBg = 'bg-rose-200 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 font-black animate-shake z-10';
-                } else if (isSameNumber) {
-                  cellBg = 'bg-amber-100 dark:bg-amber-900/40 font-black text-amber-950 dark:text-amber-100';
-                } else if (isPeer) {
-                  cellBg = 'bg-stone-100/90 dark:bg-slate-800/60';
-                }
-
-                if (isFlashingUnit) {
-                  cellBg = 'bg-blue-300 dark:bg-blue-700 animate-flashLine';
-                }
-
-                return (
-                  <div
-                    key={idx}
-                    role="gridcell"
-                    tabIndex={0}
-                    aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
-                    aria-selected={isSelected}
-                    onClick={() => handleCellClick(idx)}
-                    className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg} ${borderRight} ${borderBottom}`}
-                  >
-                    {cellValue !== 0 ? (
-                      <span
-                        className={`font-black text-lg sm:text-2xl font-serif select-none ${
-                          isGiven
-                            ? 'text-slate-950 dark:text-stone-100 font-black'
-                            : isConflict
-                            ? 'text-rose-700 dark:text-rose-400 font-black'
-                            : 'text-blue-800 dark:text-blue-400 font-extrabold'
-                        }`}
-                      >
-                        {cellValue}
-                      </span>
-                    ) : (
-                      /* Candidate Notes 3x3 Grid */
-                      <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 dark:text-stone-300 leading-none pointer-events-none">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                          <span
-                            key={num}
-                            className={`flex items-center justify-center ${
-                              state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900 dark:text-stone-100' : 'opacity-0'
-                            }`}
-                          >
-                            {num}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                          return (
+                            <div
+                              key={idx}
+                              role="gridcell"
+                              tabIndex={0}
+                              aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
+                              aria-selected={isSelected}
+                              onClick={() => handleCellClick(idx)}
+                              className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg}`}
+                            >
+                              {cellValue !== 0 ? (
+                                <span
+                                  className={`font-black text-lg sm:text-2xl font-serif select-none ${
+                                    isGiven
+                                      ? 'text-slate-950 dark:text-stone-100 font-black'
+                                      : isConflict
+                                      ? 'text-rose-700 dark:text-rose-400 font-black'
+                                      : 'text-blue-800 dark:text-blue-400 font-extrabold'
+                                  }`}
+                                >
+                                  {cellValue}
+                                </span>
+                              ) : (
+                                /* Candidate Notes 3x3 Grid */
+                                <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 dark:text-stone-300 leading-none pointer-events-none">
+                                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                                    <span
+                                      key={num}
+                                      className={`flex items-center justify-center ${
+                                        state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900 dark:text-stone-100' : 'opacity-0'
+                                      }`}
+                                    >
+                                      {num}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
