@@ -518,113 +518,135 @@ export const GamePage: React.FC<GamePageProps> = ({
             </div>
           </div>
 
-          {/* Razor-Sharp Sudoku Grid: 9 Bold 3x3 Boxes with Clean Gray Inner Lines */}
+          {/* Razor-Sharp Sudoku Grid: 81 Cells with Infallible Vector SVG Grid Overlay */}
           <div className="relative z-10 w-full flex items-center justify-center my-auto">
             <div
               role="grid"
               aria-label="스도쿠 게임 보드"
-              className="w-full max-w-[min(300px,calc(100vw-64px))] aspect-square grid grid-cols-3 grid-rows-3 gap-[2.5px] bg-slate-900 dark:bg-stone-100 p-[2.5px] rounded-xl shadow-xl border-2 border-slate-900 dark:border-stone-100 select-none overflow-hidden"
+              className="relative w-full max-w-[min(300px,calc(100vw-64px))] aspect-square rounded-xl shadow-xl overflow-hidden border-[2.5px] border-slate-900 dark:border-stone-100 select-none bg-[#faf8f1] dark:bg-slate-900"
             >
-              {[0, 1, 2].map(boxRow =>
-                [0, 1, 2].map(boxCol => {
-                  const boxIdx = boxRow * 3 + boxCol;
+              {/* Layer 1: 9x9 Interactive Cells Grid */}
+              <div className="w-full h-full grid grid-cols-9 grid-rows-9">
+                {Array.from({ length: 81 }, (_, idx) => {
+                  const r = Math.floor(idx / 9);
+                  const c = idx % 9;
+                  const b = Math.floor(r / 3) * 3 + Math.floor(c / 3);
+                  const cellValue = state.board[idx];
+                  const isGiven = state.givens[idx];
+                  const isSelected = state.selectedCell === idx;
+
+                  const isPeer =
+                    state.selectedCell !== null &&
+                    !isSelected &&
+                    (r === selectedRow || c === selectedCol || b === selectedBox);
+
+                  const isSameNumber =
+                    settings.highlightSame &&
+                    selectedValue !== 0 &&
+                    cellValue === selectedValue &&
+                    !isSelected;
+
+                  const isConflict = settings.showErrors && state.conflicts.includes(idx);
+                  const isHintTarget = activeHint && activeHint.cellIndex === idx;
+
+                  // Line/box complete flash
+                  const isFlashingUnit =
+                    completedUnitsFlashed.rows.includes(r) ||
+                    completedUnitsFlashed.cols.includes(c) ||
+                    completedUnitsFlashed.boxes.includes(b);
+
+                  let cellBg = 'bg-[#faf8f1] dark:bg-slate-900';
+                  if (isSelected) {
+                    cellBg = 'bg-amber-300 dark:bg-amber-500 text-slate-950 font-black';
+                  } else if (isHintTarget) {
+                    cellBg = 'bg-emerald-300 dark:bg-emerald-500 animate-pulse';
+                  } else if (isConflict) {
+                    cellBg = 'bg-rose-200 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 font-black animate-shake';
+                  } else if (isSameNumber) {
+                    cellBg = 'bg-amber-100 dark:bg-amber-900/40 font-black text-amber-950 dark:text-amber-100';
+                  } else if (isPeer) {
+                    cellBg = 'bg-stone-100/90 dark:bg-slate-800/60';
+                  }
+
+                  if (isFlashingUnit) {
+                    cellBg = 'bg-blue-300 dark:bg-blue-700 animate-flashLine';
+                  }
+
                   return (
                     <div
-                      key={boxIdx}
-                      className="grid grid-cols-3 grid-rows-3 gap-[1px] bg-stone-400 dark:bg-stone-600 overflow-hidden"
+                      key={idx}
+                      role="gridcell"
+                      tabIndex={0}
+                      aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
+                      aria-selected={isSelected}
+                      onClick={() => handleCellClick(idx)}
+                      className={`relative flex items-center justify-center w-full h-full cursor-pointer transition-colors duration-100 select-none ${cellBg}`}
                     >
-                      {[0, 1, 2].map(innerRow =>
-                        [0, 1, 2].map(innerCol => {
-                          const r = boxRow * 3 + innerRow;
-                          const c = boxCol * 3 + innerCol;
-                          const idx = r * 9 + c;
-                          const cellValue = state.board[idx];
-                          const isGiven = state.givens[idx];
-                          const isSelected = state.selectedCell === idx;
-                          const b = boxIdx;
-
-                          const isPeer =
-                            state.selectedCell !== null &&
-                            !isSelected &&
-                            (r === selectedRow || c === selectedCol || b === selectedBox);
-
-                          const isSameNumber =
-                            settings.highlightSame &&
-                            selectedValue !== 0 &&
-                            cellValue === selectedValue &&
-                            !isSelected;
-
-                          const isConflict = settings.showErrors && state.conflicts.includes(idx);
-                          const isHintTarget = activeHint && activeHint.cellIndex === idx;
-
-                          // Line/box complete flash
-                          const isFlashingUnit =
-                            completedUnitsFlashed.rows.includes(r) ||
-                            completedUnitsFlashed.cols.includes(c) ||
-                            completedUnitsFlashed.boxes.includes(b);
-
-                          let cellBg = 'bg-[#faf8f1] dark:bg-slate-900';
-                          if (isSelected) {
-                            cellBg = 'bg-amber-300 dark:bg-amber-500 text-slate-950 font-black ring-2 ring-amber-600 ring-inset z-10';
-                          } else if (isHintTarget) {
-                            cellBg = 'bg-emerald-300 dark:bg-emerald-500 ring-2 ring-emerald-600 ring-inset animate-pulse z-10';
-                          } else if (isConflict) {
-                            cellBg = 'bg-rose-200 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 font-black animate-shake z-10';
-                          } else if (isSameNumber) {
-                            cellBg = 'bg-amber-100 dark:bg-amber-900/40 font-black text-amber-950 dark:text-amber-100';
-                          } else if (isPeer) {
-                            cellBg = 'bg-stone-100/90 dark:bg-slate-800/60';
-                          }
-
-                          if (isFlashingUnit) {
-                            cellBg = 'bg-blue-300 dark:bg-blue-700 animate-flashLine';
-                          }
-
-                          return (
-                            <div
-                              key={idx}
-                              role="gridcell"
-                              tabIndex={0}
-                              aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
-                              aria-selected={isSelected}
-                              onClick={() => handleCellClick(idx)}
-                              className={`relative flex items-center justify-center aspect-square cursor-pointer transition-colors duration-100 select-none ${cellBg}`}
+                      {cellValue !== 0 ? (
+                        <span
+                          className={`font-black text-lg sm:text-2xl font-serif select-none ${
+                            isGiven
+                              ? 'text-slate-950 dark:text-stone-100 font-black'
+                              : isConflict
+                              ? 'text-rose-700 dark:text-rose-400 font-black'
+                              : 'text-blue-800 dark:text-blue-400 font-extrabold'
+                          }`}
+                        >
+                          {cellValue}
+                        </span>
+                      ) : (
+                        /* Candidate Notes 3x3 Grid */
+                        <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 dark:text-stone-300 leading-none pointer-events-none">
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                            <span
+                              key={num}
+                              className={`flex items-center justify-center ${
+                                state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900 dark:text-stone-100' : 'opacity-0'
+                              }`}
                             >
-                              {cellValue !== 0 ? (
-                                <span
-                                  className={`font-black text-lg sm:text-2xl font-serif select-none ${
-                                    isGiven
-                                      ? 'text-slate-950 dark:text-stone-100 font-black'
-                                      : isConflict
-                                      ? 'text-rose-700 dark:text-rose-400 font-black'
-                                      : 'text-blue-800 dark:text-blue-400 font-extrabold'
-                                  }`}
-                                >
-                                  {cellValue}
-                                </span>
-                              ) : (
-                                /* Candidate Notes 3x3 Grid */
-                                <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 text-[8px] sm:text-[9px] font-bold text-stone-700 dark:text-stone-300 leading-none pointer-events-none">
-                                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                                    <span
-                                      key={num}
-                                      className={`flex items-center justify-center ${
-                                        state.notes[idx].includes(num) ? 'opacity-100 font-black text-slate-900 dark:text-stone-100' : 'opacity-0'
-                                      }`}
-                                    >
-                                      {num}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })
+                              {num}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
                   );
-                })
-              )}
+                })}
+              </div>
+
+              {/* Layer 2: Vector SVG Grid Lines (On Top of Cells, Guaranteed Razor-Sharp on All Devices) */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none z-20"
+                viewBox="0 0 900 900"
+                preserveAspectRatio="none"
+                shapeRendering="crispEdges"
+              >
+                {/* 1. Thin Cell Dividing Lines: Solid Gray (1px equivalent) */}
+                {/* Verticals for individual cells */}
+                <line x1="100" y1="0" x2="100" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="200" y1="0" x2="200" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="400" y1="0" x2="400" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="500" y1="0" x2="500" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="700" y1="0" x2="700" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="800" y1="0" x2="800" y2="900" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+
+                {/* Horizontals for individual cells */}
+                <line x1="0" y1="100" x2="900" y2="100" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="0" y1="200" x2="900" y2="200" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="0" y1="400" x2="900" y2="400" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="0" y1="500" x2="900" y2="500" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="0" y1="700" x2="900" y2="700" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+                <line x1="0" y1="800" x2="900" y2="800" className="stroke-stone-400 dark:stroke-stone-500" strokeWidth="2.5" />
+
+                {/* 2. Bold 3x3 Box Dividing Lines: Bold Dark in Light Mode / Crisp Bright Silver in Dark Mode */}
+                {/* Major Verticals */}
+                <line x1="300" y1="0" x2="300" y2="900" className="stroke-slate-900 dark:stroke-stone-100" strokeWidth="7" />
+                <line x1="600" y1="0" x2="600" y2="900" className="stroke-slate-900 dark:stroke-stone-100" strokeWidth="7" />
+
+                {/* Major Horizontals */}
+                <line x1="0" y1="300" x2="900" y2="300" className="stroke-slate-900 dark:stroke-stone-100" strokeWidth="7" />
+                <line x1="0" y1="600" x2="900" y2="600" className="stroke-slate-900 dark:stroke-stone-100" strokeWidth="7" />
+              </svg>
             </div>
           </div>
 
