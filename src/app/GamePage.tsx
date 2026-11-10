@@ -421,7 +421,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-3 select-none">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto pt-2 px-2 pb-0 sm:pt-3 sm:px-3 sm:pb-0 select-none">
       {/* Top Sleek Control Bar - Compact Rounded-xl Buttons, Zero Text Wrapping */}
       <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
         <button
@@ -668,8 +668,8 @@ export const GamePage: React.FC<GamePageProps> = ({
         </div>
       </main>
 
-      {/* Floating Bottom Card: Controls & Numpad */}
-      <footer className="w-full max-w-[385px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 sm:p-2 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-1 mt-0.5 select-none">
+      {/* Bottom Menu Card: Controls & Numpad Flush to Bottom Edge */}
+      <footer className="w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-t-2xl rounded-b-none p-1.5 sm:p-2 pb-2 sm:pb-3 border-t border-slate-200/80 dark:border-slate-800 shadow-2xl space-y-1 mt-auto select-none">
         {/* Action Controls Row */}
         <div className="grid grid-cols-6 gap-1 px-0.5">
           <button

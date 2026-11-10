@@ -22,10 +22,10 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   return (
     <nav
       aria-label="하단 네비게이션 메뉴"
-      className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto pointer-events-auto select-none px-2 sm:px-3 pb-1"
+      className="fixed bottom-0 left-0 right-0 z-40 w-full pointer-events-auto select-none"
     >
-      {/* Outer Dock Bar Container with Sleek Compact Height & Reduced Padding */}
-      <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.35)] px-1 py-1">
+      {/* Outer Dock Bar Container Flush to the Bottom with Zero Gap */}
+      <div className="max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/80 dark:border-slate-800 rounded-t-2xl sm:rounded-t-3xl rounded-b-none shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.35)] px-1.5 pt-1 pb-1 sm:pb-2">
         <div className="flex items-center justify-between relative">
           
           {/* Tab 1: 홈 (Home) */}
