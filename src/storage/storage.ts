@@ -31,7 +31,7 @@ export const STORAGE_KEY = 'MY_LOVE_SUDOKU_DATA_V1';
 
 export const DEFAULT_SETTINGS: UserSettings = {
   soundEnabled: true,
-  theme: 'system',
+  theme: 'light',
   showErrors: true,
   autoRemoveNotes: true,
   highlightSame: true,
@@ -103,9 +103,11 @@ export function migrateOrSanitize(parsed: unknown): SaveDataV1 {
     }
   }
 
+  const rawSettings = (obj.settings as Partial<UserSettings>) || {};
   const settings: UserSettings = {
     ...defaultData.settings,
-    ...((obj.settings as UserSettings) || {})
+    ...rawSettings,
+    theme: rawSettings.theme === 'dark' ? 'dark' : rawSettings.theme === 'system' ? 'system' : 'light'
   };
 
   return {

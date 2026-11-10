@@ -20,7 +20,6 @@ import { DailyQuestPage } from './DailyQuestPage';
 import { GamePage } from './GamePage';
 import { ResultPage } from './ResultPage';
 import { ProfilePage } from './ProfilePage';
-import { SettingsPage } from './SettingsPage';
 
 export type AppView = 'home' | 'stage-map' | 'daily-quest' | 'game' | 'result' | 'profile' | 'settings';
 
@@ -292,17 +291,25 @@ export const App: React.FC = () => {
         <ProfilePage
           progression={data.progression}
           achievements={data.achievements}
+          settings={data.settings}
+          onUpdateSettings={handleUpdateSettings}
           onEquipTitle={handleEquipTitle}
           onResetData={handleResetData}
           onBack={() => setCurrentView('home')}
+          initialTab="profile"
         />
       )}
 
       {currentView === 'settings' && (
-        <SettingsPage
+        <ProfilePage
+          progression={data.progression}
+          achievements={data.achievements}
           settings={data.settings}
           onUpdateSettings={handleUpdateSettings}
+          onEquipTitle={handleEquipTitle}
+          onResetData={handleResetData}
           onBack={() => setCurrentView('home')}
+          initialTab="settings"
         />
       )}
 

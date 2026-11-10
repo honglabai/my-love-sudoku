@@ -39,7 +39,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="홈 화면으로 이동"
           >
             <span className="text-lg leading-none transition-transform active:scale-90">🏠</span>
-            <span className="text-[10px] sm:text-[10.5px] mt-0.5 tracking-tight font-bold leading-none">홈</span>
+            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">홈</span>
             {currentView === 'home' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -56,7 +56,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="스테이지 여정보기 화면으로 이동"
           >
             <span className="text-lg leading-none transition-transform active:scale-90">🗺️</span>
-            <span className="text-[10px] sm:text-[10.5px] mt-0.5 tracking-tight font-bold leading-none">여정보기</span>
+            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">여정보기</span>
             {currentView === 'stage-map' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -76,7 +76,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                   {hasActiveGame ? '▶️' : '🎮'}
                 </span>
               </div>
-              <span className="text-[9.5px] sm:text-[10px] font-black text-slate-800 dark:text-slate-200 mt-0.5 leading-none tracking-tight">
+              <span className="text-[10.5px] sm:text-[11px] font-black text-slate-800 dark:text-slate-200 mt-0.5 leading-none tracking-tight">
                 {hasActiveGame ? '이어하기' : '게임하기'}
               </span>
             </button>
@@ -93,7 +93,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="일일 여정 도전 화면으로 이동"
           >
             <span className="text-lg leading-none transition-transform active:scale-90">🗓️</span>
-            <span className="text-[10px] sm:text-[10.5px] mt-0.5 tracking-tight font-bold leading-none">일일 여정</span>
+            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">일일 여정</span>
             {currentView === 'daily-quest' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -110,7 +110,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="마이페이지 화면으로 이동"
           >
             <span className="text-lg leading-none transition-transform active:scale-90">👤</span>
-            <span className="text-[10px] sm:text-[10.5px] mt-0.5 tracking-tight font-bold leading-none">My Page</span>
+            <span className="text-[11px] sm:text-xs mt-0.5 tracking-tight font-bold leading-none">My Page</span>
             {(currentView === 'profile' || currentView === 'settings') && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}

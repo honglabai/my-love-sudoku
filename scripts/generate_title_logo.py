@@ -63,13 +63,11 @@ def create_title_logo(dark_mode=False):
     seal_gap = 16
     seal_size = 46
     
-    total_w = love_w + sudoku_w + seal_gap + seal_size
-    start_x = (WIDTH - total_w) // 2 + 10 # slightly offset for cherry branch
+    total_w = love_w + sudoku_w
+    start_x = (WIDTH - total_w) // 2 # Perfectly centered
     
     love_x = start_x
     sudoku_x = start_x + love_w
-    seal_x = sudoku_x + sudoku_w + seal_gap
-    seal_y = center_y - 28
     
     # Colors depending on mode
     love_color = (235, 75, 105, 255) if dark_mode else (205, 45, 75, 255)
@@ -88,18 +86,11 @@ def create_title_logo(dark_mode=False):
     # 3. Draw Main Texts
     t_draw.text((love_x, center_y), t_love, fill=love_color, font=FONT_MAIN_TITLE, anchor="lm")
     t_draw.text((sudoku_x, center_y), t_sudoku, fill=sudoku_color, font=FONT_MAIN_TITLE, anchor="lm")
-    
-    # 4. Korean Red Seal Stamp [愛] or [정심]
-    # Red background
-    t_draw.rectangle([seal_x, seal_y, seal_x + seal_size, seal_y + seal_size], outline=SEAL_RED, width=3)
-    t_draw.rectangle([seal_x + 3, seal_y + 3, seal_x + seal_size - 3, seal_y + seal_size - 3], outline=(225, 100, 100, 255), width=1)
-    t_draw.rectangle([seal_x + 4, seal_y + 4, seal_x + seal_size - 4, seal_y + seal_size - 4], fill=(255, 240, 242, 250))
-    t_draw.text((seal_x + seal_size // 2, seal_y + seal_size // 2), "愛", fill=SEAL_RED, font=FONT_SEAL_BIG, anchor="mm")
 
-    # 5. Traditional Decorative Underline & Motto
+    # 4. Traditional Decorative Underline & Motto
     divider_y = center_y + 48
-    line_left = start_x - 10
-    line_right = seal_x + seal_size + 10
+    line_left = start_x - 15
+    line_right = start_x + total_w + 15
     
     # Thin elegant divider lines with center diamond
     t_draw.line([(line_left, divider_y), (WIDTH // 2 - 25, divider_y)], fill=(195, 145, 60, 180), width=1)

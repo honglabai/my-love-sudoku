@@ -21,18 +21,18 @@
 }
 
 @layer utilities {
-  /* 3D Tactile Button Styles (Inspired by Ridi Gamification UI) */
+  /* 3D Tactile Button Styles (Slimmer, sleek profile with compact depth) */
   .btn-3d-primary {
-    @apply bg-blue-600 hover:bg-blue-500 text-white font-extrabold shadow-[0_4px_0_#1d4ed8] active:shadow-none active:translate-y-1 transition-all;
+    @apply bg-blue-600 hover:bg-blue-500 text-white font-extrabold shadow-[0_2.5px_0_#1d4ed8] active:shadow-none active:translate-y-[2px] transition-all;
   }
   .btn-3d-accent {
-    @apply bg-amber-500 hover:bg-amber-400 text-white font-extrabold shadow-[0_4px_0_#b45309] active:shadow-none active:translate-y-1 transition-all;
+    @apply bg-amber-500 hover:bg-amber-400 text-white font-extrabold shadow-[0_2.5px_0_#b45309] active:shadow-none active:translate-y-[2px] transition-all;
   }
   .btn-3d-secondary {
-    @apply bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold shadow-[0_3px_0_#cbd5e1] dark:shadow-[0_3px_0_#0f172a] active:shadow-none active:translate-y-1 transition-all;
+    @apply bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold shadow-[0_2px_0_#cbd5e1] dark:shadow-[0_2px_0_#0f172a] active:shadow-none active:translate-y-[1.5px] transition-all;
   }
   .btn-3d-rose {
-    @apply bg-rose-500 hover:bg-rose-400 text-white font-extrabold shadow-[0_4px_0_#be123c] active:shadow-none active:translate-y-1 transition-all;
+    @apply bg-rose-500 hover:bg-rose-400 text-white font-extrabold shadow-[0_2.5px_0_#be123c] active:shadow-none active:translate-y-[2px] transition-all;
   }
 
   /* Traditional Korean Red Stamp Seal */

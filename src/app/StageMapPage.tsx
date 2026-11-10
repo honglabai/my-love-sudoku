@@ -56,22 +56,22 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
           ← 홈으로
         </Button>
         <div className="text-center">
-          <h2 className="text-base font-black text-slate-900 dark:text-slate-100">
+          <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
             스테이지 여정
           </h2>
-          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
             총 별점: ⭐ {progression.totalStars} / 150
           </span>
         </div>
         <div className="w-16 text-right">
-          <Badge variant="blue" size="sm">
+          <Badge variant="blue" size="sm" className="text-xs">
             Lv. {progression.level}
           </Badge>
         </div>
       </div>
 
       {/* World Selector Tabs (Segmented Pill) */}
-      <div className="grid grid-cols-5 gap-1 p-1 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-full mb-3 shadow-sm">
+      <div className="grid grid-cols-5 gap-1 p-1 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl mb-3 shadow-sm">
         {WORLDS.map(w => {
           const isCurrent = w.id === selectedWorldId;
           const isWorldUnlocked = progression.unlockedStageMax >= w.stageStart;
@@ -79,15 +79,15 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
             <button
               key={w.id}
               onClick={() => handleSelectWorld(w.id)}
-              className={`py-2 px-1 text-center rounded-full transition-all font-bold text-xs ${
+              className={`py-1.5 px-1 text-center rounded-xl transition-all font-bold text-xs ${
                 isCurrent
-                  ? 'bg-blue-600 text-white shadow-md'
+                  ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <div>{w.id}월드</div>
-              <div className="text-[10px] font-normal truncate opacity-85">{w.name}</div>
-              {!isWorldUnlocked && <div className="text-[10px] mt-0.5">🔒</div>}
+              <div className="text-[11px] font-medium truncate opacity-90">{w.name}</div>
+              {!isWorldUnlocked && <div className="text-xs mt-0.5">🔒</div>}
             </button>
           );
         })}

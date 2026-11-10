@@ -422,27 +422,28 @@ export const GamePage: React.FC<GamePageProps> = ({
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto p-2 sm:p-3 select-none">
-      {/* Top Floating Control Bar */}
-      <header className="w-full flex items-center justify-between pt-1 pb-2 px-1">
-        <Button variant="ghost" size="sm" pill onClick={onExit} aria-label="이전 화면으로 이동" className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800">
+      {/* Top Sleek Control Bar - Compact Rounded-xl Buttons, Zero Text Wrapping */}
+      <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
+        <button
+          onClick={onExit}
+          aria-label="이전 화면으로 이동"
+          className="flex items-center justify-center px-2 py-1 min-h-[30px] rounded-xl text-xs font-bold whitespace-nowrap bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 active:scale-95 transition-all"
+        >
           ← 나가기
-        </Button>
+        </button>
 
-        <div className="text-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200/60 dark:border-slate-800 shadow-sm">
-          <div className="flex items-center justify-center gap-1.5">
-            <span className="korean-seal text-[9px] py-0 px-1">
-              {stage.worldName}
-            </span>
-            <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100">
-              {stage.id}단계. {stage.title}
+        <div className="flex-1 min-w-0 text-center bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-2 py-1 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <div className="flex items-center justify-center gap-1">
+            <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
+              {stage.id}단계 · {stage.title}
             </h2>
             {stage.isBoss && (
-              <Badge variant="amber" size="sm">
+              <Badge variant="amber" size="sm" className="py-0 px-1 text-[9px]">
                 보스
               </Badge>
             )}
           </div>
-          <div className="text-[10px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-400">
+          <div className="text-[11px] sm:text-xs font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">
             시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3{' '}
             <span className="tracking-tighter">
               {state.mistakes === 0 ? '❤️❤️❤️' : state.mistakes === 1 ? '❤️❤️🖤' : state.mistakes === 2 ? '❤️🖤🖤' : '🖤🖤🖤'}
@@ -450,30 +451,24 @@ export const GamePage: React.FC<GamePageProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
+        <div className="flex items-center gap-1 shrink-0">
+          <button
             onClick={() => setShowTutorial(true)}
             aria-label="도움말 가이드"
-            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800 text-xs px-2.5"
+            className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-200 active:scale-95 transition-all p-0"
           >
             ❓
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            pill
+          </button>
+          <button
             onClick={() => {
               dispatch({ type: 'PAUSE' });
               setShowPauseModal(true);
             }}
             aria-label="게임 일시정지"
-            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border border-slate-200/60 dark:border-slate-800 text-xs px-2.5"
+            className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-200 active:scale-95 transition-all p-0"
           >
             ⏸️
-          </Button>
+          </button>
         </div>
       </header>
 
@@ -495,7 +490,7 @@ export const GamePage: React.FC<GamePageProps> = ({
 
           {/* Top Zen Sheet Header: Real HTML Typography */}
           <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
-            {/* Title: 내사랑 스도쿠 + 愛 Seal */}
+            {/* Title: 내사랑 스도쿠 (Without '愛' seal) */}
             <div className="flex items-center justify-center gap-1.5 leading-none">
               <span className="font-serif font-black text-sm sm:text-base text-rose-700 dark:text-rose-500 tracking-tight drop-shadow-xs">
                 내사랑
@@ -503,25 +498,22 @@ export const GamePage: React.FC<GamePageProps> = ({
               <span className="font-serif font-black text-sm sm:text-base text-slate-900 dark:text-slate-100 tracking-tight drop-shadow-xs">
                 스도쿠
               </span>
-              <span className="inline-flex items-center justify-center w-4 h-4 border border-rose-600 rounded-2xs text-[8px] font-serif font-black text-rose-600 bg-rose-50/90 dark:bg-rose-950/80 leading-none shadow-xs">
-                愛
-              </span>
             </div>
 
             {/* Stage Info: 제 1단계 · 첫 번째 퍼즐 */}
-            <div className="text-[10.5px] sm:text-[11.5px] font-black text-stone-900 dark:text-stone-100 tracking-wide mt-1 truncate max-w-[280px]">
+            <div className="text-xs sm:text-sm font-black text-stone-900 dark:text-stone-100 tracking-wide mt-1 truncate max-w-[280px]">
               제 {stage.id}단계 · {stage.title}
             </div>
 
             {/* World Level Theme Pill Badge */}
             <div className="mt-0.5">
-              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[8.5px] sm:text-[9.5px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
+              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9.5px] sm:text-[10.5px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
                 {zenMeta.pill}
               </span>
             </div>
 
             {/* Zen Motto / 힐링 한마디 */}
-            <div className="text-[8.5px] sm:text-[9.5px] text-stone-600 dark:text-stone-300 font-serif italic mt-0.5 tracking-tight truncate max-w-[290px]">
+            <div className="text-[9.5px] sm:text-[10.5px] text-stone-600 dark:text-stone-300 font-serif italic mt-0.5 tracking-tight truncate max-w-[290px]">
               “{zenMeta.motto}”
             </div>
           </div>
@@ -639,14 +631,14 @@ export const GamePage: React.FC<GamePageProps> = ({
           {/* Bottom Zen Sheet Footer: Traditional Rules Plaque */}
           <div className="relative z-10 w-full flex items-center justify-center pt-0.5 pb-1 pointer-events-none select-none">
             {/* Center: Rules Plaque */}
-            <div className="max-w-[270px] sm:max-w-[290px] mx-auto px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
-              <div className="text-[8.5px] sm:text-[9.5px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest leading-none">
+            <div className="max-w-[275px] sm:max-w-[295px] mx-auto px-2.5 py-1 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs border border-amber-900/15 dark:border-slate-800 shadow-xs text-center">
+              <div className="text-[9.5px] sm:text-[10.5px] font-serif font-black text-stone-700 dark:text-stone-300 tracking-widest leading-none">
                 — 스 도 쿠  규 칙 —
               </div>
-              <div className="text-[7.5px] sm:text-[8px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
+              <div className="text-[8.5px] sm:text-[9.5px] font-bold text-slate-900 dark:text-slate-100 mt-0.5 leading-tight">
                 가로줄 · 세로줄 · 3×3 박스에 1부터 9까지
               </div>
-              <div className="text-[7px] sm:text-[7.5px] font-medium text-stone-600 dark:text-stone-400 mt-0.25 leading-tight">
+              <div className="text-[8px] sm:text-[8.5px] font-medium text-stone-600 dark:text-stone-400 mt-0.25 leading-tight">
                 숫자를 중복 없이 단 한 번씩만 채워 넣으세요.
               </div>
             </div>
@@ -665,7 +657,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'UNDO' });
             }}
             disabled={state.history.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↩️</span>
             <span className="leading-tight mt-0.5">취소</span>
@@ -678,7 +670,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'REDO' });
             }}
             disabled={state.future.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↪️</span>
             <span className="leading-tight mt-0.5">다시</span>
@@ -690,7 +682,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">🧹</span>
             <span className="leading-tight mt-0.5">지우기</span>
@@ -702,7 +694,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
-            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 transition-all active:scale-95 ${
+            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 transition-all active:scale-95 ${
               state.isNoteMode
                 ? 'bg-amber-500 text-white shadow-md ring-2 ring-amber-400'
                 : 'bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs'
@@ -715,7 +707,7 @@ export const GamePage: React.FC<GamePageProps> = ({
           <button
             type="button"
             onClick={handleTriggerHint}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">💡</span>
             <span className="leading-tight mt-0.5">힌트</span>
@@ -727,7 +719,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               setShowItemDrawer(true);
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[32px] sm:min-h-[34px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0.25 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
           >
             <span className="text-xs sm:text-sm leading-none">🎒</span>
             <span className="leading-tight mt-0.5 whitespace-nowrap">아이템({totalItemCount})</span>
@@ -750,7 +742,7 @@ export const GamePage: React.FC<GamePageProps> = ({
                 }`}
               >
                 <span className="text-base sm:text-lg leading-none">{num}</span>
-                <span className="text-[8px] sm:text-[8.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
+                <span className="text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>

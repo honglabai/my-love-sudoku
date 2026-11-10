@@ -1,188 +1,426 @@
 import React, { useState } from 'react';
 import { PlayerProgression, getRequiredXPForLevel } from '../features/progression/progression';
 import { ACHIEVEMENTS } from '../features/achievements/achievements';
+import { UserSettings } from '../storage/storage';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Badge } from '../components/Badge';
 import { ProgressBar } from '../components/ProgressBar';
 import { Modal } from '../components/Modal';
+import { sound } from '../audio/sound';
 
 interface ProfilePageProps {
   progression: PlayerProgression;
   achievements: Record<string, number>;
+  settings: UserSettings;
+  onUpdateSettings: (newSettings: Partial<UserSettings>) => void;
   onEquipTitle: (title: string) => void;
   onResetData: () => void;
   onBack: () => void;
+  initialTab?: 'profile' | 'settings';
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   progression,
   achievements,
+  settings,
+  onUpdateSettings,
   onEquipTitle,
   onResetData,
-  onBack
+  onBack,
+  initialTab = 'profile'
 }) => {
+  const [activeTab, setActiveTab] = useState<'profile' | 'settings'>(initialTab);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [tutorialResetNotice, setTutorialResetNotice] = useState(false);
 
   const reqXP = getRequiredXPForLevel(progression.level);
 
   const totalCleared = Object.keys(progression.stageRecords).length;
   const perfectClears = Object.values(progression.stageRecords).filter(r => r.stars === 3).length;
 
+  const handleToggleSound = () => {
+    const nextVal = !settings.soundEnabled;
+    sound.setEnabled(nextVal);
+    if (nextVal) sound.playTap();
+    onUpdateSettings({ soundEnabled: nextVal });
+  };
+
+  const handleResetTutorial = () => {
+    try {
+      localStorage.removeItem('my_love_sudoku_tutorial_seen');
+      sound.playTap();
+      setTutorialResetNotice(true);
+      setTimeout(() => setTutorialResetNotice(false), 3000);
+    } catch {
+      // ignore
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto p-3 sm:p-4 pb-20 select-none">
+    <div className="relative z-10 flex flex-col min-h-screen max-w-md mx-auto p-3 sm:p-4 pb-20 select-none">
       {/* Top Header */}
-      <div className="flex items-center justify-between mb-4 pt-2">
-        <Button variant="ghost" size="sm" onClick={onBack}>
+      <div className="flex items-center justify-between mb-3 pt-1">
+        <Button variant="ghost" size="sm" onClick={onBack} className="text-xs">
           ← 홈으로
         </Button>
-        <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">프로필 & 업적</h2>
+        <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
+          마이페이지 (My Page)
+        </h2>
         <div className="w-16" />
       </div>
 
-      {/* Main Player Info Card */}
-      <Card className="mb-4 bg-gradient-to-br from-blue-50/50 to-indigo-50/40 dark:from-slate-900 dark:to-blue-950/20 border-blue-200/70 dark:border-blue-900/40">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/20 text-white">
-              👤
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <Badge variant="blue" size="sm">
-                  Lv. {progression.level}
-                </Badge>
-                <button
-                  onClick={() => setShowTitleModal(true)}
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  [칭호 변경]
-                </button>
-              </div>
-              <h3 className="text-base font-black text-slate-900 dark:text-slate-100 mt-0.5">
-                {progression.equippedTitle}
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        <ProgressBar
-          value={progression.currentXP}
-          max={reqXP}
-          label={`경험치 (${progression.currentXP} / ${reqXP} XP)`}
-          showPercent
-          color="blue"
-          className="mb-3"
-        />
-
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
-          <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">총 획득 별점</div>
-            <div className="text-sm font-extrabold text-amber-500">
-              ⭐ {progression.totalStars}
-            </div>
-          </div>
-          <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">클리어 스테이지</div>
-            <div className="text-sm font-extrabold text-blue-600 dark:text-blue-400">
-              {totalCleared} / 50
-            </div>
-          </div>
-          <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">3성 완벽 클리어</div>
-            <div className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
-              {perfectClears}개
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Item Inventory Section */}
-      <Card className="mb-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-amber-200/80 dark:border-amber-900/50 shadow-md">
-        <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5 flex items-center justify-between">
-          <span>🎒 보유 중인 아이템</span>
-          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">스도쿠 인게임에서 사용 가능</span>
-        </h3>
-        <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
-            <div className="text-lg mb-0.5">🔍</div>
-            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">천리안 돋보기</div>
-            <div className="text-xs font-black text-blue-600 dark:text-blue-400">{progression.inventory?.autoSolve ?? 3}개</div>
-            <div className="text-[9px] text-slate-400">정답 1칸 입력</div>
-          </div>
-          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
-            <div className="text-lg mb-0.5">💊</div>
-            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">정심환 (부활)</div>
-            <div className="text-xs font-black text-rose-600 dark:text-rose-400">{progression.inventory?.healMistake ?? 3}개</div>
-            <div className="text-[9px] text-slate-400">실수 회복 / 부활</div>
-          </div>
-          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
-            <div className="text-lg mb-0.5">🧹</div>
-            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">정화의 향</div>
-            <div className="text-xs font-black text-amber-600 dark:text-amber-400">{progression.inventory?.clearErrors ?? 3}개</div>
-            <div className="text-[9px] text-slate-400">오답 일괄 제거</div>
-          </div>
-          <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
-            <div className="text-lg mb-0.5">📜</div>
-            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">통찰의 부적</div>
-            <div className="text-xs font-black text-emerald-600 dark:text-emerald-400">{progression.inventory?.autoCandidates ?? 3}개</div>
-            <div className="text-[9px] text-slate-400">후보수 자동 메모</div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Achievements Section */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 px-1">
-          수집한 업적 배지 ({Object.keys(achievements).length} / {ACHIEVEMENTS.length})
-        </h3>
-
-        <div className="space-y-2">
-          {ACHIEVEMENTS.map(ach => {
-            const isUnlocked = !!achievements[ach.id];
-            return (
-              <Card
-                key={ach.id}
-                className={`transition-all ${
-                  isUnlocked
-                    ? 'border-amber-200/80 dark:border-amber-900/40 bg-gradient-to-r from-amber-50/20 to-transparent'
-                    : 'opacity-50 grayscale'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">{ach.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                        {ach.name}
-                      </span>
-                      {isUnlocked && (
-                        <Badge variant="amber" size="sm">
-                          {ach.rewardTitle}
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      {ach.description}
-                    </p>
-                  </div>
-                  <div>
-                    {isUnlocked ? (
-                      <span className="text-xs font-bold text-amber-500">달성</span>
-                    ) : (
-                      <span className="text-xs text-slate-400">잠김</span>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+      {/* Segmented Sub-Navigation: [👤 내 정보 & 업적] | [⚙️ 게임 설정] */}
+      <div className="flex bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-2xl mb-3 shadow-inner">
+        <button
+          onClick={() => setActiveTab('profile')}
+          className={`flex-1 py-1.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-1.5 ${
+            activeTab === 'profile'
+              ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <span>👤</span>
+          <span>내 정보 & 업적</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('settings')}
+          className={`flex-1 py-1.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-1.5 ${
+            activeTab === 'settings'
+              ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <span>⚙️</span>
+          <span>게임 설정</span>
+        </button>
       </div>
 
-      {/* Reset Data Button */}
-      <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
+      {/* TAB 1: Profile, Inventory & Achievements */}
+      {activeTab === 'profile' && (
+        <div className="space-y-3">
+          {/* Main Player Info Card */}
+          <Card className="bg-gradient-to-br from-blue-50/50 to-indigo-50/40 dark:from-slate-900 dark:to-blue-950/20 border-blue-200/70 dark:border-blue-900/40">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/20 text-white">
+                  👤
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="blue" size="sm" className="text-xs">
+                      Lv. {progression.level}
+                    </Badge>
+                    <button
+                      onClick={() => setShowTitleModal(true)}
+                      className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      [칭호 변경]
+                    </button>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-0.5">
+                    {progression.equippedTitle}
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <ProgressBar
+              value={progression.currentXP}
+              max={reqXP}
+              label={`경험치 (${progression.currentXP} / ${reqXP} XP)`}
+              showPercent
+              color="blue"
+              className="mb-3"
+            />
+
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
+              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
+                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">총 획득 별점</div>
+                <div className="text-sm sm:text-base font-extrabold text-amber-500">
+                  ⭐ {progression.totalStars}
+                </div>
+              </div>
+              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
+                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">클리어 스테이지</div>
+                <div className="text-sm sm:text-base font-extrabold text-blue-600 dark:text-blue-400">
+                  {totalCleared} / 50
+                </div>
+              </div>
+              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
+                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">3성 완벽 클리어</div>
+                <div className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                  {perfectClears}개
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Item Inventory Section */}
+          <Card className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-amber-200/80 dark:border-amber-900/50 shadow-md">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center justify-between">
+              <span>🎒 보유 중인 아이템</span>
+              <span className="text-[10.5px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold">스도쿠 인게임에서 사용 가능</span>
+            </h3>
+            <div className="grid grid-cols-2 gap-2 text-center">
+              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div className="text-xl mb-0.5">🔍</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">천리안 돋보기</div>
+                <div className="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400">{progression.inventory?.autoSolve ?? 3}개</div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">정답 1칸 입력</div>
+              </div>
+              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div className="text-xl mb-0.5">💊</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">정심환 (부활)</div>
+                <div className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">{progression.inventory?.healMistake ?? 3}개</div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">실수 회복 / 부활</div>
+              </div>
+              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div className="text-xl mb-0.5">🧹</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">정화의 향</div>
+                <div className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400">{progression.inventory?.clearErrors ?? 3}개</div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">오답 일괄 제거</div>
+              </div>
+              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div className="text-xl mb-0.5">📜</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">통찰의 부적</div>
+                <div className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">{progression.inventory?.autoCandidates ?? 3}개</div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">후보수 자동 메모</div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Achievements Section */}
+          <div className="mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 px-1">
+              수집한 업적 배지 ({Object.keys(achievements).length} / {ACHIEVEMENTS.length})
+            </h3>
+
+            <div className="space-y-2">
+              {ACHIEVEMENTS.map(ach => {
+                const isUnlocked = !!achievements[ach.id];
+                return (
+                  <Card
+                    key={ach.id}
+                    className={`transition-all ${
+                      isUnlocked
+                        ? 'border-amber-200/80 dark:border-amber-900/40 bg-gradient-to-r from-amber-50/20 to-transparent'
+                        : 'opacity-50 grayscale'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="text-3xl">{ach.icon}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                            {ach.name}
+                          </span>
+                          {isUnlocked && (
+                            <Badge variant="amber" size="sm" className="text-xs">
+                              {ach.rewardTitle}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                          {ach.description}
+                        </p>
+                      </div>
+                      <div>
+                        {isUnlocked ? (
+                          <span className="text-xs font-bold text-amber-500">달성</span>
+                        ) : (
+                          <span className="text-xs text-slate-400">잠김</span>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: Game Settings inside My Page */}
+      {activeTab === 'settings' && (
+        <div className="space-y-2.5">
+          {/* Sound FX Toggle */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">🔊 효과음</div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                숫자 입력, 성공, 완성 연출 효과음 재생
+              </div>
+            </div>
+            <button
+              onClick={handleToggleSound}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors ${
+                settings.soundEnabled ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.soundEnabled ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </Card>
+
+          {/* Theme Selector (Default: Light) */}
+          <Card>
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                🎨 화면 테마
+              </div>
+              <span className="text-[10.5px] text-blue-600 dark:text-blue-400 font-semibold">
+                기본값: 라이트
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: 'light', label: '☀️ 라이트 (기본)' },
+                { id: 'dark', label: '🌙 다크' },
+                { id: 'system', label: '💻 시스템' }
+              ].map(item => {
+                const isSelected = settings.theme === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onUpdateSettings({ theme: item.id as UserSettings['theme'] })}
+                    className={`py-1.5 px-2 rounded-xl font-bold text-xs transition-all ${
+                      isSelected
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+
+          {/* Highlight Conflicts Toggle */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                ⚠️ 중복 오류 강조
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                행, 열, 박스 내 중복된 숫자를 붉은색으로 표시
+              </div>
+            </div>
+            <button
+              onClick={() => onUpdateSettings({ showErrors: !settings.showErrors })}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors ${
+                settings.showErrors ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.showErrors ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </Card>
+
+          {/* Auto Remove Notes Toggle */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                ✏️ 후보 메모 자동 정리
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                숫자 입력 시 연결된 행·열·박스의 후보 메모 자동 삭제
+              </div>
+            </div>
+            <button
+              onClick={() => onUpdateSettings({ autoRemoveNotes: !settings.autoRemoveNotes })}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors ${
+                settings.autoRemoveNotes ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.autoRemoveNotes ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </Card>
+
+          {/* Highlight Same Numbers Toggle */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                🔢 동일한 숫자 강조
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                선택한 셀과 같은 숫자를 가진 다른 칸들을 밝게 강조
+              </div>
+            </div>
+            <button
+              onClick={() => onUpdateSettings({ highlightSame: !settings.highlightSame })}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors ${
+                settings.highlightSame ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.highlightSame ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </Card>
+
+          {/* Reduced Motion Toggle */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                🍃 화면 움직임 최소화
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                클리어 축하 폭죽 및 역동적 애니메이션 간소화
+              </div>
+            </div>
+            <button
+              onClick={() => onUpdateSettings({ reducedMotion: !settings.reducedMotion })}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors ${
+                settings.reducedMotion ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.reducedMotion ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </Card>
+
+          {/* Tutorial Guide Reset */}
+          <Card className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                📖 튜토리얼 가이드 다시 보기
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                게임 시작 시 입문 도움말 안내 팝업을 다시 표시합니다
+              </div>
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleResetTutorial}
+              className="text-xs shrink-0"
+            >
+              {tutorialResetNotice ? '초기화됨! ✓' : '다시 보기'}
+            </Button>
+          </Card>
+        </div>
+      )}
+
+      {/* Reset Data Button at bottom of My Page */}
+      <div className="pt-4 mt-2 border-t border-slate-200 dark:border-slate-800 text-center">
         <button
           onClick={() => setShowResetModal(true)}
           className="text-xs font-semibold text-rose-500 hover:text-rose-700 underline"
@@ -197,7 +435,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         onClose={() => setShowTitleModal(false)}
         title="칭호 선택"
       >
-        <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+        <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
           {progression.unlockedTitles.map(title => {
             const isSelected = progression.equippedTitle === title;
             return (
@@ -207,7 +445,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   onEquipTitle(title);
                   setShowTitleModal(false);
                 }}
-                className={`w-full p-3 rounded-xl font-bold text-sm text-left flex items-center justify-between transition-all ${
+                className={`w-full p-2.5 rounded-xl font-bold text-xs sm:text-sm text-left flex items-center justify-between transition-all ${
                   isSelected
                     ? 'bg-blue-600 text-white shadow-sm'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -221,10 +459,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </div>
         <Button
           variant="secondary"
-          size="md"
+          size="sm"
           fullWidth
           onClick={() => setShowTitleModal(false)}
-          className="mt-4"
+          className="mt-3 text-xs"
         >
           닫기
         </Button>
@@ -236,9 +474,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         onClose={() => setShowResetModal(false)}
         title="데이터 초기화"
       >
-        <div className="space-y-4 text-center">
-          <div className="text-4xl">⚠️</div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div className="space-y-3 text-center">
+          <div className="text-3xl">⚠️</div>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
             정말로 모든 게임 데이터를 초기화하시겠습니까?
             <br />
             모든 스테이지 기록, 획득한 별점, 경험치, 업적이 초기화되며 되돌릴 수 없습니다.
@@ -247,20 +485,20 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              size="md"
+              size="sm"
               onClick={() => setShowResetModal(false)}
-              className="flex-1"
+              className="flex-1 text-xs"
             >
               취소
             </Button>
             <Button
               variant="danger"
-              size="md"
+              size="sm"
               onClick={() => {
                 onResetData();
                 setShowResetModal(false);
               }}
-              className="flex-1"
+              className="flex-1 text-xs"
             >
               초기화 확인
             </Button>

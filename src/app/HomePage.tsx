@@ -43,18 +43,18 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
       <main className="w-full space-y-3.5 my-auto">
         <Card className="relative overflow-hidden border-blue-200/80 dark:border-blue-900/40 shadow-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
           {/* Top user title announcement */}
-          <div className="text-center pt-1 pb-3">
-            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="text-center pt-1 pb-2">
+            <div className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400">
               플레이어님의 현재 등급
             </div>
-            <div className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight mt-0.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight mt-0.5">
               {progression.equippedTitle}
             </div>
           </div>
 
           {/* Gamification Tier Progression Bar with Tooltip (Ridi Style) */}
-          <div className="bg-slate-50 dark:bg-slate-800/80 rounded-2xl p-4 border border-slate-100 dark:border-slate-800 mb-3">
-            <div className="flex items-center justify-between text-xs font-bold mb-2">
+          <div className="bg-slate-50 dark:bg-slate-800/80 rounded-2xl p-3.5 border border-slate-100 dark:border-slate-800 mb-2.5">
+            <div className="flex items-center justify-between text-xs sm:text-sm font-bold mb-2">
               <span className="text-slate-600 dark:text-slate-400">다음 등급까지</span>
               <span className="text-blue-600 dark:text-blue-400">
                 {progression.currentXP} / {reqXP} XP ({percent}%)
@@ -62,7 +62,7 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
             </div>
 
             {/* Progress Track */}
-            <div className="relative w-full h-4 bg-slate-200/80 dark:bg-slate-700/80 rounded-full p-0.5 overflow-hidden">
+            <div className="relative w-full h-3.5 bg-slate-200/80 dark:bg-slate-700/80 rounded-full p-0.5 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 transition-all duration-700 ease-out shadow-sm"
                 style={{ width: `${percent}%` }}
@@ -70,38 +70,38 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
             </div>
 
             {/* Checkpoint Tier Markers */}
-            <div className="grid grid-cols-4 gap-1 text-[10px] text-center mt-2.5 font-bold text-slate-500 dark:text-slate-400">
+            <div className="grid grid-cols-4 gap-1 text-xs text-center mt-2.5 font-bold text-slate-500 dark:text-slate-400">
               <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
                 <div>입문자</div>
-                <div className="text-[9px] opacity-75">Lv.1</div>
+                <div className="text-[10px] opacity-75">Lv.1</div>
               </div>
               <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
                 <div>탐험가</div>
-                <div className="text-[9px] opacity-75">Lv.5</div>
+                <div className="text-[10px] opacity-75">Lv.5</div>
               </div>
               <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
                 <div>수집가</div>
-                <div className="text-[9px] opacity-75">Lv.15</div>
+                <div className="text-[10px] opacity-75">Lv.15</div>
               </div>
               <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
                 <div>마스터</div>
-                <div className="text-[9px] opacity-75">Lv.30+</div>
+                <div className="text-[10px] opacity-75">Lv.30+</div>
               </div>
             </div>
           </div>
 
           {/* Cumulative Stats Grid */}
           <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="p-3 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-2xl">
-              <div className="text-xs font-bold text-amber-700 dark:text-amber-400">누적 수집 별점</div>
-              <div className="text-lg font-black text-amber-600 dark:text-amber-400 mt-0.5">
+            <div className="p-2.5 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-2xl">
+              <div className="text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400">누적 수집 별점</div>
+              <div className="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 mt-0.5">
                 ⭐ {progression.totalStars} <span className="text-xs font-semibold text-slate-400">/ 150</span>
               </div>
             </div>
 
-            <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-2xl">
-              <div className="text-xs font-bold text-blue-700 dark:text-blue-400">클리어 스테이지</div>
-              <div className="text-lg font-black text-blue-600 dark:text-blue-400 mt-0.5">
+            <div className="p-2.5 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-2xl">
+              <div className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-400">클리어 스테이지</div>
+              <div className="text-lg sm:text-xl font-black text-blue-600 dark:text-blue-400 mt-0.5">
                 🧩 {Object.keys(progression.stageRecords).length}{' '}
                 <span className="text-xs font-semibold text-slate-400">/ 50</span>
               </div>
@@ -122,13 +122,13 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
                   ⏳
                 </div>
                 <div>
-                  <div className="text-[11px] font-black text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                  <div className="text-xs font-black text-amber-800 dark:text-amber-300 uppercase tracking-wider">
                     플레이 중인 게임 이어하기
                   </div>
-                  <div className="text-sm font-black text-slate-900 dark:text-slate-100">
+                  <div className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100">
                     스테이지 {activeStage.id}. {activeStage.title}
                   </div>
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <div className="text-[11px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400">
                     진행 시간: {formatTime(activeGame.elapsedSeconds)} · 실수: {activeGame.mistakes}
                   </div>
                 </div>
@@ -140,15 +140,14 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
           </Card>
         )}
 
-        {/* Tactile 3D Action Buttons (Pin 2 Inspired) */}
-        <div className="space-y-2.5 pt-1">
+        {/* Tactile Sleek Action Buttons */}
+        <div className="space-y-2 pt-0.5">
           <Button
             variant="primary"
             size="lg"
             fullWidth
-            pill
             onClick={() => onNavigate('stage-map')}
-            className="text-base font-black shadow-lg"
+            className="text-sm sm:text-base font-black shadow-md"
           >
             🗺️ 스테이지 여정 (5개 월드)
           </Button>
@@ -157,9 +156,8 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
             variant="secondary"
             size="md"
             fullWidth
-            pill
             onClick={() => onNavigate('profile')}
-            className="text-sm font-bold"
+            className="text-xs sm:text-sm font-bold"
           >
             🏅 내 프로필 & 업적 수집
           </Button>
@@ -169,7 +167,7 @@ export const HomePage: React.FC<HomePageProps> = ({ progression, activeGame, onN
             size="md"
             fullWidth
             onClick={() => onNavigate('settings')}
-            className="text-sm font-semibold"
+            className="text-xs sm:text-sm font-semibold"
           >
             ⚙️ 게임 설정
           </Button>
