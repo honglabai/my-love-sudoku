@@ -648,9 +648,9 @@ export const GamePage: React.FC<GamePageProps> = ({
       </main>
 
       {/* Bottom Menu Card: Controls & Numpad Flush to Bottom Edge */}
-      <footer className="w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-t-2xl rounded-b-none p-1.5 sm:p-2 pb-2 sm:pb-3 border-t border-slate-200/80 dark:border-slate-800 shadow-2xl space-y-1 mt-auto select-none">
-        {/* Action Controls Row */}
-        <div className="grid grid-cols-6 gap-1 px-0.5">
+      <footer className="w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-t-2xl rounded-b-none p-1 sm:p-1.5 pb-1 sm:pb-2 border-t border-slate-200/80 dark:border-slate-800 shadow-2xl space-y-0.5 mt-auto select-none">
+        {/* Action Controls Row - Minimized Gaps */}
+        <div className="grid grid-cols-6 gap-0.5 px-0.5">
           <button
             type="button"
             onClick={() => {
@@ -658,7 +658,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'UNDO' });
             }}
             disabled={state.history.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↩️</span>
             <span className="leading-tight mt-0.5">취소</span>
@@ -671,7 +671,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'REDO' });
             }}
             disabled={state.future.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↪️</span>
             <span className="leading-tight mt-0.5">다시</span>
@@ -683,7 +683,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">🧹</span>
             <span className="leading-tight mt-0.5">지우기</span>
@@ -695,7 +695,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
-            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 transition-all active:scale-95 ${
+            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 transition-all active:scale-95 ${
               state.isNoteMode
                 ? 'bg-amber-500 text-white shadow-md ring-2 ring-amber-400'
                 : 'bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs'
@@ -708,7 +708,7 @@ export const GamePage: React.FC<GamePageProps> = ({
           <button
             type="button"
             onClick={handleTriggerHint}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">💡</span>
             <span className="leading-tight mt-0.5">힌트</span>
@@ -720,15 +720,15 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               setShowItemDrawer(true);
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[30px] sm:min-h-[32px] rounded-xl text-[10px] sm:text-[10.5px] font-bold gap-0.25 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
           >
             <span className="text-xs sm:text-sm leading-none">🎒</span>
             <span className="leading-tight mt-0.5 whitespace-nowrap">아이템({totalItemCount})</span>
           </button>
         </div>
 
-        {/* Number Keypad 1~9 */}
-        <div className="grid grid-cols-9 gap-1 px-0.5">
+        {/* Number Keypad 1~9 - Minimized Gaps */}
+        <div className="grid grid-cols-9 gap-0.5 px-0.5">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => {
             const isCompletedNum = digitCounts[num] >= 9;
             return (
@@ -736,14 +736,14 @@ export const GamePage: React.FC<GamePageProps> = ({
                 key={num}
                 onClick={() => handleNumpadClick(num)}
                 disabled={isCompletedNum && !state.isNoteMode}
-                className={`flex flex-col items-center justify-center h-11 sm:h-12 rounded-xl font-black font-serif transition-all active:translate-y-0.5 active:shadow-none p-0.5 ${
+                className={`flex flex-col items-center justify-center h-10 sm:h-11 rounded-xl font-black font-serif transition-all active:translate-y-0.5 active:shadow-none p-0.5 ${
                   isCompletedNum && !state.isNoteMode
                     ? 'opacity-30 bg-slate-200 dark:bg-slate-800 pointer-events-none'
                     : 'bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-blue-800 dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-[0_2px_0_#cbd5e1] dark:shadow-[0_2px_0_#0f172a]'
                 }`}
               >
                 <span className="text-lg sm:text-xl leading-none">{num}</span>
-                <span className="text-[9.5px] sm:text-[10px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
+                <span className="text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
                   {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
                 </span>
               </button>

@@ -56,10 +56,10 @@ export const TopHeader: React.FC = () => {
 
   return (
     <>
-      <header className="w-full select-none pt-1 pb-1">
+      <header className="w-full select-none pt-0 pb-0.5">
         {/* Top Utility Bar: Edition Indicator + Install App Button */}
-        <div className="w-full flex items-center justify-between px-1 mb-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+        <div className="w-full flex items-center justify-between px-1 mb-1">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>한국 수묵 담채화 에디션</span>
           </div>
@@ -67,7 +67,7 @@ export const TopHeader: React.FC = () => {
           <button
             onClick={handleInstallClick}
             aria-label="앱 설치 및 바탕화면에 추가"
-            className={`flex items-center gap-1.5 px-3 py-1.5 min-h-[32px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
+            className={`flex items-center gap-1 px-2.5 py-1 min-h-[28px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
               isStandalone
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-blue-500/30'
