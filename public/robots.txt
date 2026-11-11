@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Google AdSense Crawler Explicit Access
+User-agent: Mediapartners-Google
+Allow: /
+
+# Googlebot Web & Image Crawlers
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+
+Sitemap: https://my-love-sudoku.vercel.app/sitemap.xml

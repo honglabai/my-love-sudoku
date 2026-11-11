@@ -8,6 +8,10 @@ import { Badge } from '../components/Badge';
 import { ProgressBar } from '../components/ProgressBar';
 import { Modal } from '../components/Modal';
 import { LevelTestModal } from '../components/LevelTestModal';
+import { PrivacyPolicyModal } from '../components/PrivacyPolicyModal';
+import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
+import { SudokuGuideModal } from '../components/SudokuGuideModal';
+import { AboutContactModal } from '../components/AboutContactModal';
 import { sound } from '../audio/sound';
 
 interface ProfilePageProps {
@@ -37,6 +41,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showLevelTest, setShowLevelTest] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [tutorialResetNotice, setTutorialResetNotice] = useState(false);
 
   const reqXP = getRequiredXPForLevel(progression.level);
@@ -463,11 +471,41 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </Card>
           )}
 
-          {/* App Info Card */}
-          <Card className="text-center p-3 bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 space-y-1">
-            <div className="font-extrabold text-slate-800 dark:text-slate-200">내사랑 스도쿠</div>
+          {/* App Info Card with Policy & Guide Links for AdSense & User Transparency */}
+          <Card className="text-center p-3.5 bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 space-y-2">
+            <div className="font-extrabold text-slate-800 dark:text-slate-200 text-sm">내사랑 스도쿠</div>
             <div>버전 1.0.0 (정식 배포판) · 한국 수묵 담채화 에디션</div>
             <div className="text-[11px] text-slate-400">오프라인 PWA 및 고화질 벡터 스도쿠 보드 지원</div>
+
+            <div className="pt-2 border-t border-slate-200/70 dark:border-slate-700/60 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+              <button
+                onClick={() => setShowPrivacy(true)}
+                className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+              >
+                개인정보처리방침
+              </button>
+              <span>·</span>
+              <button
+                onClick={() => setShowTerms(true)}
+                className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+              >
+                이용약관
+              </button>
+              <span>·</span>
+              <button
+                onClick={() => setShowGuide(true)}
+                className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+              >
+                게임 가이드 & FAQ
+              </button>
+              <span>·</span>
+              <button
+                onClick={() => setShowAbout(true)}
+                className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+              >
+                고객지원 문의
+              </button>
+            </div>
           </Card>
         </div>
       )}
@@ -567,6 +605,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           onSelectPlacementStage={onApplyLevelTest}
         />
       )}
+
+      {/* Google AdSense Mandatory Modals */}
+      <PrivacyPolicyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
+      <TermsOfServiceModal isOpen={showTerms} onClose={() => setShowTerms(false)} />
+      <SudokuGuideModal isOpen={showGuide} onClose={() => setShowGuide(false)} />
+      <AboutContactModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
     </div>
   );
 };

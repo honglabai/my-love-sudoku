@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlayerProgression, getRequiredXPForLevel } from '../features/progression/progression';
 import { ActiveGameSave } from '../storage/storage';
 import { Card } from '../components/Card';
@@ -6,6 +6,11 @@ import { Button } from '../components/Button';
 import { getStageById } from '../features/stages/stageData';
 import { TopHeader } from '../components/TopHeader';
 import { LevelTestModal } from '../components/LevelTestModal';
+import { PrivacyPolicyModal } from '../components/PrivacyPolicyModal';
+import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
+import { SudokuGuideModal } from '../components/SudokuGuideModal';
+import { AboutContactModal } from '../components/AboutContactModal';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 interface HomePageProps {
   progression: PlayerProgression;
@@ -21,6 +26,20 @@ export const HomePage: React.FC<HomePageProps> = ({
   onApplyLevelTest
 }) => {
   const [showLevelTest, setShowLevelTest] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+
+  // Auto-open modal if URL query param is present (for crawlers, sitemap & deep links)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+    if (view === 'privacy') setShowPrivacy(true);
+    else if (view === 'terms') setShowTerms(true);
+    else if (view === 'guide') setShowGuide(true);
+    else if (view === 'about') setShowAbout(true);
+  }, []);
   const reqXP = getRequiredXPForLevel(progression.level);
   const activeStage = activeGame ? getStageById(activeGame.stageId) : null;
 
@@ -159,12 +178,56 @@ export const HomePage: React.FC<HomePageProps> = ({
           >
             🎯 실력 진단 레벨 테스트 (원하는 단계부터 시작)
           </Button>
+
+          {/* Quick Guide & Rules Button for Crawlers and Players */}
+          <button
+            onClick={() => setShowGuide(true)}
+            className="w-full py-2 px-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-98 transition-all shadow-2xs"
+          >
+            <span>📖</span>
+            <span>스도쿠 기본 규칙 및 핵심 풀이 공식 가이드</span>
+          </button>
         </div>
+
+        {/* AdSense Placement Slot */}
+        <AdSenseUnit />
       </main>
 
-      {/* Footer Info */}
-      <footer className="text-center text-xs text-slate-500 dark:text-slate-500 mt-4">
-        <p>내사랑 스도쿠 · v1.0.0 · 한국 수묵 담채화 에디션</p>
+      {/* Semantic Footer with Full Transparency Links (Mandatory for Google AdSense Approval) */}
+      <footer className="w-full text-center text-xs text-slate-500 dark:text-slate-500 mt-2 space-y-2 select-none">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+          <button
+            onClick={() => setShowPrivacy(true)}
+            className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+          >
+            개인정보처리방침
+          </button>
+          <span>·</span>
+          <button
+            onClick={() => setShowTerms(true)}
+            className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+          >
+            이용약관
+          </button>
+          <span>·</span>
+          <button
+            onClick={() => setShowGuide(true)}
+            className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+          >
+            게임 가이드 & FAQ
+          </button>
+          <span>·</span>
+          <button
+            onClick={() => setShowAbout(true)}
+            className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
+          >
+            서비스 소개 & 문의
+          </button>
+        </div>
+
+        <p className="text-[11px] text-slate-400 dark:text-slate-500">
+          내사랑 스도쿠 · v1.0.0 · 한국 수묵 담채화 에디션
+        </p>
       </footer>
 
       {/* Diagnostic Level Test Modal */}
@@ -173,6 +236,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         onClose={() => setShowLevelTest(false)}
         onSelectPlacementStage={onApplyLevelTest}
       />
+
+      {/* Google AdSense Mandatory Modals */}
+      <PrivacyPolicyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
+      <TermsOfServiceModal isOpen={showTerms} onClose={() => setShowTerms(false)} />
+      <SudokuGuideModal isOpen={showGuide} onClose={() => setShowGuide(false)} />
+      <AboutContactModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
     </div>
   );
 };

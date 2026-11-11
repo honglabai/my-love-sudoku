@@ -1,0 +1,4 @@
+# Google AdSense Authorized Digital Sellers (ads.txt)
+# https://support.google.com/adsense/answer/7532444
+# 구글 애드센스 계정 생성 후 발급받은 본인의 게시자 ID(예: pub-1234567890123456)로 변경하십시오.
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
