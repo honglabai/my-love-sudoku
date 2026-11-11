@@ -59,11 +59,15 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       {/* Top Victory Header */}
       <header className="text-center mt-4">
         <div className="flex items-center justify-center gap-2 mb-1">
-          <span className="korean-seal">승리</span>
+          <span className="text-2xl sm:text-3xl select-none" aria-hidden="true">
+            🎉
+          </span>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-serif">
             스테이지 완료!
           </h1>
-          <span className="korean-seal">축하</span>
+          <span className="inline-block text-2xl sm:text-3xl select-none -scale-x-100" aria-hidden="true">
+            🎉
+          </span>
         </div>
         <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 mt-1">
           스테이지 {stageId}. {stage?.title}
