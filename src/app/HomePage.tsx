@@ -228,7 +228,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         <p className="text-[10px] text-slate-400 dark:text-slate-500">
-          내사랑 스도쿠 · v1.0.0 · 한국 수묵 담채화 에디션
+          내사랑 스도쿠 · v1.0.0
         </p>
       </footer>
 

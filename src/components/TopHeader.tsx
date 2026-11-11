@@ -56,18 +56,29 @@ export const TopHeader: React.FC = () => {
 
   return (
     <>
-      <header className="w-full select-none pt-0 pb-0.5">
-        {/* Top Utility Bar: Edition Indicator + Install App Button */}
-        <div className="w-full flex items-center justify-between px-1 mb-1">
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>한국 수묵 담채화 에디션</span>
+      <header className="w-full flex items-center justify-between gap-2.5 pt-1 pb-1 px-0.5 select-none min-h-[44px]">
+        {/* Left: Scaled-down Title Image */}
+        <div className="flex-1 flex items-center min-w-0">
+          <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-stone-200/90 dark:border-slate-800/80 shadow-xs bg-[#fbf9f5] dark:bg-slate-900 transition-all hover:scale-[1.01]">
+            <img
+              src="/assets/logo/title_banner.webp"
+              alt="내사랑 스도쿠"
+              className="dark:hidden h-11 sm:h-12 w-auto max-w-[240px] sm:max-w-[280px] object-contain block select-none pointer-events-none"
+            />
+            <img
+              src="/assets/logo/title_banner_dark.webp"
+              alt="내사랑 스도쿠"
+              className="hidden dark:block h-11 sm:h-12 w-auto max-w-[240px] sm:max-w-[280px] object-contain block select-none pointer-events-none"
+            />
           </div>
+        </div>
 
+        {/* Right: Install App Button on the Same Row */}
+        <div className="shrink-0 flex items-center">
           <button
             onClick={handleInstallClick}
             aria-label="앱 설치 및 바탕화면에 추가"
-            className={`flex items-center gap-1 px-2.5 py-1 min-h-[28px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 min-h-[34px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
               isStandalone
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-blue-500/30'
@@ -76,20 +87,6 @@ export const TopHeader: React.FC = () => {
             <span>📲</span>
             <span className="whitespace-nowrap">{isStandalone ? '설치됨' : '앱 설치'}</span>
           </button>
-        </div>
-
-        {/* Title Banner Box: Matches the width ("폭과 넓이") and rounded card styling of other boxes */}
-        <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-stone-200/90 dark:border-slate-800/80 shadow-md hover:shadow-lg transition-all bg-[#fbf9f5] dark:bg-slate-900">
-          <img
-            src="/assets/logo/title_banner.webp"
-            alt="내사랑 스도쿠"
-            className="dark:hidden w-full h-auto block select-none pointer-events-none"
-          />
-          <img
-            src="/assets/logo/title_banner_dark.webp"
-            alt="내사랑 스도쿠"
-            className="hidden dark:block w-full h-auto block select-none pointer-events-none"
-          />
         </div>
       </header>
 
