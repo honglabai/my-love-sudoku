@@ -17,7 +17,7 @@ export const AboutContactModal: React.FC<AboutContactModalProps> = ({ isOpen, on
             내사랑 스도쿠 (My Love Sudoku)
           </h4>
           <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
-            한국 전통 수묵 담채화 에디션 · v1.0.0
+            HongLab AI 오리지널 에디션 · v1.0.0
           </p>
         </div>
 
@@ -35,18 +35,19 @@ export const AboutContactModal: React.FC<AboutContactModalProps> = ({ isOpen, on
             운영팀 및 고객 문의 안내
           </h5>
           <div className="space-y-1 text-slate-600 dark:text-slate-400">
-            <p>• 서비스 배포처: Vercel Cloud Platform</p>
-            <p>• 개발 및 운영: 내사랑 스도쿠 독립 개발팀</p>
+            <p>• 서비스 도메인: <a href="https://sudoku.honglabai.com" className="text-blue-600 dark:text-blue-400 font-medium underline">https://sudoku.honglabai.com</a></p>
+            <p>• 개발 및 운영: HongLab AI (홍랩)</p>
+            <p>• 공식 웹사이트: <a href="https://honglabai.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline font-medium">https://honglabai.com</a></p>
             <p>
               • 이메일 문의:{' '}
               <a
-                href="mailto:support@my-love-sudoku.vercel.app"
+                href="mailto:contact@honglabai.com"
                 className="text-blue-600 dark:text-blue-400 underline font-medium"
               >
-                support@my-love-sudoku.vercel.app
+                contact@honglabai.com
               </a>
             </p>
-            <p>• 버그 제보 / 스테이지 건의 / 광고 문의 등 언제든 환영합니다.</p>
+            <p>• 버그 제보 / 스테이지 건의 / 제휴 및 광고 문의 등 언제든 환영합니다.</p>
           </div>
         </section>
 

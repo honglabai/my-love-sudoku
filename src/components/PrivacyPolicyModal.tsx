@@ -95,15 +95,17 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
             서비스 이용 중 발생하는 개인정보 보호 관련 고충 및 문의는 아래 담당자에게 문의해 주시면 신속하게 답변해 드리겠습니다.
           </p>
           <div className="text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
-            <p>• 서비스명: 내사랑 스도쿠 (한국 수묵 담채화 에디션)</p>
-            <p>• 책임자 및 운영팀: 내사랑 스도쿠 운영팀</p>
+            <p>• 서비스명: 내사랑 스도쿠 (sudoku.honglabai.com)</p>
+            <p>• 운영 및 제공자: HongLab AI (홍랩)</p>
+            <p>• 개인정보 보호책임자: HongLab AI 개인정보보호팀</p>
             <p>
               • 고객 문의 이메일:{' '}
-              <a href="mailto:support@my-love-sudoku.vercel.app" className="text-blue-600 dark:text-blue-400 underline">
-                support@my-love-sudoku.vercel.app
+              <a href="mailto:contact@honglabai.com" className="text-blue-600 dark:text-blue-400 underline">
+                contact@honglabai.com
               </a>
             </p>
-            <p>• 최종 개정일자: 2026년 11월 11일</p>
+            <p>• 공식 사이트: https://sudoku.honglabai.com</p>
+            <p>• 최종 개정일자: 2026년 11월 12일</p>
           </div>
         </section>
 

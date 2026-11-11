@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>내사랑 스도쿠</title>
-    <link>https://my-love-sudoku.vercel.app/</link>
-    <description>5개 월드 50개 엄선 스테이지와 체계적인 스도쿠 풀이 공식 가이드를 제공하는 무료 웰메이드 스도쿠 웹게임</description>
+    <title>내사랑 스도쿠 - HongLab AI</title>
+    <link>https://sudoku.honglabai.com/</link>
+    <description>5개 월드 50개 엄선 스테이지와 체계적인 스도쿠 풀이 공식 가이드를 제공하는 무료 웰메이드 스도쿠 웹게임 (운영: HongLab AI)</description>
     <language>ko-KR</language>
-    <lastBuildDate>Wed, 11 Nov 2026 00:00:00 +0900</lastBuildDate>
-    <atom:link href="https://my-love-sudoku.vercel.app/rss.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Thu, 12 Nov 2026 00:00:00 +0900</lastBuildDate>
+    <atom:link href="https://sudoku.honglabai.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>내사랑 스도쿠 - 5개 월드 50개 스테이지 정식 서비스</title>
-      <link>https://my-love-sudoku.vercel.app/</link>
+      <title>내사랑 스도쿠 - 5개 월드 50개 스테이지 정식 서비스 (sudoku.honglabai.com)</title>
+      <link>https://sudoku.honglabai.com/</link>
       <description>초급부터 마스터까지 즐기는 한국 수묵화 테마 스도쿠. 두뇌 훈련과 치매 예방에 최적화된 무료 퍼즐 플랫폼입니다.</description>
-      <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
-      <guid>https://my-love-sudoku.vercel.app/</guid>
+      <pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
+      <guid>https://sudoku.honglabai.com/</guid>
     </item>
     <item>
       <title>스도쿠 기본 규칙 및 초급·중급·고급 핵심 풀이 공식 가이드</title>
-      <link>https://my-love-sudoku.vercel.app/?view=guide</link>
+      <link>https://sudoku.honglabai.com/?view=guide</link>
       <description>단일 후보수, 숨겨진 후보수, 라인-블록 교차 배제, X-Wing 공식까지 스도쿠 완성을 위한 상세 전략을 확인하세요.</description>
-      <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
-      <guid>https://my-love-sudoku.vercel.app/?view=guide</guid>
+      <pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
+      <guid>https://sudoku.honglabai.com/?view=guide</guid>
+    </item>
+    <item>
+      <title>내사랑 스도쿠 서비스 소개 및 개발사 HongLab AI 안내</title>
+      <link>https://sudoku.honglabai.com/?view=about</link>
+      <description>HongLab AI(홍랩)에서 제작 및 서비스하는 한국 전통 테마 웰메이드 스도쿠 플랫폼 소개 및 고객지원 창구 안내.</description>
+      <pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
+      <guid>https://sudoku.honglabai.com/?view=about</guid>
     </item>
   </channel>
 </rss>

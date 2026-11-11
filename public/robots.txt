@@ -17,4 +17,4 @@ Allow: /
 User-agent: Daumoa
 Allow: /
 
-Sitemap: https://my-love-sudoku.vercel.app/sitemap.xml
+Sitemap: https://sudoku.honglabai.com/sitemap.xml

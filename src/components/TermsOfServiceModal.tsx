@@ -16,7 +16,7 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({ isOpen
             제 1 조 (목적)
           </h4>
           <p>
-            본 약관은 '내사랑 스도쿠'(이하 "서비스")가 제공하는 온라인 퍼즐 게임 및 관련 제반 서비스의 이용 조건 및 절차, 이용자와 서비스 제공자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+            본 약관은 HongLab AI(홍랩)가 운영하는 '내사랑 스도쿠'(https://sudoku.honglabai.com, 이하 "서비스")가 제공하는 온라인 퍼즐 게임 및 관련 제반 서비스의 이용 조건 및 절차, 이용자와 서비스 제공자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
           </p>
         </section>
 
@@ -61,7 +61,7 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({ isOpen
         </section>
 
         <div className="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-          <p>시행일자: 2026년 11월 11일</p>
+          <p>시행일자: 2026년 11월 12일 (개정)</p>
         </div>
 
         <div className="pt-2">
