@@ -1,14 +1,20 @@
 User-agent: *
 Allow: /
 
-# Google AdSense Crawler Explicit Access
-User-agent: Mediapartners-Google
+# Naver Search Engine Crawler (Yeti)
+User-agent: Yeti
 Allow: /
 
-# Googlebot Web & Image Crawlers
+# Google Search & Google AdSense Crawlers
 User-agent: Googlebot
 Allow: /
 User-agent: Googlebot-Image
+Allow: /
+User-agent: Mediapartners-Google
+Allow: /
+
+# Daum & Kakao Crawler
+User-agent: Daumoa
 Allow: /
 
 Sitemap: https://my-love-sudoku.vercel.app/sitemap.xml
