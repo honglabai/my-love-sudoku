@@ -12,6 +12,8 @@ import { PrivacyPolicyModal } from '../components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
 import { SudokuGuideModal } from '../components/SudokuGuideModal';
 import { AboutContactModal } from '../components/AboutContactModal';
+import { LanguageSelector } from '../components/LanguageSelector';
+import { useI18n } from '../i18n';
 import { sound } from '../audio/sound';
 
 interface ProfilePageProps {
@@ -37,6 +39,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onApplyLevelTest,
   initialTab = 'profile'
 }) => {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<'profile' | 'settings'>(initialTab);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -75,10 +78,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       {/* Top Header */}
       <div className="flex items-center justify-between mb-3 pt-1">
         <Button variant="ghost" size="sm" onClick={onBack} className="text-xs">
-          ← 홈으로
+          ← {t('common.toHome')}
         </Button>
         <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
-          마이페이지
+          {t('nav.profile')}
         </h2>
         <div className="w-16" />
       </div>
@@ -94,7 +97,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <span>👤</span>
-          <span>내 정보 & 업적</span>
+          <span>{t('profile.tabProfile')}</span>
         </button>
         <button
           onClick={() => setActiveTab('settings')}
@@ -105,7 +108,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <span>⚙️</span>
-          <span>게임 설정</span>
+          <span>{t('profile.tabSettings')}</span>
         </button>
       </div>
 
@@ -277,12 +280,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       {/* TAB 2: Game Settings inside My Page */}
       {activeTab === 'settings' && (
         <div className="space-y-2.5">
+          {/* Language Selector Card */}
+          <Card>
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                <span>🌐</span>
+                <span>{t('profile.language')}</span>
+              </div>
+            </div>
+            <LanguageSelector variant="settings" />
+          </Card>
+
           {/* Sound FX Toggle */}
           <Card className="flex items-center justify-between">
             <div>
-              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">🔊 효과음</div>
+              <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                🔊 {t('profile.sound')}
+              </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                숫자 입력, 성공, 완성 연출 효과음 재생
+                {t('profile.soundDesc')}
               </div>
             </div>
             <button
@@ -303,17 +319,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card>
             <div className="flex items-center justify-between mb-2">
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                🎨 화면 테마
+                🎨 {t('profile.theme')}
               </div>
-              <span className="text-[10.5px] text-blue-600 dark:text-blue-400 font-semibold">
-                기본값: 라이트
-              </span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { id: 'light', label: '☀️ 라이트 (기본)' },
-                { id: 'dark', label: '🌙 다크' },
-                { id: 'system', label: '💻 시스템' }
+                { id: 'light', label: `☀️ ${t('profile.themeLight')}` },
+                { id: 'dark', label: `🌙 ${t('profile.themeDark')}` },
+                { id: 'system', label: `💻 ${t('profile.themeSystem')}` }
               ].map(item => {
                 const isSelected = settings.theme === item.id;
                 return (
@@ -337,10 +350,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                ⚠️ 중복 오류 강조
+                ⚠️ {t('profile.highlightErrors')}
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                행, 열, 박스 내 중복된 숫자를 붉은색으로 표시
+                {t('profile.highlightErrorsDesc')}
               </div>
             </div>
             <button
@@ -361,10 +374,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                ✏️ 후보 메모 자동 정리
+                ✏️ {t('profile.autoNotes')}
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                숫자 입력 시 연결된 행·열·박스의 후보 메모 자동 삭제
+                {t('profile.autoNotesDesc')}
               </div>
             </div>
             <button
@@ -385,10 +398,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                🔢 동일한 숫자 강조
+                🔢 {t('profile.highlightSame')}
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                선택한 셀과 같은 숫자를 가진 다른 칸들을 밝게 강조
+                {t('profile.highlightSameDesc')}
               </div>
             </div>
             <button
@@ -409,10 +422,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                🍃 화면 움직임 최소화
+                🍃 {t('profile.reducedMotion')}
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                클리어 축하 폭죽 및 역동적 애니메이션 간소화
+                {t('profile.reducedMotionDesc')}
               </div>
             </div>
             <button

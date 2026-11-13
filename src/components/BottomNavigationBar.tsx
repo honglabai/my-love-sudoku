@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppView } from '../app/App';
+import { useI18n } from '../i18n';
 
 interface BottomNavigationBarProps {
   currentView: AppView;
@@ -14,10 +15,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   onPlayGame,
   hasActiveGame
 }) => {
-  // Navigation tabs (matching Pin 3 left phone elevated dock layout)
-  // Left 2: [홈], [월드 여정]
-  // Center: [게임하기] (Elevated Protruding Circular FAB)
-  // Right 2: [일일 여정], [My Page]
+  const { t } = useI18n();
 
   return (
     <nav
@@ -39,7 +37,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="홈 화면으로 이동"
           >
             <span className="text-base leading-none transition-transform active:scale-90">🏠</span>
-            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">홈</span>
+            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.home')}</span>
             {currentView === 'home' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -56,7 +54,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="스테이지 여정보기 화면으로 이동"
           >
             <span className="text-base leading-none transition-transform active:scale-90">🗺️</span>
-            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">여정보기</span>
+            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.stages')}</span>
             {currentView === 'stage-map' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -75,7 +73,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                 </span>
               </div>
               <span className="text-[11.5px] sm:text-[12px] font-black text-slate-800 dark:text-slate-200 mt-0.5 leading-none tracking-tight">
-                {hasActiveGame ? '이어하기' : '게임하기'}
+                {hasActiveGame ? t('home.continue') : t('home.quickStart')}
               </span>
             </button>
           </div>
@@ -91,7 +89,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="일일 여정 도전 화면으로 이동"
           >
             <span className="text-base leading-none transition-transform active:scale-90">🗓️</span>
-            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">일일 여정</span>
+            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.daily')}</span>
             {currentView === 'daily-quest' && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}
@@ -108,7 +106,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
             aria-label="마이페이지 화면으로 이동"
           >
             <span className="text-base leading-none transition-transform active:scale-90">👤</span>
-            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">마이페이지</span>
+            <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.profile')}</span>
             {(currentView === 'profile' || currentView === 'settings') && (
               <span className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mt-0.5" />
             )}

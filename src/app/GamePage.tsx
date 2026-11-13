@@ -11,6 +11,7 @@ import { findLogicalHint, HintResult } from '../features/hint/hintEngine';
 import { getRow, getCol, getBox } from '../domain/sudoku/types';
 import { PlayerInventory, DEFAULT_INVENTORY } from '../features/progression/progression';
 import { ItemDrawer } from '../components/ItemDrawer';
+import { useI18n } from '../i18n';
 
 interface WorldZenMeta {
   themeName: string;
@@ -85,6 +86,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   onSaveActiveGame,
   onExit
 }) => {
+  const { t, language } = useI18n();
   const stage = getStageById(stageId) || getStageById(1)!;
   const currentInventory = inventory || DEFAULT_INVENTORY;
   const zenMeta = WORLD_ZEN_META[stage.worldId] || WORLD_ZEN_META[1];
@@ -426,25 +428,25 @@ export const GamePage: React.FC<GamePageProps> = ({
       <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
         <button
           onClick={onExit}
-          aria-label="이전 화면으로 이동"
+          aria-label={t('game.exit')}
           className="flex items-center justify-center px-2 py-1 min-h-[30px] rounded-xl text-xs font-bold whitespace-nowrap bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 active:scale-95 transition-all"
         >
-          ← 나가기
+          ← {t('game.exit')}
         </button>
 
         <div className="flex-1 min-w-0 text-center bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-2 py-1 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
           <div className="flex items-center justify-center gap-1">
             <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
-              {stage.id}단계 · {stage.title}
+              {stage.id}{language === 'en' ? ' · ' : language === 'ja' ? ' · ' : language === 'zh' ? ' · ' : '단계 · '}{stage.title}
             </h2>
             {stage.isBoss && (
               <Badge variant="amber" size="sm" className="py-0 px-1 text-[9px]">
-                보스
+                {t('map.boss')}
               </Badge>
             )}
           </div>
           <div className="text-[11px] sm:text-xs font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">
-            시간: {formatTimer(state.elapsedSeconds)} · 실수: {state.mistakes}/3{' '}
+            {t('game.time')}: {formatTimer(state.elapsedSeconds)} · {t('game.mistakes')}: {state.mistakes}/3{' '}
             <span className="tracking-tighter">
               {state.mistakes === 0 ? '❤️❤️❤️' : state.mistakes === 1 ? '❤️❤️🖤' : state.mistakes === 2 ? '❤️🖤🖤' : '🖤🖤🖤'}
             </span>
@@ -661,7 +663,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↩️</span>
-            <span className="leading-tight mt-0.5">취소</span>
+            <span className="leading-tight mt-0.5">{t('game.undo')}</span>
           </button>
 
           <button
@@ -674,7 +676,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">↪️</span>
-            <span className="leading-tight mt-0.5">다시</span>
+            <span className="leading-tight mt-0.5">{t('game.redo')}</span>
           </button>
 
           <button
@@ -686,7 +688,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">🧹</span>
-            <span className="leading-tight mt-0.5">지우기</span>
+            <span className="leading-tight mt-0.5">{t('game.erase')}</span>
           </button>
 
           <button
@@ -702,7 +704,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             }`}
           >
             <span className="text-xs sm:text-sm leading-none">✏️</span>
-            <span className="leading-tight mt-0.5">메모</span>
+            <span className="leading-tight mt-0.5">{t('game.notes')}</span>
           </button>
 
           <button
@@ -711,7 +713,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
           >
             <span className="text-xs sm:text-sm leading-none">💡</span>
-            <span className="leading-tight mt-0.5">힌트</span>
+            <span className="leading-tight mt-0.5">{t('game.hint')}</span>
           </button>
 
           <button
@@ -723,7 +725,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
           >
             <span className="text-xs sm:text-sm leading-none">🎒</span>
-            <span className="leading-tight mt-0.5 whitespace-nowrap">아이템({totalItemCount})</span>
+            <span className="leading-tight mt-0.5 whitespace-nowrap">{t('game.inventory')}({totalItemCount})</span>
           </button>
         </div>
 
@@ -744,7 +746,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               >
                 <span className="text-lg sm:text-xl leading-none">{num}</span>
                 <span className="text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-400 mt-0.5 leading-none">
-                  {isCompletedNum ? '완료' : `${9 - digitCounts[num]}`}
+                  {isCompletedNum ? (language === 'en' ? 'Done' : language === 'ja' ? '完了' : language === 'zh' ? '完成' : '완료') : `${9 - digitCounts[num]}`}
                 </span>
               </button>
             );
@@ -759,7 +761,7 @@ export const GamePage: React.FC<GamePageProps> = ({
       <Modal
         isOpen={showHintModal && !!activeHint}
         onClose={() => setShowHintModal(false)}
-        title="💡 논리적 힌트"
+        title={`💡 ${t('game.hintModalTitle')}`}
       >
         {activeHint && (
           <div className="space-y-4 text-center">
@@ -773,7 +775,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             </div>
 
             <div className="text-base font-extrabold text-blue-600 dark:text-blue-400">
-              추천 숫자: <span className="text-2xl font-black">{activeHint.digit}</span>
+              {t('game.recommendedDigit')}: <span className="text-2xl font-black">{activeHint.digit}</span>
             </div>
 
             <div className="flex gap-2">
@@ -784,7 +786,7 @@ export const GamePage: React.FC<GamePageProps> = ({
                 onClick={() => setShowHintModal(false)}
                 className="flex-1"
               >
-                직접 풀기
+                {t('game.solveDirect')}
               </Button>
               <Button
                 variant="primary"
@@ -793,7 +795,7 @@ export const GamePage: React.FC<GamePageProps> = ({
                 onClick={handleApplyHint}
                 className="flex-1"
               >
-                적용하기
+                {t('game.applyHint')}
               </Button>
             </div>
           </div>
@@ -807,11 +809,11 @@ export const GamePage: React.FC<GamePageProps> = ({
           setShowPauseModal(false);
           dispatch({ type: 'RESUME' });
         }}
-        title="일시 정지"
+        title={t('game.pauseTitle')}
       >
         <div className="space-y-3">
           <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-            현재 스테이지 진행 상황은 자동으로 저장됩니다.
+            {t('game.pauseDesc')}
           </p>
 
           <Button
@@ -824,7 +826,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'RESUME' });
             }}
           >
-            ▶️ 계속하기
+            ▶️ {t('game.resume')}
           </Button>
 
           <Button
@@ -837,7 +839,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               setShowPauseModal(false);
             }}
           >
-            🔄 처음부터 다시 풀기
+            🔄 {t('game.restart')}
           </Button>
 
           <Button
@@ -847,7 +849,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             pill
             onClick={onExit}
           >
-            🗺️ 스테이지 선택으로 나가기
+            🗺️ {t('game.exitToMap')}
           </Button>
         </div>
       </Modal>
@@ -866,16 +868,16 @@ export const GamePage: React.FC<GamePageProps> = ({
       <Modal
         isOpen={showGameOverModal || state.isFailed}
         onClose={() => {}}
-        title="💔 스테이지 실패 (실수 3/3)"
+        title={`💔 ${t('game.gameOverTitle')}`}
       >
         <div className="space-y-4 text-center">
           <div className="p-4 bg-rose-50 dark:bg-rose-950/40 rounded-2xl border border-rose-200 dark:border-rose-900/60">
             <div className="text-3xl mb-2">🖤 🖤 🖤</div>
             <h3 className="text-base font-black text-rose-900 dark:text-rose-200 mb-1">
-              실수를 3번 하여 이번 판이 종료되었습니다
+              {t('game.gameOverDesc')}
             </h3>
             <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed font-medium">
-              하지만 정심환 아이템을 사용하면 실수 1회를 차감하고 즉시 부활하여 이어서 풀 수 있습니다!
+              {t('item.healDesc')}
             </p>
           </div>
 
@@ -889,7 +891,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               onClick={() => handleUseItem('healMistake')}
               className="bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 shadow-lg text-white"
             >
-              💊 정심환으로 부활하기 (보유: {currentInventory.healMistake || 0}개)
+              💊 {t('game.reviveItem')} ({currentInventory.healMistake || 0})
             </Button>
 
             <Button
@@ -902,7 +904,7 @@ export const GamePage: React.FC<GamePageProps> = ({
                 setShowGameOverModal(false);
               }}
             >
-              🔄 처음부터 다시 풀기
+              🔄 {t('game.restart')}
             </Button>
 
             <Button
@@ -912,7 +914,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               pill
               onClick={onExit}
             >
-              🗺️ 스테이지 선택으로 나가기
+              🗺️ {t('game.exitToMap')}
             </Button>
           </div>
         </div>

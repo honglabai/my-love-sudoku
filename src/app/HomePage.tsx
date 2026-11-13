@@ -11,6 +11,7 @@ import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
 import { SudokuGuideModal } from '../components/SudokuGuideModal';
 import { AboutContactModal } from '../components/AboutContactModal';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { useI18n } from '../i18n';
 
 interface HomePageProps {
   progression: PlayerProgression;
@@ -25,6 +26,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onNavigate,
   onApplyLevelTest
 }) => {
+  const { t, language } = useI18n();
   const [showLevelTest, setShowLevelTest] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -62,7 +64,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Top user title announcement */}
           <div className="text-center pt-0 pb-1">
             <div className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">
-              플레이어님의 현재 등급
+              {t('profile.titleTitle')}
             </div>
             <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
               {progression.equippedTitle}
@@ -72,7 +74,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Gamification Tier Progression Bar with Tooltip */}
           <div className="bg-slate-50 dark:bg-slate-800/80 rounded-xl p-2.5 sm:p-3 border border-slate-100 dark:border-slate-800 mb-1.5">
             <div className="flex items-center justify-between text-xs font-bold mb-1.5">
-              <span className="text-slate-600 dark:text-slate-400">다음 등급까지</span>
+              <span className="text-slate-600 dark:text-slate-400">{t('profile.levelInfo')}</span>
               <span className="text-blue-600 dark:text-blue-400">
                 {progression.currentXP} / {reqXP} XP ({percent}%)
               </span>
@@ -89,19 +91,19 @@ export const HomePage: React.FC<HomePageProps> = ({
             {/* Checkpoint Tier Markers */}
             <div className="grid grid-cols-4 gap-0.5 text-[11px] text-center mt-1.5 font-bold text-slate-500 dark:text-slate-400">
               <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>입문자</div>
+                <div>{language === 'en' ? 'Novice' : language === 'ja' ? '入門者' : language === 'zh' ? '初学者' : '입문자'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.1</div>
               </div>
               <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>탐험가</div>
+                <div>{language === 'en' ? 'Explorer' : language === 'ja' ? '探検家' : language === 'zh' ? '探索者' : '탐험가'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.5</div>
               </div>
               <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>수집가</div>
+                <div>{language === 'en' ? 'Collector' : language === 'ja' ? '収集家' : language === 'zh' ? '收集家' : '수집가'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.15</div>
               </div>
               <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>마스터</div>
+                <div>{language === 'en' ? 'Master' : language === 'ja' ? '達人' : language === 'zh' ? '宗师' : '마스터'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.30+</div>
               </div>
             </div>
@@ -110,14 +112,14 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Cumulative Stats Grid */}
           <div className="grid grid-cols-2 gap-1.5 text-center">
             <div className="p-2 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-xl">
-              <div className="text-[11px] font-bold text-amber-700 dark:text-amber-400">누적 수집 별점</div>
+              <div className="text-[11px] font-bold text-amber-700 dark:text-amber-400">{t('home.statsStars')}</div>
               <div className="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-0.5">
                 ⭐ {progression.totalStars} <span className="text-[10px] font-semibold text-slate-400">/ 150</span>
               </div>
             </div>
 
             <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-xl">
-              <div className="text-[11px] font-bold text-blue-700 dark:text-blue-400">클리어 스테이지</div>
+              <div className="text-[11px] font-bold text-blue-700 dark:text-blue-400">{t('home.statsCleared')}</div>
               <div className="text-base sm:text-lg font-black text-blue-600 dark:text-blue-400 mt-0.5">
                 🧩 {Object.keys(progression.stageRecords).length}{' '}
                 <span className="text-[10px] font-semibold text-slate-400">/ 50</span>
@@ -140,18 +142,18 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </div>
                 <div>
                   <div className="text-[10px] font-black text-amber-800 dark:text-amber-300 uppercase tracking-wider">
-                    플레이 중인 게임 이어하기
+                    {t('home.activeGameTitle')}
                   </div>
                   <div className="text-xs font-black text-slate-900 dark:text-slate-100">
-                    스테이지 {activeStage.id}. {activeStage.title}
+                    {t('common.stage')} {activeStage.id}. {activeStage.title}
                   </div>
                   <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-                    진행: {formatTime(activeGame.elapsedSeconds)} · 실수: {activeGame.mistakes}
+                    {t('home.activeGameProgress')}: {formatTime(activeGame.elapsedSeconds)} · {t('game.mistakes')}: {activeGame.mistakes}
                   </div>
                 </div>
               </div>
               <Button size="sm" variant="accent" pill className="py-1 px-3 text-xs">
-                이어하기
+                {t('home.continue')}
               </Button>
             </div>
           </Card>
@@ -166,7 +168,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             onClick={() => onNavigate('stage-map')}
             className="py-2.5 text-sm sm:text-base font-black shadow-md"
           >
-            🗺️ 스테이지 여정 (5개 월드)
+            🗺️ {t('home.stageJourney')}
           </Button>
 
           {/* 2-Column Minimized Gap Sub Buttons */}
@@ -178,7 +180,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               onClick={() => setShowLevelTest(true)}
               className="py-2 text-[11.5px] font-black bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-amber-950/30 text-amber-900 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-2xs"
             >
-              🎯 레벨 테스트
+              🎯 {t('home.levelTest')}
             </Button>
 
             <button
@@ -186,7 +188,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               className="py-2 px-2 rounded-xl bg-white/85 dark:bg-slate-900/85 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[11.5px] flex items-center justify-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-98 transition-all shadow-2xs"
             >
               <span>📖</span>
-              <span>스도쿠 공식 가이드</span>
+              <span>{t('home.sudokuGuide')}</span>
             </button>
           </div>
         </div>
@@ -202,33 +204,33 @@ export const HomePage: React.FC<HomePageProps> = ({
             onClick={() => setShowPrivacy(true)}
             className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
           >
-            개인정보처리방침
+            {t('profile.privacy')}
           </button>
           <span>·</span>
           <button
             onClick={() => setShowTerms(true)}
             className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
           >
-            이용약관
+            {t('profile.terms')}
           </button>
           <span>·</span>
           <button
             onClick={() => setShowGuide(true)}
             className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
           >
-            게임 가이드
+            {t('home.sudokuGuide')}
           </button>
           <span>·</span>
           <button
             onClick={() => setShowAbout(true)}
             className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
           >
-            서비스 소개 & 문의
+            {t('profile.about')}
           </button>
         </div>
 
         <p className="text-[10px] text-slate-400 dark:text-slate-500">
-          내사랑 스도쿠 · v1.0.0
+          {t('brand.title')} · v1.0.0
         </p>
       </footer>
 

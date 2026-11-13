@@ -7,6 +7,7 @@ import { Badge } from '../components/Badge';
 import { StarRating } from '../components/StarRating';
 import { StampBadge } from '../components/StampBadge';
 import { LevelTestModal } from '../components/LevelTestModal';
+import { useI18n } from '../i18n';
 
 interface StageMapPageProps {
   progression: PlayerProgression;
@@ -23,6 +24,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
   onWorldChange,
   onApplyLevelTest
 }) => {
+  const { t, language } = useI18n();
   const [showLevelTest, setShowLevelTest] = useState(false);
   const currentWorldId = Math.min(5, Math.floor((progression.unlockedStageMax - 1) / 10) + 1);
   const [selectedWorldId, setSelectedWorldId] = useState<number>(currentWorldId);
@@ -57,14 +59,14 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-3 pt-2">
         <Button variant="ghost" size="sm" pill onClick={onBack}>
-          ← 홈으로
+          ← {t('common.toHome')}
         </Button>
         <div className="text-center">
           <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
-            스테이지 여정
+            {t('map.title')}
           </h2>
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-            총 별점: ⭐ {progression.totalStars} / 150
+            {t('common.stars')}: ⭐ {progression.totalStars} / 150
           </span>
         </div>
         <div className="w-16 text-right">
@@ -89,7 +91,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              <div>{w.id}월드</div>
+              <div>{w.id}{language === 'en' ? ' World' : language === 'ja' ? '界' : language === 'zh' ? '卷' : '월드'}</div>
               <div className="text-[11px] font-medium truncate opacity-90">{w.name}</div>
               {!isWorldUnlocked && <div className="text-xs mt-0.5">🔒</div>}
             </button>
@@ -106,7 +108,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                 {activeWorld.id === 1 ? '🌸' : activeWorld.id === 2 ? '🎋' : activeWorld.id === 3 ? '🏯' : activeWorld.id === 4 ? '🍁' : '☀️'}
               </span>
               <h3 className="text-base font-black text-slate-900 dark:text-slate-100">
-                월드 {activeWorld.id}. {activeWorld.name}
+                {activeWorld.id}{language === 'en' ? ' World. ' : language === 'ja' ? '界. ' : language === 'zh' ? '卷. ' : '월드. '}{activeWorld.name}
               </h3>
               <Badge variant={activeWorld.id === 5 ? 'rose' : activeWorld.id >= 3 ? 'amber' : 'blue'} size="sm">
                 {activeWorld.difficulty}
@@ -115,7 +117,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
             <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{activeWorld.description}</p>
           </div>
           <div className="text-right">
-            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">클리어</div>
+            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{language === 'en' ? 'Clear' : language === 'ja' ? 'クリア' : language === 'zh' ? '通关' : '클리어'}</div>
             <div className="text-base font-black text-blue-600 dark:text-blue-400">
               {clearedCount} / 10
             </div>
@@ -132,9 +134,9 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
           >
             <span className="flex items-center gap-1.5">
               <span>🎯</span>
-              <span>스도쿠 실력자이신가요? 레벨 테스트로 원하는 단계 바로 해금</span>
+              <span>{t('map.skipTest')}</span>
             </span>
-            <span className="text-amber-600 dark:text-amber-400 font-black">테스트 →</span>
+            <span className="text-amber-600 dark:text-amber-400 font-black">→</span>
           </button>
         </div>
       )}
@@ -150,7 +152,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                 : 'text-slate-600 dark:text-slate-400'
             }`}
           >
-            🗺️ 스탬프 여정
+            🗺️ {t('map.roadmap')}
           </button>
           <button
             onClick={() => setViewMode('list')}
@@ -160,7 +162,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                 : 'text-slate-600 dark:text-slate-400'
             }`}
           >
-            📋 상세 목록
+            📋 {t('map.list')}
           </button>
         </div>
       </div>

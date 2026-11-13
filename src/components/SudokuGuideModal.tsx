@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { useI18n } from '../i18n';
 
 interface SudokuGuideModalProps {
   isOpen: boolean;
@@ -8,10 +9,11 @@ interface SudokuGuideModalProps {
 }
 
 export const SudokuGuideModal: React.FC<SudokuGuideModalProps> = ({ isOpen, onClose }) => {
+  const { t, language } = useI18n();
   const [activeTab, setActiveTab] = useState<'rules' | 'techniques' | 'benefits' | 'faq'>('rules');
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="📖 스도쿠 완벽 가이드 & 공식" maxWidth="max-w-lg">
+    <Modal isOpen={isOpen} onClose={onClose} title={`📖 ${t('modal.guideTitle')}`} maxWidth="max-w-lg">
       <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-300">
         {/* Navigation Tabs */}
         <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 gap-1 text-xs font-bold shrink-0">
@@ -23,7 +25,7 @@ export const SudokuGuideModal: React.FC<SudokuGuideModalProps> = ({ isOpen, onCl
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
-            기본 규칙
+            {language === 'en' ? 'Rules' : language === 'ja' ? '基本ルール' : language === 'zh' ? '基本规则' : '기본 규칙'}
           </button>
           <button
             onClick={() => setActiveTab('techniques')}
@@ -33,7 +35,7 @@ export const SudokuGuideModal: React.FC<SudokuGuideModalProps> = ({ isOpen, onCl
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
-            핵심 풀이 공식
+            {language === 'en' ? 'Techniques' : language === 'ja' ? '解法公式' : language === 'zh' ? '解题技巧' : '핵심 풀이 공식'}
           </button>
           <button
             onClick={() => setActiveTab('benefits')}
@@ -43,7 +45,7 @@ export const SudokuGuideModal: React.FC<SudokuGuideModalProps> = ({ isOpen, onCl
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
-            두뇌 건강 효과
+            {language === 'en' ? 'Brain Benefits' : language === 'ja' ? '脳トレ効果' : language === 'zh' ? '大脑健康' : '두뇌 건강 효과'}
           </button>
           <button
             onClick={() => setActiveTab('faq')}
@@ -53,7 +55,7 @@ export const SudokuGuideModal: React.FC<SudokuGuideModalProps> = ({ isOpen, onCl
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
             }`}
           >
-            자주 묻는 질문
+            {language === 'en' ? 'FAQ' : language === 'ja' ? 'FAQ' : language === 'zh' ? '常见问答' : '자주 묻는 질문'}
           </button>
         </div>
 

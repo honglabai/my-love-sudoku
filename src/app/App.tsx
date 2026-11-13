@@ -11,6 +11,7 @@ import { claimStageReward, RewardResult, applyLevelTestPlacement } from '../feat
 import { evaluateAchievements, Achievement } from '../features/achievements/achievements';
 import { getStageById } from '../features/stages/stageData';
 import { sound } from '../audio/sound';
+import { I18nProvider, Language } from '../i18n';
 
 import { ThemeBackground } from '../components/ThemeBackground';
 import { BottomNavigationBar } from '../components/BottomNavigationBar';
@@ -60,6 +61,11 @@ export const App: React.FC = () => {
     }
   }, [data.settings.theme]);
 
+  // Sync Language in document root
+  useEffect(() => {
+    document.documentElement.lang = data.settings.language || 'ko';
+  }, [data.settings.language]);
+
   // Persist save data on change
   const updateData = useCallback((updater: (prev: SaveDataV1) => SaveDataV1) => {
     setData(prev => {
@@ -68,6 +74,16 @@ export const App: React.FC = () => {
       return next;
     });
   }, []);
+
+  const handleLanguageChange = useCallback((lang: Language) => {
+    updateData(prev => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        language: lang
+      }
+    }));
+  }, [updateData]);
 
   const handleNavigate = (view: AppView, stageId?: number) => {
     if (stageId) {
@@ -225,7 +241,8 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <I18nProvider initialLanguage={data.settings.language} onLanguageChange={handleLanguageChange}>
+      <div className="relative min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Dynamic Zen Watercolor Theme Background */}
       <ThemeBackground
         worldId={currentBackgroundWorldId || 1}
@@ -341,6 +358,7 @@ export const App: React.FC = () => {
           hasActiveGame={!!data.activeGame}
         />
       )}
-    </div>
+      </div>
+    </I18nProvider>
   );
 };

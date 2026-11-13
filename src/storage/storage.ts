@@ -1,4 +1,5 @@
 import { PlayerProgression, createInitialProgression, DEFAULT_INVENTORY } from '../features/progression/progression';
+import { Language } from '../i18n/types';
 
 export interface UserSettings {
   soundEnabled: boolean;
@@ -7,6 +8,7 @@ export interface UserSettings {
   autoRemoveNotes: boolean;
   highlightSame: boolean;
   reducedMotion: boolean;
+  language: Language;
 }
 
 export interface ActiveGameSave {
@@ -35,7 +37,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   showErrors: true,
   autoRemoveNotes: true,
   highlightSame: true,
-  reducedMotion: false
+  reducedMotion: false,
+  language: 'ko'
 };
 
 export function createDefaultSaveData(): SaveDataV1 {
@@ -107,7 +110,10 @@ export function migrateOrSanitize(parsed: unknown): SaveDataV1 {
   const settings: UserSettings = {
     ...defaultData.settings,
     ...rawSettings,
-    theme: rawSettings.theme === 'dark' ? 'dark' : rawSettings.theme === 'system' ? 'system' : 'light'
+    theme: rawSettings.theme === 'dark' ? 'dark' : rawSettings.theme === 'system' ? 'system' : 'light',
+    language: (['ko', 'en', 'ja', 'zh'].includes(rawSettings.language as string)
+      ? rawSettings.language
+      : defaultData.settings.language) as Language
   };
 
   return {

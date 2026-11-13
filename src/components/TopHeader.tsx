@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InstallAppModal } from './InstallAppModal';
+import { LanguageSelector } from './LanguageSelector';
+import { useI18n } from '../i18n';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -7,6 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export const TopHeader: React.FC = () => {
+  const { t } = useI18n();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
@@ -56,36 +59,37 @@ export const TopHeader: React.FC = () => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between gap-2.5 pt-1 pb-1 px-0.5 select-none min-h-[44px]">
+      <header className="w-full flex items-center justify-between gap-2 pt-1 pb-1 px-0.5 select-none min-h-[44px]">
         {/* Left: Scaled-down Title Image */}
         <div className="flex-1 flex items-center min-w-0">
           <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-stone-200/90 dark:border-slate-800/80 shadow-xs bg-[#fbf9f5] dark:bg-slate-900 transition-all hover:scale-[1.01]">
             <img
               src="/assets/logo/title_banner.webp"
               alt="내사랑 스도쿠"
-              className="dark:hidden h-11 sm:h-12 w-auto max-w-[240px] sm:max-w-[280px] object-contain block select-none pointer-events-none"
+              className="dark:hidden h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[260px] object-contain block select-none pointer-events-none"
             />
             <img
               src="/assets/logo/title_banner_dark.webp"
               alt="내사랑 스도쿠"
-              className="hidden dark:block h-11 sm:h-12 w-auto max-w-[240px] sm:max-w-[280px] object-contain block select-none pointer-events-none"
+              className="hidden dark:block h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[260px] object-contain block select-none pointer-events-none"
             />
           </div>
         </div>
 
-        {/* Right: Install App Button on the Same Row */}
-        <div className="shrink-0 flex items-center">
+        {/* Right: Language Selector & Install App Button on the Same Row */}
+        <div className="shrink-0 flex items-center gap-1.5">
+          <LanguageSelector variant="header" />
           <button
             onClick={handleInstallClick}
             aria-label="앱 설치 및 바탕화면에 추가"
-            className={`flex items-center gap-1.5 px-3 py-1.5 min-h-[34px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
+            className={`flex items-center gap-1 px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
               isStandalone
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-blue-500/30'
             }`}
           >
             <span>📲</span>
-            <span className="whitespace-nowrap">{isStandalone ? '설치됨' : '앱 설치'}</span>
+            <span className="whitespace-nowrap">{isStandalone ? t('common.installed') : t('common.install')}</span>
           </button>
         </div>
       </header>

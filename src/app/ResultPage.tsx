@@ -9,6 +9,7 @@ import { Button } from '../components/Button';
 import { StarRating } from '../components/StarRating';
 import { ProgressBar } from '../components/ProgressBar';
 import { Badge } from '../components/Badge';
+import { useI18n } from '../i18n';
 
 interface ResultPageProps {
   stageId: number;
@@ -35,6 +36,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
   onReplay,
   onGoToMap
 }) => {
+  const { t } = useI18n();
   const stage = getStageById(stageId);
   const nextStageId = rewardResult.nextUnlockedStage || (stageId < 50 ? stageId + 1 : null);
 
@@ -63,14 +65,14 @@ export const ResultPage: React.FC<ResultPageProps> = ({
             🎉
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-serif">
-            스테이지 완료!
+            {t('result.stageComplete')}
           </h1>
           <span className="inline-block text-2xl sm:text-3xl select-none -scale-x-100" aria-hidden="true">
             🎉
           </span>
         </div>
         <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 mt-1">
-          스테이지 {stageId}. {stage?.title}
+          {t('common.stage')} {stageId}. {stage?.title}
         </p>
       </header>
 
@@ -82,49 +84,49 @@ export const ResultPage: React.FC<ResultPageProps> = ({
             <StarRating stars={rewardResult.starsEarned} size="lg" animated />
             <div className="text-sm font-black text-amber-500 mt-2">
               {rewardResult.starsEarned === 3
-                ? '완벽한 추론! ★★★'
+                ? t('result.perfectLogic')
                 : rewardResult.starsEarned === 2
-                ? '훌륭한 논리! ★★'
-                : '스테이지 클리어! ★'}
+                ? t('result.greatLogic')
+                : t('result.clear')}
             </div>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-2 p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl mb-4 text-center border border-slate-100 dark:border-slate-800">
             <div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">클리어 시간</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">{t('result.clearTime')}</div>
               <div className="text-sm font-black text-slate-900 dark:text-slate-100">
                 {formatTime(elapsedSeconds)}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">실수 횟수</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">{t('result.mistakes')}</div>
               <div className="text-sm font-black text-slate-900 dark:text-slate-100">
-                {mistakes}회
+                {mistakes}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">사용한 힌트</div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">{t('result.hintsUsed')}</div>
               <div className="text-sm font-black text-slate-900 dark:text-slate-100">
-                {hintsUsed}회
+                {hintsUsed}
               </div>
             </div>
           </div>
 
           {/* XP Gained Announcement */}
           <div className="p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-900 rounded-2xl mb-4">
-            <div className="text-xs font-bold text-blue-600 dark:text-blue-400">획득 경험치</div>
+            <div className="text-xs font-bold text-blue-600 dark:text-blue-400">{t('result.xpEarned')}</div>
             <div className="text-2xl font-black text-blue-700 dark:text-blue-300">
               +{rewardResult.xpEarned} <span className="text-xs font-semibold">XP</span>
             </div>
             {rewardResult.isFirstClear && (
               <div className="text-[11px] text-blue-500 dark:text-blue-400 font-bold mt-0.5">
-                최초 클리어 보너스 지급 완료!
+                {t('result.firstClearBonus')}
               </div>
             )}
             {!rewardResult.isFirstClear && rewardResult.isNewStarRecord && (
               <div className="text-[11px] text-amber-600 dark:text-amber-400 font-bold mt-0.5">
-                별점 최고 기록 갱신 보너스 지급 완료!
+                {t('result.newStarRecord')}
               </div>
             )}
           </div>
@@ -132,7 +134,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           {/* Level Up Fanfare Banner */}
           {rewardResult.leveledUp && (
             <div className="p-3 bg-gradient-to-r from-amber-400 to-yellow-500 text-white rounded-2xl font-black mb-4 shadow-lg animate-pop">
-              <div className="text-sm">🌟 레벨 업! 🌟</div>
+              <div className="text-sm">🌟 {t('result.levelUp')} 🌟</div>
               <div className="text-lg">
                 Lv. {rewardResult.oldLevel} ➔ Lv. {rewardResult.newLevel}
               </div>
@@ -143,7 +145,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           <div className="text-left">
             <div className="flex justify-between items-center text-xs font-bold mb-1">
               <span className="text-slate-700 dark:text-slate-300">
-                플레이어 레벨 {rewardResult.updatedProgression.level}
+                {t('result.playerLevel')} {rewardResult.updatedProgression.level}
               </span>
               <span className="text-blue-600 dark:text-blue-400">
                 {rewardResult.updatedProgression.currentXP} / {reqXP} XP
@@ -169,7 +171,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
                 <div className="flex-1 text-left">
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
-                      새로운 업적 달성!
+                      {t('result.newAchievement')}
                     </span>
                     <Badge variant="amber" size="sm">
                       {ach.rewardTitle}
@@ -195,7 +197,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               onClick={() => onNextStage(nextStageId)}
               className="text-base font-black shadow-lg"
             >
-              다음 스테이지로 도전 (스테이지 {nextStageId}) ➔
+              {t('result.nextStage')} ({t('common.stage')} {nextStageId}) ➔
             </Button>
           )}
 
@@ -207,7 +209,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               onClick={() => onReplay(stageId)}
               className="font-bold"
             >
-              🔄 다시 풀기
+              🔄 {t('result.replay')}
             </Button>
 
             <Button
@@ -217,14 +219,14 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               onClick={onGoToMap}
               className="font-bold bg-white/70 dark:bg-slate-800/70"
             >
-              🗺️ 스테이지 목록
+              🗺️ {t('result.stageList')}
             </Button>
           </div>
         </div>
       </main>
 
       <footer className="text-xs text-slate-500 dark:text-slate-400 text-center">
-        내사랑 스도쿠 · 자동 저장 완료
+        {t('common.autoSaved')}
       </footer>
     </div>
   );

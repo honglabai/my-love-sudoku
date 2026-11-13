@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { PlayerInventory } from '../features/progression/progression';
+import { useI18n } from '../i18n';
 
 interface ItemDrawerProps {
   isOpen: boolean;
@@ -20,58 +21,87 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
   hasErrorsOnBoard,
   onUseItem
 }) => {
+  const { t, language } = useI18n();
+
+  const getLocalizedItem = (id: keyof PlayerInventory) => {
+    switch (id) {
+      case 'autoSolve':
+        return {
+          name: language === 'en' ? 'Clairvoyant Magnifier' : language === 'ja' ? '千里眼の虫眼鏡' : language === 'zh' ? '千里眼放大镜' : '천리안 돋보기',
+          desc: language === 'en' ? 'Fills the correct digit into a selected cell instantly.' : language === 'ja' ? '選択したマスに正しい答えを即座に入力します。' : language === 'zh' ? '立即在所选空格填入正确的答案。' : '선택한 빈칸에 100% 올바른 정답을 즉시 채워 넣습니다.',
+          btnText: language === 'en' ? 'Fill 1 Cell' : language === 'ja' ? '1マス正解入力' : language === 'zh' ? '填入1格正确数字' : '정답 1칸 채우기',
+          badge: language === 'en' ? 'Recommended' : language === 'ja' ? 'おすすめ' : language === 'zh' ? '推荐' : '추천'
+        };
+      case 'healMistake':
+        return {
+          name: language === 'en' ? 'Heart-Calming Pill' : language === 'ja' ? '清心丸 (ミス回復)' : language === 'zh' ? '定心丸 (消除失误)' : '정심환 (실수 회복/부활)',
+          desc: language === 'en' ? 'Reduces mistake count by 1 and revives on defeat.' : language === 'ja' ? 'ミス回数を1回減らし、失敗時にも復活可能。' : language === 'zh' ? '消除1次失误记录，挑战失败时亦可复活。' : '실수 횟수를 1회 차감합니다. (3번 실패 시에도 즉시 부활하여 이어서 플레이!)',
+          btnText: language === 'en' ? `Recover 1 Mistake (${mistakes}/3)` : language === 'ja' ? `ミス1回回復 (${mistakes}/3)` : language === 'zh' ? `消除1次失误 (${mistakes}/3)` : `실수 1회 회복 (현재: ${mistakes}/3)`,
+          badge: mistakes >= 2 ? (language === 'en' ? 'Danger!' : language === 'ja' ? 'ピンチ!' : language === 'zh' ? '危机脱离!' : '위기 탈출!') : undefined
+        };
+      case 'clearErrors':
+        return {
+          name: language === 'en' ? 'Incense of Purification' : language === 'ja' ? '浄化の香 (誤字消去)' : language === 'zh' ? '清净檀香 (清除错字)' : '정화의 향 (오답 일괄 제거)',
+          desc: language === 'en' ? 'Clears all conflicting digits currently on the board.' : language === 'ja' ? '盤面上で間違って入力された数字をすべて消去します。' : language === 'zh' ? '自动检测并清除棋盘上所有填错的数字。' : '보드 위에 잘못 입력된 모든 충돌 숫자들을 한 번에 감지하여 깨끗이 지워줍니다.',
+          btnText: language === 'en' ? 'Clear All Errors' : language === 'ja' ? '誤りを一括消去' : language === 'zh' ? '一键清除错字' : '오답 일괄 지우기',
+          badge: hasErrorsOnBoard ? (language === 'en' ? 'Errors Found' : language === 'ja' ? 'エラー検知' : language === 'zh' ? '已检测到错误' : '오답 감지됨') : undefined
+        };
+      case 'autoCandidates':
+        return {
+          name: language === 'en' ? 'Talisman of Insight' : language === 'ja' ? '洞察の護符 (候補メモ)' : language === 'zh' ? '洞察符文 (候选笔记)' : '통찰의 부적 (후보수 자동 메모)',
+          desc: language === 'en' ? 'Calculates and populates all pencil marks for empty cells.' : language === 'ja' ? 'すべての空きマスの候補数字を自動計算してメモします。' : language === 'zh' ? '自动计算并在所有空格中填入可能的候选笔记。' : '모든 빈칸에 들어갈 수 있는 유효한 후보 숫자를 계산하여 메모로 가득 채워줍니다.',
+          btnText: language === 'en' ? 'Auto-Fill Notes' : language === 'ja' ? '候補メモを自動入力' : language === 'zh' ? '自动填入候选数' : '후보수 자동 기입',
+          badge: language === 'en' ? 'Deduction Aid' : language === 'ja' ? '論理補助' : language === 'zh' ? '逻辑辅助' : '논리 보조'
+        };
+    }
+  };
+
   const items = [
     {
       id: 'autoSolve' as keyof PlayerInventory,
-      name: '천리안 돋보기',
+      ...getLocalizedItem('autoSolve'),
       icon: '🔍',
       count: inventory.autoSolve,
-      desc: '선택한 빈칸(또는 가장 유력한 빈칸)에 100% 올바른 정답을 즉시 채워 넣습니다.',
-      btnText: '정답 1칸 채우기',
-      badge: '추천',
       badgeColor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
       disabled: inventory.autoSolve <= 0
     },
     {
       id: 'healMistake' as keyof PlayerInventory,
-      name: '정심환 (실수 회복/부활)',
+      ...getLocalizedItem('healMistake'),
       icon: '💊',
       count: inventory.healMistake,
-      desc: '실수 횟수를 1회 차감합니다. (3번 실패 시에도 즉시 부활하여 이어서 플레이!)',
-      btnText: `실수 1회 회복 (현재: ${mistakes}/3)`,
-      badge: mistakes >= 2 ? '위기 탈출!' : undefined,
       badgeColor: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300',
       disabled: inventory.healMistake <= 0 || mistakes === 0
     },
     {
       id: 'clearErrors' as keyof PlayerInventory,
-      name: '정화의 향 (오답 일괄 제거)',
+      ...getLocalizedItem('clearErrors'),
       icon: '🧹',
       count: inventory.clearErrors,
-      desc: '보드 위에 잘못 입력된 모든 충돌 숫자들을 한 번에 감지하여 깨끗이 지워줍니다.',
-      btnText: '오답 일괄 지우기',
-      badge: hasErrorsOnBoard ? '오답 감지됨' : undefined,
       badgeColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
       disabled: inventory.clearErrors <= 0 || !hasErrorsOnBoard
     },
     {
       id: 'autoCandidates' as keyof PlayerInventory,
-      name: '통찰의 부적 (후보수 자동 메모)',
+      ...getLocalizedItem('autoCandidates'),
       icon: '📜',
       count: inventory.autoCandidates,
-      desc: '모든 빈칸에 들어갈 수 있는 유효한 후보 숫자를 계산하여 메모로 가득 채워줍니다.',
-      btnText: '후보수 자동 기입',
-      badge: '논리 보조',
       badgeColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
       disabled: inventory.autoCandidates <= 0
     }
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="🎒 내사랑 스도쿠 보물함">
+    <Modal isOpen={isOpen} onClose={onClose} title={`🎒 ${t('game.itemDrawerTitle')}`}>
       <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
         <p className="text-xs text-center text-slate-600 dark:text-slate-400 font-medium">
-          기본 지급된 신비로운 아이템을 사용하여 위기의 순간을 지혜롭게 돌파하세요!
+          {language === 'en'
+            ? 'Use your special ink items to overcome difficult situations!'
+            : language === 'ja'
+            ? 'アイテムを賢く使って、難関パズルを突破しましょう！'
+            : language === 'zh'
+            ? '善用锦囊中的水墨道具，化险为夷突破难关！'
+            : '기본 지급된 신비로운 아이템을 사용하여 위기의 순간을 지혜롭게 돌파하세요!'}
         </p>
 
         <div className="space-y-2.5">

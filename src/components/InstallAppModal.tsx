@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { useI18n } from '../i18n';
 
 interface InstallAppModalProps {
   isOpen: boolean;
@@ -19,8 +20,10 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
   onTriggerInstallPrompt,
   hasNativePrompt
 }) => {
+  const { t } = useI18n();
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="📲 내사랑 스도쿠 앱 설치">
+    <Modal isOpen={isOpen} onClose={onClose} title={`📲 ${t('modal.installTitle')}`}>
       <div className="space-y-4 text-slate-800 dark:text-slate-200">
         {isStandalone ? (
           <div className="text-center py-3">
@@ -139,7 +142,7 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
 
         <div className="pt-2 text-center">
           <Button variant="ghost" size="sm" onClick={onClose} className="text-xs">
-            닫기
+            {t('common.close')}
           </Button>
         </div>
       </div>
