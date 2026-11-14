@@ -54,7 +54,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const percent = Math.min(100, Math.max(0, Math.round((progression.currentXP / Math.max(1, reqXP)) * 100)));
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto px-2.5 py-1 sm:px-4 pb-14">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md w-full mx-auto px-2 sm:px-4 py-1 pb-14 overflow-x-hidden">
       {/* Top Header: Title Logo Image with App Install Button */}
       <TopHeader />
 
@@ -66,7 +66,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">
               {t('profile.titleTitle')}
             </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+            <div className="text-lg sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight truncate max-w-full px-1">
               {getLocalizedTitle(progression.equippedTitle, language)}
             </div>
           </div>
@@ -75,7 +75,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="bg-slate-50 dark:bg-slate-800/80 rounded-xl p-2.5 sm:p-3 border border-slate-100 dark:border-slate-800 mb-1.5">
             <div className="flex items-center justify-between text-xs font-bold mb-1.5">
               <span className="text-slate-600 dark:text-slate-400">{t('profile.levelInfo')}</span>
-              <span className="text-blue-600 dark:text-blue-400">
+              <span className="text-blue-600 dark:text-blue-400 text-[11px] sm:text-xs">
                 {progression.currentXP} / {reqXP} XP ({percent}%)
               </span>
             </div>
@@ -89,21 +89,21 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             {/* Checkpoint Tier Markers */}
-            <div className="grid grid-cols-4 gap-0.5 text-[11px] text-center mt-1.5 font-bold text-slate-500 dark:text-slate-400">
+            <div className="grid grid-cols-4 gap-0.5 text-[10px] sm:text-[11px] text-center mt-1.5 font-bold text-slate-500 dark:text-slate-400 tracking-tighter sm:tracking-normal">
               <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>{language === 'en' ? 'Novice' : language === 'ja' ? '入門者' : language === 'zh' ? '初学者' : '입문자'}</div>
+                <div className="truncate">{language === 'en' ? 'Novice' : language === 'ja' ? '入門者' : language === 'zh' ? '初学者' : '입문자'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.1</div>
               </div>
               <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>{language === 'en' ? 'Explorer' : language === 'ja' ? '探検家' : language === 'zh' ? '探索者' : '탐험가'}</div>
+                <div className="truncate">{language === 'en' ? 'Explorer' : language === 'ja' ? '探検家' : language === 'zh' ? '探索者' : '탐험가'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.5</div>
               </div>
               <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>{language === 'en' ? 'Collector' : language === 'ja' ? '収集家' : language === 'zh' ? '收集家' : '수집가'}</div>
+                <div className="truncate">{language === 'en' ? 'Collector' : language === 'ja' ? '収集家' : language === 'zh' ? '收集家' : '수집가'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.15</div>
               </div>
               <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>{language === 'en' ? 'Master' : language === 'ja' ? '達人' : language === 'zh' ? '宗师' : '마스터'}</div>
+                <div className="truncate">{language === 'en' ? 'Master' : language === 'ja' ? '達人' : language === 'zh' ? '宗师' : '마스터'}</div>
                 <div className="text-[9.5px] opacity-75">Lv.30+</div>
               </div>
             </div>
@@ -112,14 +112,14 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Cumulative Stats Grid */}
           <div className="grid grid-cols-2 gap-1.5 text-center">
             <div className="p-2 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-xl">
-              <div className="text-[11px] font-bold text-amber-700 dark:text-amber-400">{t('home.statsStars')}</div>
+              <div className="text-[10.5px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 truncate tracking-tight">{t('home.statsStars')}</div>
               <div className="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-0.5">
                 ⭐ {progression.totalStars} <span className="text-[10px] font-semibold text-slate-400">/ 150</span>
               </div>
             </div>
 
             <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-xl">
-              <div className="text-[11px] font-bold text-blue-700 dark:text-blue-400">{t('home.statsCleared')}</div>
+              <div className="text-[10.5px] sm:text-[11px] font-bold text-blue-700 dark:text-blue-400 truncate tracking-tight">{t('home.statsCleared')}</div>
               <div className="text-base sm:text-lg font-black text-blue-600 dark:text-blue-400 mt-0.5">
                 🧩 {Object.keys(progression.stageRecords).length}{' '}
                 <span className="text-[10px] font-semibold text-slate-400">/ 50</span>
@@ -166,7 +166,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             size="md"
             fullWidth
             onClick={() => onNavigate('stage-map')}
-            className="py-2.5 text-sm sm:text-base font-black shadow-md"
+            className="py-2.5 text-xs sm:text-base font-black shadow-md tracking-tight"
           >
             🗺️ {t('home.stageJourney')}
           </Button>
@@ -178,17 +178,17 @@ export const HomePage: React.FC<HomePageProps> = ({
               size="sm"
               fullWidth
               onClick={() => setShowLevelTest(true)}
-              className="py-2 text-[11.5px] font-black bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-amber-950/30 text-amber-900 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-2xs"
+              className="py-2 px-1 text-[10.5px] xs:text-[11.5px] font-black tracking-tight bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-amber-950/30 text-amber-900 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/60 shadow-2xs truncate"
             >
               🎯 {t('home.levelTest')}
             </Button>
 
             <button
               onClick={() => setShowGuide(true)}
-              className="py-2 px-2 rounded-xl bg-white/85 dark:bg-slate-900/85 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[11.5px] flex items-center justify-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-98 transition-all shadow-2xs"
+              className="py-2 px-1 rounded-xl bg-white/85 dark:bg-slate-900/85 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[10.5px] xs:text-[11.5px] tracking-tight flex items-center justify-center gap-1 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-98 transition-all shadow-2xs truncate"
             >
               <span>📖</span>
-              <span>{t('home.sudokuGuide')}</span>
+              <span className="truncate">{t('home.sudokuGuide')}</span>
             </button>
           </div>
         </div>
@@ -199,7 +199,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* Semantic Footer with Full Transparency Links */}
       <footer className="w-full text-center text-xs text-slate-500 dark:text-slate-500 mt-1 space-y-1 select-none">
-        <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-0.5 text-[10.5px] font-semibold text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-[10px] sm:text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 tracking-tight">
           <button
             onClick={() => setShowPrivacy(true)}
             className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"

@@ -11,51 +11,64 @@ import { findLogicalHint, HintResult } from '../features/hint/hintEngine';
 import { getRow, getCol, getBox } from '../domain/sudoku/types';
 import { PlayerInventory, DEFAULT_INVENTORY } from '../features/progression/progression';
 import { ItemDrawer } from '../components/ItemDrawer';
-import { useI18n, getLocalizedStageTitle } from '../i18n';
+import { useI18n, getLocalizedStageTitle, getLocalizedWorld, getLocalizedDifficulty } from '../i18n';
 
 interface WorldZenMeta {
-  themeName: string;
-  pill: string;
   pillColor: string;
-  motto: string;
   seal: [string, string];
+  mottos: Record<string, string>;
 }
 
 const WORLD_ZEN_META: Record<number, WorldZenMeta> = {
   1: {
-    themeName: '평온의 정원',
-    pill: 'BEGINNER · 평온의 정원',
     pillColor: 'text-rose-700 bg-rose-50/90 border-rose-300',
-    motto: '맑은 마음으로 첫 수를 놓아보세요.',
-    seal: ['평', '온']
+    seal: ['평', '온'],
+    mottos: {
+      ko: '맑은 마음으로 첫 수를 놓아보세요.',
+      en: 'Place your first number with a tranquil mind.',
+      ja: '澄んだ心で最初の一手を指してみましょう。',
+      zh: '以清净之心，落定第一着数。'
+    }
   },
   2: {
-    themeName: '푸른 대나무숲',
-    pill: 'EASY · 푸른 대나무숲',
     pillColor: 'text-emerald-800 bg-emerald-50/90 border-emerald-300',
-    motto: '차분한 시선으로 논리의 실마리를 찾으세요.',
-    seal: ['통', '찰']
+    seal: ['통', '찰'],
+    mottos: {
+      ko: '차분한 시선으로 논리의 실마리를 찾으세요.',
+      en: 'Find the clues of logic with calm eyes.',
+      ja: '穏やかな視線で論理の手がかりを見つけましょう。',
+      zh: '以从容眼光，寻觅逻辑线索。'
+    }
   },
   3: {
-    themeName: '황혼의 석탑',
-    pill: 'NORMAL · 황혼의 석탑',
     pillColor: 'text-amber-800 bg-amber-50/90 border-amber-300',
-    motto: '깊은 집중으로 숨겨진 한 수를 밝히세요.',
-    seal: ['정', '진']
+    seal: ['정', '진'],
+    mottos: {
+      ko: '깊은 집중으로 숨겨진 한 수를 밝히세요.',
+      en: 'Reveal the hidden move with deep concentration.',
+      ja: '深い集中で隠された一手を見出しましょう。',
+      zh: '聚精会神，洞察隐藏的玄机。'
+    }
   },
   4: {
-    themeName: '설산과 백매화',
-    pill: 'HARD · 설산과 백매화',
     pillColor: 'text-sky-800 bg-sky-50/90 border-sky-300',
-    motto: '정교한 추론으로 복잡한 실타래를 푸세요.',
-    seal: ['지', '혜']
+    seal: ['지', '혜'],
+    mottos: {
+      ko: '정교한 추론으로 복잡한 실타래를 푸세요.',
+      en: 'Untangle complexity through precise deduction.',
+      ja: '精緻な推論で複雑な糸口を解き明かしましょう。',
+      zh: '以精密推理，解开错综谜题。'
+    }
   },
   5: {
-    themeName: '붉은 달과 천년송',
-    pill: 'MASTER · 붉은 달과 천년송',
     pillColor: 'text-purple-800 bg-purple-50/90 border-purple-300',
-    motto: '완전한 통찰로 최고의 경지를 이루세요.',
-    seal: ['극', '치']
+    seal: ['극', '치'],
+    mottos: {
+      ko: '완전한 통찰로 최고의 경지를 이루세요.',
+      en: 'Achieve the highest realm with total insight.',
+      ja: '完全な洞察で最高の境地に達しましょう。',
+      zh: '以通透洞察，达至最高境界。'
+    }
   }
 };
 
@@ -423,7 +436,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md mx-auto pt-1 px-1 pb-0 sm:pt-2 sm:px-2 sm:pb-0 select-none">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen w-full max-w-md mx-auto pt-1 px-1 pb-0 sm:pt-2 sm:px-2 sm:pb-0 select-none overflow-x-hidden">
       {/* Top Sleek Control Bar - Compact Rounded-xl Buttons, Zero Text Wrapping */}
       <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
         <button
@@ -494,16 +507,16 @@ export const GamePage: React.FC<GamePageProps> = ({
           <div className="relative z-10 w-full flex items-center justify-between px-2 pt-0.5 pb-1 pointer-events-none select-none">
             <div className="flex items-center gap-1.5 leading-none">
               <span className="font-serif font-black text-xs sm:text-sm text-rose-700 dark:text-rose-500 tracking-tight">
-                내사랑
+                {language === 'en' ? 'My' : language === 'ja' ? '愛しの' : language === 'zh' ? '挚爱' : '내사랑'}
               </span>
               <span className="font-serif font-black text-xs sm:text-sm text-slate-900 dark:text-slate-100 tracking-tight">
-                스도쿠
+                {language === 'en' ? 'Sudoku' : language === 'ja' ? '数独' : language === 'zh' ? '数独' : '스도쿠'}
               </span>
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className={`inline-block px-2 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-black tracking-wider uppercase border shadow-2xs ${zenMeta.pillColor}`}>
-                {zenMeta.pill}
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] sm:text-[9.5px] font-black tracking-wider uppercase border shadow-2xs truncate max-w-[200px] ${zenMeta.pillColor}`}>
+                {getLocalizedDifficulty(stage.difficulty, language)} · {getLocalizedWorld(stage.worldId, language).name}
               </span>
             </div>
           </div>
@@ -642,8 +655,8 @@ export const GamePage: React.FC<GamePageProps> = ({
 
           {/* Bottom Zen Motto */}
           <div className="relative z-10 w-full text-center pt-1 pb-0.5 pointer-events-none select-none">
-            <span className="text-[10px] sm:text-[10.5px] text-stone-600 dark:text-stone-300 font-serif italic tracking-tight">
-              “{zenMeta.motto}”
+            <span className="text-[10px] sm:text-[10.5px] text-stone-600 dark:text-stone-300 font-serif italic tracking-tight truncate max-w-full inline-block px-1">
+              “{zenMeta.mottos[language] || zenMeta.mottos.ko}”
             </span>
           </div>
         </div>
@@ -652,7 +665,7 @@ export const GamePage: React.FC<GamePageProps> = ({
       {/* Bottom Menu Card: Controls & Numpad Flush to Bottom Edge */}
       <footer className="w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-t-2xl rounded-b-none p-1 sm:p-1.5 pb-1 sm:pb-2 border-t border-slate-200/80 dark:border-slate-800 shadow-2xl space-y-0.5 mt-auto select-none">
         {/* Action Controls Row - Minimized Gaps */}
-        <div className="grid grid-cols-6 gap-0.5 px-0.5">
+        <div className="grid grid-cols-6 gap-0.5 px-0.5 w-full">
           <button
             type="button"
             onClick={() => {
@@ -660,10 +673,10 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'UNDO' });
             }}
             disabled={state.history.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all min-w-0"
           >
             <span className="text-xs sm:text-sm leading-none">↩️</span>
-            <span className="leading-tight mt-0.5">{t('game.undo')}</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.undo')}</span>
           </button>
 
           <button
@@ -673,10 +686,10 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'REDO' });
             }}
             disabled={state.future.length === 0}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all min-w-0"
           >
             <span className="text-xs sm:text-sm leading-none">↪️</span>
-            <span className="leading-tight mt-0.5">{t('game.redo')}</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.redo')}</span>
           </button>
 
           <button
@@ -685,10 +698,10 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playErase();
               dispatch({ type: 'ERASE_CELL' });
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs active:scale-95 transition-all min-w-0"
           >
             <span className="text-xs sm:text-sm leading-none">🧹</span>
-            <span className="leading-tight mt-0.5">{t('game.erase')}</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.erase')}</span>
           </button>
 
           <button
@@ -697,23 +710,23 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               dispatch({ type: 'TOGGLE_NOTE_MODE' });
             }}
-            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 transition-all active:scale-95 ${
+            className={`flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 transition-all active:scale-95 min-w-0 ${
               state.isNoteMode
                 ? 'bg-amber-500 text-white shadow-md ring-2 ring-amber-400'
                 : 'bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-300 shadow-2xs'
             }`}
           >
             <span className="text-xs sm:text-sm leading-none">✏️</span>
-            <span className="leading-tight mt-0.5">{t('game.notes')}</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.notes')}</span>
           </button>
 
           <button
             type="button"
             onClick={handleTriggerHint}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-amber-600 dark:text-amber-400 shadow-2xs active:scale-95 transition-all min-w-0"
           >
             <span className="text-xs sm:text-sm leading-none">💡</span>
-            <span className="leading-tight mt-0.5">{t('game.hint')}</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.hint')}</span>
           </button>
 
           <button
@@ -722,10 +735,10 @@ export const GamePage: React.FC<GamePageProps> = ({
               sound.playTap();
               setShowItemDrawer(true);
             }}
-            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9.5px] sm:text-[10px] font-bold gap-0 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform"
+            className="flex flex-col items-center justify-center py-0.5 px-0.5 min-h-[26px] sm:min-h-[28px] rounded-xl text-[9px] sm:text-[10px] font-bold gap-0 bg-gradient-to-b from-amber-100/90 to-orange-100/90 dark:from-slate-800 dark:to-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-2xs text-amber-900 dark:text-amber-300 active:scale-95 transition-transform min-w-0"
           >
             <span className="text-xs sm:text-sm leading-none">🎒</span>
-            <span className="leading-tight mt-0.5 whitespace-nowrap">{t('game.inventory')}({totalItemCount})</span>
+            <span className="leading-tight mt-0.5 truncate max-w-full tracking-tighter px-0.5 text-center">{t('game.inventory')}({totalItemCount})</span>
           </button>
         </div>
 

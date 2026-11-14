@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-love-sudoku-v17';
+const CACHE_NAME = 'my-love-sudoku-v18';
 
 self.addEventListener('install', () => {
   self.skipWaiting();

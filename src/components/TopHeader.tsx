@@ -59,37 +59,37 @@ export const TopHeader: React.FC = () => {
 
   return (
     <>
-      <header className="w-full flex items-center justify-between gap-2 pt-1 pb-1 px-0.5 select-none min-h-[44px]">
+      <header className="w-full max-w-full flex items-center justify-between gap-1.5 sm:gap-2 pt-1 pb-1 px-0.5 select-none min-h-[40px] sm:min-h-[44px]">
         {/* Left: Scaled-down Title Image */}
-        <div className="flex-1 flex items-center min-w-0">
-          <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-stone-200/90 dark:border-slate-800/80 shadow-xs bg-[#fbf9f5] dark:bg-slate-900 transition-all hover:scale-[1.01]">
+        <div className="flex-1 flex items-center min-w-0 pr-1">
+          <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-stone-200/90 dark:border-slate-800/80 shadow-xs bg-[#fbf9f5] dark:bg-slate-900 transition-all hover:scale-[1.01] max-w-[150px] xs:max-w-[180px] sm:max-w-[240px]">
             <img
               src={`/assets/logo/title_banner_${language}.webp`}
               alt={t('brand.title')}
-              className="dark:hidden h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[260px] object-contain block select-none pointer-events-none"
+              className="dark:hidden h-9 xs:h-10 sm:h-12 w-auto max-w-full object-contain block select-none pointer-events-none"
             />
             <img
               src={`/assets/logo/title_banner_${language}_dark.webp`}
               alt={t('brand.title')}
-              className="hidden dark:block h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[260px] object-contain block select-none pointer-events-none"
+              className="hidden dark:block h-9 xs:h-10 sm:h-12 w-auto max-w-full object-contain block select-none pointer-events-none"
             />
           </div>
         </div>
 
         {/* Right: Language Selector & Install App Button on the Same Row */}
-        <div className="shrink-0 flex items-center gap-1.5">
+        <div className="shrink-0 flex items-center gap-1 sm:gap-1.5">
           <LanguageSelector variant="header" />
           <button
             onClick={handleInstallClick}
             aria-label={t('modal.installTitle')}
-            className={`flex items-center gap-1 px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-black shadow-xs active:scale-95 transition-all border ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] rounded-xl text-[11px] sm:text-xs font-black tracking-tight shadow-xs active:scale-95 transition-all border ${
               isStandalone
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-blue-500/30'
             }`}
           >
-            <span>📲</span>
-            <span className="whitespace-nowrap">{isStandalone ? t('common.installed') : t('common.install')}</span>
+            <span className="text-xs sm:text-sm">📲</span>
+            <span className="whitespace-nowrap tracking-tight">{isStandalone ? t('common.installed') : t('common.install')}</span>
           </button>
         </div>
       </header>

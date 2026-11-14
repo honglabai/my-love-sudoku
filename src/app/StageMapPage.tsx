@@ -55,7 +55,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
   };
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen max-w-lg mx-auto p-3 sm:p-4 pb-20 select-none">
+    <div className="relative z-10 flex flex-col min-h-screen w-full max-w-lg mx-auto p-3 sm:p-4 pb-20 select-none overflow-x-hidden">
       {/* Top Bar */}
       <div className="flex items-center justify-between mb-3 pt-2">
         <Button variant="ghost" size="sm" pill onClick={onBack}>
@@ -271,10 +271,12 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                       <StarRating stars={record.stars} size="sm" />
                     ) : isUnlocked ? (
                       <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-200/60">
-                        도전
+                        {language === 'en' ? 'Play' : language === 'ja' ? '挑戦' : language === 'zh' ? '挑战' : '도전'}
                       </span>
                     ) : (
-                      <span className="text-xs text-slate-400">잠김</span>
+                      <span className="text-xs text-slate-400">
+                        {language === 'en' ? 'Locked' : language === 'ja' ? 'ロック' : language === 'zh' ? '未解锁' : '잠김'}
+                      </span>
                     )}
                   </div>
                 </div>

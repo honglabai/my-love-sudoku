@@ -10,7 +10,7 @@ export const zh: Translations = {
   'common.confirm': '确认',
   'common.cancel': '取消',
   'common.close': '关闭',
-  'common.install': '安装应用',
+  'common.install': '安装',
   'common.installed': '已安装',
   'common.autoSaved': '我爱数独 · 自动保存完成',
   'common.level': '等级',

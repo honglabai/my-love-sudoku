@@ -242,7 +242,7 @@ export const App: React.FC = () => {
 
   return (
     <I18nProvider initialLanguage={data.settings.language} onLanguageChange={handleLanguageChange}>
-      <div className="relative min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+      <div className="relative min-h-screen w-full max-w-full overflow-x-hidden bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Dynamic Zen Watercolor Theme Background */}
       <ThemeBackground
         worldId={currentBackgroundWorldId || 1}

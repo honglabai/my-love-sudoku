@@ -74,7 +74,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen max-w-md mx-auto p-3 sm:p-4 pb-20 select-none">
+    <div className="relative z-10 flex flex-col min-h-screen w-full max-w-md mx-auto p-3 sm:p-4 pb-20 select-none overflow-x-hidden">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-3 pt-1">
         <Button variant="ghost" size="sm" onClick={onBack} className="text-xs">
@@ -170,23 +170,29 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
-              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">총 획득 별점</div>
-                <div className="text-sm sm:text-base font-extrabold text-amber-500">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
+              <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
+                <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
+                  {language === 'en' ? 'Total Stars' : language === 'ja' ? '獲得スター' : language === 'zh' ? '获得星数' : '총 획득 별점'}
+                </div>
+                <div className="text-sm sm:text-base font-extrabold text-amber-500 truncate">
                   ⭐ {progression.totalStars}
                 </div>
               </div>
-              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">클리어 스테이지</div>
-                <div className="text-sm sm:text-base font-extrabold text-blue-600 dark:text-blue-400">
+              <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
+                <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
+                  {language === 'en' ? 'Cleared' : language === 'ja' ? 'クリア数' : language === 'zh' ? '通关数' : '클리어 스테이지'}
+                </div>
+                <div className="text-sm sm:text-base font-extrabold text-blue-600 dark:text-blue-400 truncate">
                   {totalCleared} / 50
                 </div>
               </div>
-              <div className="p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl">
-                <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold">3성 완벽 클리어</div>
-                <div className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400">
-                  {perfectClears}개
+              <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
+                <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
+                  {language === 'en' ? 'Perfects' : language === 'ja' ? 'ノーミス' : language === 'zh' ? '完美通关' : '3성 완벽 클리어'}
+                </div>
+                <div className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400 truncate">
+                  {perfectClears}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
                 </div>
               </div>
             </div>
@@ -195,33 +201,59 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           {/* Item Inventory Section */}
           <Card className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-amber-200/80 dark:border-amber-900/50 shadow-md">
             <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center justify-between">
-              <span>🎒 보유 중인 아이템</span>
-              <span className="text-[10.5px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold">스도쿠 인게임에서 사용 가능</span>
+              <span>🎒 {language === 'en' ? 'Item Inventory' : language === 'ja' ? '所持アイテム' : language === 'zh' ? '持有道具' : '보유 중인 아이템'}</span>
+              <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold truncate max-w-[170px]">
+                {language === 'en' ? 'In-game items' : language === 'ja' ? '数独ゲームで使用可能' : language === 'zh' ? '数独局内可使用' : '스도쿠 인게임에서 사용 가능'}
+              </span>
             </h3>
             <div className="grid grid-cols-2 gap-2 text-center">
-              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
                 <div className="text-xl mb-0.5">🔍</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">천리안 돋보기</div>
-                <div className="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400">{progression.inventory?.autoSolve ?? 3}개</div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">정답 1칸 입력</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {language === 'en' ? 'Clairvoyance Lens' : language === 'ja' ? '千里眼の虫眼鏡' : language === 'zh' ? '千里眼放大镜' : '천리안 돋보기'}
+                </div>
+                <div className="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400">
+                  {progression.inventory?.autoSolve ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                </div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
+                  {language === 'en' ? 'Reveals 1 cell' : language === 'ja' ? '正解を1マス入力' : language === 'zh' ? '填入1格正确数' : '정답 1칸 입력'}
+                </div>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
                 <div className="text-xl mb-0.5">💊</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">정심환 (부활)</div>
-                <div className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">{progression.inventory?.healMistake ?? 3}개</div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">실수 회복 / 부활</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {language === 'en' ? 'Revival Pill' : language === 'ja' ? '清心丸 (復活)' : language === 'zh' ? '清心丸 (复活)' : '정심환 (부활)'}
+                </div>
+                <div className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">
+                  {progression.inventory?.healMistake ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                </div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
+                  {language === 'en' ? 'Revives mistakes' : language === 'ja' ? 'ミス回復 / 復活' : language === 'zh' ? '消除失误 / 复活' : '실수 회복 / 부활'}
+                </div>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
                 <div className="text-xl mb-0.5">🧹</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">정화의 향</div>
-                <div className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400">{progression.inventory?.clearErrors ?? 3}개</div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">오답 일괄 제거</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {language === 'en' ? 'Purifying Incense' : language === 'ja' ? '浄化の香' : language === 'zh' ? '净化之香' : '정화의 향'}
+                </div>
+                <div className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400">
+                  {progression.inventory?.clearErrors ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                </div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
+                  {language === 'en' ? 'Clears errors' : language === 'ja' ? '誤答を一括消去' : language === 'zh' ? '一键清除错数' : '오답 일괄 제거'}
+                </div>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
                 <div className="text-xl mb-0.5">📜</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">통찰의 부적</div>
-                <div className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">{progression.inventory?.autoCandidates ?? 3}개</div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400">후보수 자동 메모</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  {language === 'en' ? 'Insight Talisman' : language === 'ja' ? '洞察のお札' : language === 'zh' ? '洞察之符' : '통찰의 부적'}
+                </div>
+                <div className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">
+                  {progression.inventory?.autoCandidates ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                </div>
+                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
+                  {language === 'en' ? 'Auto notes' : language === 'ja' ? '候補数を自動メモ' : language === 'zh' ? '候选数自动填注' : '후보수 자동 메모'}
+                </div>
               </div>
             </div>
           </Card>
@@ -229,7 +261,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           {/* Achievements Section */}
           <div className="mb-4">
             <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 px-1">
-              수집한 업적 배지 ({Object.keys(achievements).length} / {ACHIEVEMENTS.length})
+              {language === 'en' ? 'Achievement Badges' : language === 'ja' ? '獲得実績バッジ' : language === 'zh' ? '已获成就徽章' : '수집한 업적 배지'} ({Object.keys(achievements).length} / {ACHIEVEMENTS.length})
             </h3>
 
             <div className="space-y-2">

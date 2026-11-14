@@ -10,7 +10,7 @@ export const en: Translations = {
   'common.confirm': 'Confirm',
   'common.cancel': 'Cancel',
   'common.close': 'Close',
-  'common.install': 'Install App',
+  'common.install': 'Install',
   'common.installed': 'Installed',
   'common.autoSaved': 'My Love Sudoku · Auto Saved',
   'common.level': 'Level',

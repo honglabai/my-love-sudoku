@@ -67,7 +67,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ variant = 'h
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="언어 변경 / Change Language"
-        className="flex items-center gap-1 px-2 py-1.5 min-h-[34px] rounded-xl text-xs font-bold bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-stone-200/90 dark:border-slate-800 shadow-2xs active:scale-95 transition-all"
+        className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 min-h-[30px] sm:min-h-[34px] rounded-xl text-xs font-bold bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-stone-200/90 dark:border-slate-800 shadow-2xs active:scale-95 transition-all"
       >
         <Globe size={14} className="text-slate-500 dark:text-slate-400" />
         <span className="text-[11px] font-black uppercase tracking-wider">{currentOption.code}</span>
