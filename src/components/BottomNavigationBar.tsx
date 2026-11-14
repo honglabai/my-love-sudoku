@@ -15,11 +15,19 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
   onPlayGame,
   hasActiveGame
 }) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+
+  const navAria = language === 'en'
+    ? 'Bottom Navigation Menu'
+    : language === 'ja'
+    ? 'ナビゲーションメニュー'
+    : language === 'zh'
+    ? '底部导航菜单'
+    : '하단 네비게이션 메뉴';
 
   return (
     <nav
-      aria-label="하단 네비게이션 메뉴"
+      aria-label={navAria}
       className="fixed bottom-0 left-0 right-0 z-40 w-full pointer-events-auto select-none"
     >
       {/* Outer Dock Bar Container Flush to the Bottom with Minimal Height & Padding */}

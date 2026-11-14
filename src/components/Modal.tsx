@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useI18n } from '../i18n';
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export const Modal: React.FC<ModalProps> = ({
   maxWidth = 'max-w-sm',
   children
 }) => {
+  const { t } = useI18n();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -44,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
           </h3>
           <button
             onClick={onClose}
-            aria-label="닫기"
+            aria-label={t('common.close')}
             className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             ✕

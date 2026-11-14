@@ -146,7 +146,7 @@ export const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ onClose }) => 
         <button
           type="button"
           onClick={() => onClose(dontShowAgain)}
-          aria-label="튜토리얼 닫기"
+          aria-label={language === 'en' ? 'Close Tutorial' : language === 'ja' ? 'チュートリアルを閉じる' : language === 'zh' ? '关闭指南' : '튜토리얼 닫기'}
           className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold text-sm"
         >
           ✕

@@ -3,6 +3,8 @@ import { UserSettings } from '../storage/storage';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { sound } from '../audio/sound';
+import { useI18n } from '../i18n';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 interface SettingsPageProps {
   settings: UserSettings;
@@ -15,6 +17,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   onUpdateSettings,
   onBack
 }) => {
+  const { t, language } = useI18n();
   const [tutorialResetNotice, setTutorialResetNotice] = useState(false);
 
   const handleToggleSound = () => {
@@ -40,19 +43,34 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {/* Top Header */}
       <div className="flex items-center justify-between mb-4 pt-2">
         <Button variant="ghost" size="sm" onClick={onBack}>
-          ← 홈으로
+          ← {t('common.toHome')}
         </Button>
-        <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">게임 설정</h2>
+        <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">
+          {t('profile.preferencesTitle')}
+        </h2>
         <div className="w-16" />
       </div>
 
       <div className="space-y-3">
+        {/* Language Selector */}
+        <Card>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span>🌐</span>
+              <span>{t('profile.language')}</span>
+            </div>
+          </div>
+          <LanguageSelector variant="settings" />
+        </Card>
+
         {/* Sound FX Toggle */}
         <Card className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-bold text-slate-900 dark:text-slate-100">🔊 효과음</div>
+            <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              🔊 {t('profile.sound')}
+            </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              숫자 입력, 성공, 완성 연출 효과음 재생
+              {t('profile.soundDesc')}
             </div>
           </div>
           <button
@@ -72,13 +90,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Theme Selector */}
         <Card>
           <div className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-2">
-            🎨 화면 테마
+            🎨 {t('profile.theme')}
           </div>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { id: 'light', label: '☀️ 라이트' },
-              { id: 'dark', label: '🌙 다크' },
-              { id: 'system', label: '💻 시스템' }
+              { id: 'light', label: `☀️ ${t('profile.themeLight')}` },
+              { id: 'dark', label: `🌙 ${t('profile.themeDark')}` },
+              { id: 'system', label: `💻 ${t('profile.themeSystem')}` }
             ].map(item => {
               const isSelected = settings.theme === item.id;
               return (
@@ -102,10 +120,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <Card className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              ⚠️ 중복 오류 강조
+              ⚠️ {t('profile.highlightErrors')}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              행, 열, 박스 내 중복된 숫자를 붉은색으로 표시
+              {t('profile.highlightErrorsDesc')}
             </div>
           </div>
           <button
@@ -126,10 +144,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <Card className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              ✏️ 후보 메모 자동 정리
+              ✏️ {t('profile.autoNotes')}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              숫자 입력 시 연결된 행·열·박스의 후보 메모 자동 삭제
+              {t('profile.autoNotesDesc')}
             </div>
           </div>
           <button
@@ -150,10 +168,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <Card className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              🔍 동일한 숫자 강조
+              🔍 {t('profile.highlightSame')}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              선택한 셀과 같은 번호를 가진 모든 칸 강조
+              {t('profile.highlightSameDesc')}
             </div>
           </div>
           <button
@@ -174,10 +192,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <Card className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              🍃 모션 줄이기
+              🍃 {t('profile.reducedMotion')}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              화면 흔들림 및 불꽃 효과 애니메이션 최소화
+              {t('profile.reducedMotionDesc')}
             </div>
           </div>
           <button
@@ -198,15 +216,15 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <Card className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              📖 초보자 가이드 안내
+              📖 {language === 'en' ? 'Beginner Guide' : language === 'ja' ? '初心者ガイド' : language === 'zh' ? '新手指南' : '초보자 가이드 안내'}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
               {tutorialResetNotice ? (
                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                  ✓ 안내가 초기화되었습니다. 다음 게임 시 다시 표시됩니다.
+                  ✓ {language === 'en' ? 'Reset! Guide will show on next game.' : language === 'ja' ? 'リセット完了！次回プレイ時に表示されます。' : language === 'zh' ? '已重置！下次游戏将再次显示。' : '안내가 초기화되었습니다. 다음 게임 시 다시 표시됩니다.'}
                 </span>
               ) : (
-                '스도쿠 규칙 및 게임 조작법 가이드 다시 보기'
+                language === 'en' ? 'Re-enable in-game tutorial guide' : language === 'ja' ? '数独のルールと操作方法ガイドを再表示' : language === 'zh' ? '重新显示数独规则与操作指南' : '스도쿠 규칙 및 게임 조작법 가이드 다시 보기'
               )}
             </div>
           </div>
@@ -216,15 +234,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             pill
             onClick={handleResetTutorial}
           >
-            안내 초기화
+            {language === 'en' ? 'Reset' : language === 'ja' ? '再設定' : language === 'zh' ? '重置' : '안내 초기화'}
           </Button>
         </Card>
 
         {/* Info Card */}
         <Card className="text-center p-4 bg-slate-50 dark:bg-slate-900/40 text-xs text-slate-500 space-y-1">
-          <div className="font-extrabold text-slate-800 dark:text-slate-200">내사랑 스도쿠</div>
-          <div>버전 1.0.0 (정식 배포판)</div>
-          <div>순수 TypeScript 엔진 · 오프라인 PWA 지원</div>
+          <div className="font-extrabold text-slate-800 dark:text-slate-200">
+            {t('brand.title')}
+          </div>
+          <div>
+            {language === 'en' ? 'Version 1.0.0 (Official Release)' : language === 'ja' ? 'バージョン 1.0.0 (公式リリース)' : language === 'zh' ? '版本 1.0.0 (正式发布版)' : '버전 1.0.0 (정식 배포판)'}
+          </div>
+          <div>
+            {language === 'en' ? 'TypeScript Engine · Offline PWA Supported' : language === 'ja' ? 'TypeScriptエンジン · オフラインPWA対応' : language === 'zh' ? 'TypeScript引擎 · 支持离线PWA' : '순수 TypeScript 엔진 · 오프라인 PWA 지원'}
+          </div>
         </Card>
       </div>
     </div>

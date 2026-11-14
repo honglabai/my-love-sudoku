@@ -483,10 +483,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                📖 튜토리얼 가이드 다시 보기
+                📖 {language === 'en' ? 'Replay Tutorial Guide' : language === 'ja' ? 'チュートリアルを再表示' : language === 'zh' ? '重新查看新手指南' : '튜토리얼 가이드 다시 보기'}
               </div>
               <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                게임 시작 시 입문 도움말 안내 팝업을 다시 표시합니다
+                {language === 'en'
+                  ? 'Show the beginner walkthrough guide popup on next game start'
+                  : language === 'ja'
+                  ? 'ゲーム開始時に入門ガイド案内ポップアップを再表示します'
+                  : language === 'zh'
+                  ? '在游戏开始时重新展示新手入门引导弹窗'
+                  : '게임 시작 시 입문 도움말 안내 팝업을 다시 표시합니다'}
               </div>
             </div>
             <Button
@@ -495,7 +501,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               onClick={handleResetTutorial}
               className="text-xs shrink-0"
             >
-              {tutorialResetNotice ? '초기화됨! ✓' : '다시 보기'}
+              {tutorialResetNotice
+                ? (language === 'en' ? 'Reset! ✓' : language === 'ja' ? '初期化完了! ✓' : language === 'zh' ? '已重置! ✓' : '초기화됨! ✓')
+                : (language === 'en' ? 'Replay' : language === 'ja' ? '再表示' : language === 'zh' ? '重看' : '다시 보기')}
             </Button>
           </Card>
 
@@ -504,10 +512,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <Card className="flex items-center justify-between bg-amber-50/50 dark:bg-amber-950/20 border-amber-200/80 dark:border-amber-900/40">
               <div>
                 <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                  🎯 실력 진단 레벨 테스트
+                  🎯 {language === 'en' ? 'Skill Diagnostic Level Test' : language === 'ja' ? '実力診断レベルテスト' : language === 'zh' ? '实力诊断测验' : '실력 진단 레벨 테스트'}
                 </div>
                 <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                  3문항 실력 테스트를 다시 치르고 원하는 단계로 바로 점프합니다
+                  {language === 'en'
+                    ? 'Retake the 3-question test to jump directly to your preferred world'
+                    : language === 'ja'
+                    ? '3問のテストを再受検して希望のワールドへ直行します'
+                    : language === 'zh'
+                    ? '重新进行3道测试题并直接跳至心仪的世界'
+                    : '3문항 실력 테스트를 다시 치르고 원하는 단계로 바로 점프합니다'}
                 </div>
               </div>
               <Button
@@ -516,44 +530,62 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 onClick={() => setShowLevelTest(true)}
                 className="text-xs shrink-0 font-bold"
               >
-                테스트 시작
+                {language === 'en' ? 'Start Test' : language === 'ja' ? 'テスト開始' : language === 'zh' ? '开始测试' : '테스트 시작'}
               </Button>
             </Card>
           )}
 
           {/* App Info Card with Policy & Guide Links for AdSense & User Transparency */}
           <Card className="text-center p-3.5 bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 space-y-2">
-            <div className="font-extrabold text-slate-800 dark:text-slate-200 text-sm">내사랑 스도쿠</div>
-            <div>버전 1.0.0 (정식 배포판) · 한국 수묵 담채화 에디션</div>
-            <div className="text-[11px] text-slate-400">오프라인 PWA 및 고화질 벡터 스도쿠 보드 지원</div>
+            <div className="font-extrabold text-slate-800 dark:text-slate-200 text-sm">
+              {language === 'en' ? 'My Love Sudoku' : language === 'ja' ? '愛しの数独' : language === 'zh' ? '挚爱数独' : '내사랑 스도쿠'}
+            </div>
+            <div>
+              {language === 'en'
+                ? 'Version 1.0.0 (Release) · Ink Wash Watercolor Edition'
+                : language === 'ja'
+                ? 'バージョン 1.0.0 (正式版) · 水墨山水画エディション'
+                : language === 'zh'
+                ? '版本 1.0.0 (正版) · 东方水墨淡彩典藏版'
+                : '버전 1.0.0 (정식 배포판) · 한국 수묵 담채화 에디션'}
+            </div>
+            <div className="text-[11px] text-slate-400">
+              {language === 'en'
+                ? 'Offline PWA & Ultra HD Vector Sudoku Board'
+                : language === 'ja'
+                ? 'オフラインPWA＆高解像度ベクター数独盤'
+                : language === 'zh'
+                ? '支持离线PWA与超清矢量数独棋盘'
+                : '오프라인 PWA 및 고화질 벡터 스도쿠 보드 지원'}
+            </div>
 
             <div className="pt-2 border-t border-slate-200/70 dark:border-slate-700/60 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
               <button
                 onClick={() => setShowPrivacy(true)}
                 className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
               >
-                개인정보처리방침
+                {language === 'en' ? 'Privacy Policy' : language === 'ja' ? 'プライバシーポリシー' : language === 'zh' ? '隐私政策' : '개인정보처리방침'}
               </button>
               <span>·</span>
               <button
                 onClick={() => setShowTerms(true)}
                 className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
               >
-                이용약관
+                {language === 'en' ? 'Terms of Service' : language === 'ja' ? '利用規約' : language === 'zh' ? '服务条款' : '이용약관'}
               </button>
               <span>·</span>
               <button
                 onClick={() => setShowGuide(true)}
                 className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
               >
-                게임 가이드 & FAQ
+                {language === 'en' ? 'Game Guide & FAQ' : language === 'ja' ? 'ゲームガイド＆FAQ' : language === 'zh' ? '游戏指南与常见问答' : '게임 가이드 & FAQ'}
               </button>
               <span>·</span>
               <button
                 onClick={() => setShowAbout(true)}
                 className="hover:text-blue-600 dark:hover:text-blue-400 underline decoration-slate-300 dark:decoration-slate-700"
               >
-                고객지원 문의
+                {language === 'en' ? 'Contact Support' : language === 'ja' ? 'サポート・お問い合わせ' : language === 'zh' ? '联系与技术支持' : '고객지원 문의'}
               </button>
             </div>
           </Card>
@@ -566,7 +598,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           onClick={() => setShowResetModal(true)}
           className="text-xs font-semibold text-rose-500 hover:text-rose-700 underline"
         >
-          게임 진행 데이터 초기화
+          {language === 'en' ? 'Reset All Game Data' : language === 'ja' ? 'ゲーム進行データを完全初期化' : language === 'zh' ? '重置全部游戏数据' : '게임 진행 데이터 초기화'}
         </button>
       </div>
 
@@ -605,7 +637,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           onClick={() => setShowTitleModal(false)}
           className="mt-3 text-xs"
         >
-          닫기
+          {t('common.close')}
         </Button>
       </Modal>
 
@@ -613,14 +645,26 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       <Modal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
-        title="데이터 초기화"
+        title={t('profile.resetData')}
       >
         <div className="space-y-3 text-center">
           <div className="text-3xl">⚠️</div>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            정말로 모든 게임 데이터를 초기화하시겠습니까?
+            {language === 'en'
+              ? 'Are you sure you want to reset all game data?'
+              : language === 'ja'
+              ? '本当にすべてのゲームデータを初期化しますか？'
+              : language === 'zh'
+              ? '您确定要重置所有游戏数据吗？'
+              : '정말로 모든 게임 데이터를 초기화하시겠습니까?'}
             <br />
-            모든 스테이지 기록, 획득한 별점, 경험치, 업적이 초기화되며 되돌릴 수 없습니다.
+            {language === 'en'
+              ? 'All stage records, stars, XP, and achievements will be erased and cannot be recovered.'
+              : language === 'ja'
+              ? '全ステージのクリア記録、スター、経験値、実績が消去され、元に戻せません。'
+              : language === 'zh'
+              ? '所有关卡记录、星级、经验值及成就将全部清除且无法撤销。'
+              : '모든 스테이지 기록, 획득한 별점, 경험치, 업적이 초기화되며 되돌릴 수 없습니다.'}
           </p>
 
           <div className="flex gap-2">
@@ -630,7 +674,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               onClick={() => setShowResetModal(false)}
               className="flex-1 text-xs"
             >
-              취소
+              {t('common.cancel')}
             </Button>
             <Button
               variant="danger"
@@ -641,7 +685,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               }}
               className="flex-1 text-xs"
             >
-              초기화 확인
+              {language === 'en' ? 'Confirm Reset' : language === 'ja' ? '初期化する' : language === 'zh' ? '确认重置' : '초기화 확인'}
             </Button>
           </div>
         </div>

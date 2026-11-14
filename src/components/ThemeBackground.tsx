@@ -19,7 +19,7 @@ export const ThemeBackground: React.FC<ThemeBackgroundProps> = ({
         <source srcSet={`/assets/wallpapers/stage_${bgStage}.webp`} type="image/webp" />
         <img
           src={`/assets/wallpapers/stage_${bgStage}.jpg`}
-          alt="스도쿠 게임판 한국화 배경"
+          alt=""
           aria-hidden="true"
           className={`w-full h-full object-cover object-center transition-all duration-700 ${
             isGameView

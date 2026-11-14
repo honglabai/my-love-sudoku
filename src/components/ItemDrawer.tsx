@@ -127,7 +127,13 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                       )}
                     </div>
                     <div className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-0.5">
-                      보유: {item.count}개
+                      {language === 'en'
+                        ? `Owned: ${item.count}`
+                        : language === 'ja'
+                        ? `所持: ${item.count}個`
+                        : language === 'zh'
+                        ? `拥有: ${item.count}个`
+                        : `보유: ${item.count}개`}
                     </div>
                   </div>
                 </div>
@@ -149,7 +155,9 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                 }}
                 className="py-1.5 text-xs font-bold"
               >
-                {item.count <= 0 ? '수량 부족 (0개)' : item.btnText}
+                {item.count <= 0
+                  ? (language === 'en' ? 'Out of stock (0)' : language === 'ja' ? '数量不足 (0個)' : language === 'zh' ? '数量不足 (0个)' : '수량 부족 (0개)')
+                  : item.btnText}
               </Button>
             </div>
           ))}
@@ -157,7 +165,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
 
         <div className="pt-1">
           <Button variant="ghost" size="sm" pill fullWidth onClick={onClose}>
-            닫기
+            {t('common.close')}
           </Button>
         </div>
       </div>

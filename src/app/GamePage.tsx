@@ -395,7 +395,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   };
 
   const handleTriggerHint = () => {
-    const hint = findLogicalHint(state.board, state.solution);
+    const hint = findLogicalHint(state.board, state.solution, language);
     if (hint) {
       sound.playHint();
       setActiveHint(hint);
@@ -469,7 +469,7 @@ export const GamePage: React.FC<GamePageProps> = ({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={() => setShowTutorial(true)}
-            aria-label="도움말 가이드"
+            aria-label={language === 'en' ? 'Help Guide' : language === 'ja' ? 'ヘルプガイド' : language === 'zh' ? '帮助指南' : '도움말 가이드'}
             className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-200 active:scale-95 transition-all p-0"
           >
             ❓
@@ -479,7 +479,7 @@ export const GamePage: React.FC<GamePageProps> = ({
               dispatch({ type: 'PAUSE' });
               setShowPauseModal(true);
             }}
-            aria-label="게임 일시정지"
+            aria-label={t('game.pause')}
             className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/85 dark:bg-slate-900/85 hover:bg-slate-100 dark:hover:bg-slate-800 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-200 active:scale-95 transition-all p-0"
           >
             ⏸️
@@ -495,7 +495,7 @@ export const GamePage: React.FC<GamePageProps> = ({
             <source srcSet={`/assets/wallpapers/stage_${stage.id}.webp`} type="image/webp" />
             <img
               src={`/assets/wallpapers/stage_${stage.id}.jpg`}
-              alt={`제 ${stage.id}단계 배경`}
+              alt={`${t('common.stage')} ${stage.id}`}
               className="w-full h-full object-cover object-center"
             />
           </picture>
@@ -525,7 +525,7 @@ export const GamePage: React.FC<GamePageProps> = ({
           <div className="relative z-10 w-full flex items-center justify-center my-0.5">
             <div
               role="grid"
-              aria-label="스도쿠 게임 보드"
+              aria-label={language === 'en' ? 'Sudoku Board' : language === 'ja' ? '数独ゲーム盤' : language === 'zh' ? '数独棋盘' : '스도쿠 게임 보드'}
               className="relative w-full max-w-[min(372px,calc(100vw-16px))] aspect-square rounded-xl shadow-xl overflow-hidden border-[2.5px] border-slate-900 dark:border-stone-100 select-none bg-[#faf8f1] dark:bg-slate-900"
             >
               {/* Layer 1: 9x9 Interactive Cells Grid */}
@@ -580,7 +580,15 @@ export const GamePage: React.FC<GamePageProps> = ({
                       key={idx}
                       role="gridcell"
                       tabIndex={0}
-                      aria-label={`${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`}
+                      aria-label={
+                        language === 'en'
+                          ? `Row ${r + 1}, Col ${c + 1}, ${cellValue !== 0 ? `Number ${cellValue}` : 'Empty'}`
+                          : language === 'ja'
+                          ? `${r + 1}行 ${c + 1}列, ${cellValue !== 0 ? `数字 ${cellValue}` : '空欄'}`
+                          : language === 'zh'
+                          ? `第${r + 1}行第${c + 1}列, ${cellValue !== 0 ? `数字 ${cellValue}` : '空格'}`
+                          : `${r + 1}행 ${c + 1}열, ${cellValue !== 0 ? `숫자 ${cellValue}` : '빈칸'}`
+                      }
                       aria-selected={isSelected}
                       onClick={() => handleCellClick(idx)}
                       className={`relative flex items-center justify-center w-full h-full cursor-pointer transition-colors duration-100 select-none ${cellBg}`}
