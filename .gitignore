@@ -15,3 +15,6 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+
+# Temporary script assets
+scripts/fonts/

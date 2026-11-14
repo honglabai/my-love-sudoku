@@ -11,7 +11,7 @@ import { findLogicalHint, HintResult } from '../features/hint/hintEngine';
 import { getRow, getCol, getBox } from '../domain/sudoku/types';
 import { PlayerInventory, DEFAULT_INVENTORY } from '../features/progression/progression';
 import { ItemDrawer } from '../components/ItemDrawer';
-import { useI18n } from '../i18n';
+import { useI18n, getLocalizedStageTitle } from '../i18n';
 
 interface WorldZenMeta {
   themeName: string;
@@ -437,7 +437,7 @@ export const GamePage: React.FC<GamePageProps> = ({
         <div className="flex-1 min-w-0 text-center bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-2 py-1 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
           <div className="flex items-center justify-center gap-1">
             <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
-              {stage.id}{language === 'en' ? ' · ' : language === 'ja' ? ' · ' : language === 'zh' ? ' · ' : '단계 · '}{stage.title}
+              {stage.id}{language === 'en' ? ' · ' : language === 'ja' ? ' · ' : language === 'zh' ? ' · ' : '단계 · '}{getLocalizedStageTitle(stage.id, language)}
             </h2>
             {stage.isBoss && (
               <Badge variant="amber" size="sm" className="py-0 px-1 text-[9px]">

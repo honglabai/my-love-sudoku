@@ -13,7 +13,7 @@ import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
 import { SudokuGuideModal } from '../components/SudokuGuideModal';
 import { AboutContactModal } from '../components/AboutContactModal';
 import { LanguageSelector } from '../components/LanguageSelector';
-import { useI18n } from '../i18n';
+import { useI18n, getLocalizedTitle, getLocalizedAchievement } from '../i18n';
 import { sound } from '../audio/sound';
 
 interface ProfilePageProps {
@@ -39,7 +39,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onApplyLevelTest,
   initialTab = 'profile'
 }) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [activeTab, setActiveTab] = useState<'profile' | 'settings'>(initialTab);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -131,11 +131,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       onClick={() => setShowTitleModal(true)}
                       className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
                     >
-                      [칭호 변경]
+                      [{t('profile.titleTitle')}]
                     </button>
                   </div>
                   <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-0.5">
-                    {progression.equippedTitle}
+                    {getLocalizedTitle(progression.equippedTitle, language)}
                   </h3>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <ProgressBar
               value={progression.currentXP}
               max={reqXP}
-              label={`경험치 (${progression.currentXP} / ${reqXP} XP)`}
+              label={`${t('profile.levelInfo')} (${progression.currentXP} / ${reqXP} XP)`}
               showPercent
               color="blue"
               className="mb-2"
@@ -153,19 +153,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             {/* Checkpoint Tier Markers */}
             <div className="grid grid-cols-4 gap-1 text-xs text-center mb-3 font-bold text-slate-500 dark:text-slate-400">
               <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>입문자</div>
+                <div>{language === 'en' ? 'Novice' : language === 'ja' ? '入門者' : language === 'zh' ? '初学者' : '입문자'}</div>
                 <div className="text-[10px] opacity-75">Lv.1</div>
               </div>
               <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>탐험가</div>
+                <div>{language === 'en' ? 'Explorer' : language === 'ja' ? '探検家' : language === 'zh' ? '探索者' : '탐험가'}</div>
                 <div className="text-[10px] opacity-75">Lv.5</div>
               </div>
               <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>수집가</div>
+                <div>{language === 'en' ? 'Collector' : language === 'ja' ? '収集家' : language === 'zh' ? '收集家' : '수집가'}</div>
                 <div className="text-[10px] opacity-75">Lv.15</div>
               </div>
               <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
-                <div>마스터</div>
+                <div>{language === 'en' ? 'Master' : language === 'ja' ? '達人' : language === 'zh' ? '宗师' : '마스터'}</div>
                 <div className="text-[10px] opacity-75">Lv.30+</div>
               </div>
             </div>
@@ -235,6 +235,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <div className="space-y-2">
               {ACHIEVEMENTS.map(ach => {
                 const isUnlocked = !!achievements[ach.id];
+                const locAch = getLocalizedAchievement(ach.id, language) || ach;
                 return (
                   <Card
                     key={ach.id}
@@ -249,23 +250,27 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                            {ach.name}
+                            {locAch.name}
                           </span>
                           {isUnlocked && (
                             <Badge variant="amber" size="sm" className="text-xs">
-                              {ach.rewardTitle}
+                              {getLocalizedTitle(ach.rewardTitle, language)}
                             </Badge>
                           )}
                         </div>
                         <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                          {ach.description}
+                          {locAch.description}
                         </p>
                       </div>
                       <div>
                         {isUnlocked ? (
-                          <span className="text-xs font-bold text-amber-500">달성</span>
+                          <span className="text-xs font-bold text-amber-500">
+                            {language === 'en' ? 'Unlocked' : language === 'ja' ? '達成' : language === 'zh' ? '达成' : '달성'}
+                          </span>
                         ) : (
-                          <span className="text-xs text-slate-400">잠김</span>
+                          <span className="text-xs text-slate-400">
+                            {language === 'en' ? 'Locked' : language === 'ja' ? '未開放' : language === 'zh' ? '未解锁' : '잠김'}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -537,7 +542,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       <Modal
         isOpen={showTitleModal}
         onClose={() => setShowTitleModal(false)}
-        title="칭호 선택"
+        title={t('profile.titleTitle')}
       >
         <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
           {progression.unlockedTitles.map(title => {
@@ -555,8 +560,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
-                <span>{title}</span>
-                {isSelected && <span>✓ 장착 중</span>}
+                <span>{getLocalizedTitle(title, language)}</span>
+                {isSelected && <span>✓ {language === 'en' ? 'Equipped' : language === 'ja' ? '装着中' : language === 'zh' ? '佩戴中' : '장착 중'}</span>}
               </button>
             );
           })}

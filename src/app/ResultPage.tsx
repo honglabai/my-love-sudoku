@@ -9,7 +9,7 @@ import { Button } from '../components/Button';
 import { StarRating } from '../components/StarRating';
 import { ProgressBar } from '../components/ProgressBar';
 import { Badge } from '../components/Badge';
-import { useI18n } from '../i18n';
+import { useI18n, getLocalizedStageTitle, getLocalizedTitle, getLocalizedAchievement } from '../i18n';
 
 interface ResultPageProps {
   stageId: number;
@@ -36,7 +36,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
   onReplay,
   onGoToMap
 }) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const stage = getStageById(stageId);
   const nextStageId = rewardResult.nextUnlockedStage || (stageId < 50 ? stageId + 1 : null);
 
@@ -72,7 +72,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           </span>
         </div>
         <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 mt-1">
-          {t('common.stage')} {stageId}. {stage?.title}
+          {t('common.stage')} {stageId}. {stage ? getLocalizedStageTitle(stage.id, language) : ''}
         </p>
       </header>
 
@@ -174,11 +174,11 @@ export const ResultPage: React.FC<ResultPageProps> = ({
                       {t('result.newAchievement')}
                     </span>
                     <Badge variant="amber" size="sm">
-                      {ach.rewardTitle}
+                      {getLocalizedTitle(ach.rewardTitle, language)}
                     </Badge>
                   </div>
                   <div className="text-sm font-black text-slate-900 dark:text-slate-100">
-                    {ach.name}
+                    {getLocalizedAchievement(ach.id, language)?.name || ach.name}
                   </div>
                 </div>
               </div>

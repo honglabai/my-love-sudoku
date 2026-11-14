@@ -34,7 +34,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                 ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50/60 dark:bg-blue-950/40'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'
             }`}
-            aria-label="홈 화면으로 이동"
+            aria-label={t('nav.home')}
           >
             <span className="text-base leading-none transition-transform active:scale-90">🏠</span>
             <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.home')}</span>
@@ -51,7 +51,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                 ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50/60 dark:bg-blue-950/40'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'
             }`}
-            aria-label="스테이지 여정보기 화면으로 이동"
+            aria-label={t('nav.stages')}
           >
             <span className="text-base leading-none transition-transform active:scale-90">🗺️</span>
             <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.stages')}</span>
@@ -64,7 +64,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
           <div className="relative -top-2 flex-1 flex flex-col items-center justify-center">
             <button
               onClick={onPlayGame}
-              aria-label={hasActiveGame ? '진행 중인 스도쿠 이어하기' : '스도쿠 게임하기'}
+              aria-label={hasActiveGame ? t('home.continue') : t('home.quickStart')}
               className="group flex flex-col items-center justify-center active:scale-95 transition-transform"
             >
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 hover:from-blue-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-[0_3px_10px_rgba(37,99,235,0.35)] dark:shadow-[0_3px_10px_rgba(59,130,246,0.25)] ring-2 ring-slate-100 dark:ring-slate-950 transition-all duration-200">
@@ -86,7 +86,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                 ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50/60 dark:bg-blue-950/40'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'
             }`}
-            aria-label="일일 여정 도전 화면으로 이동"
+            aria-label={t('nav.daily')}
           >
             <span className="text-base leading-none transition-transform active:scale-90">🗓️</span>
             <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.daily')}</span>
@@ -103,7 +103,7 @@ export const BottomNavigationBar: React.FC<BottomNavigationBarProps> = ({
                 ? 'text-blue-600 dark:text-blue-400 font-extrabold bg-blue-50/60 dark:bg-blue-950/40'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'
             }`}
-            aria-label="마이페이지 화면으로 이동"
+            aria-label={t('nav.profile')}
           >
             <span className="text-base leading-none transition-transform active:scale-90">👤</span>
             <span className="text-[12px] sm:text-[12.5px] mt-0.5 tracking-tight font-extrabold leading-none">{t('nav.profile')}</span>

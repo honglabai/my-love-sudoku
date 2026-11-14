@@ -1,5 +1,6 @@
 import React from 'react';
 import { StarRating } from './StarRating';
+import { useI18n } from '../i18n';
 
 interface StampBadgeProps {
   stageId: number;
@@ -22,6 +23,7 @@ export const StampBadge: React.FC<StampBadgeProps> = ({
   stars = 0,
   onClick
 }) => {
+  const { language } = useI18n();
   // Pastel color themes matching Pin 2 Ridi gamification stamp aesthetic
   const colorThemes = [
     { bg: 'from-blue-100 via-sky-50 to-indigo-100 text-blue-800 border-blue-300 dark:from-blue-950 dark:to-indigo-950 dark:border-blue-700 dark:text-blue-300' },
@@ -85,7 +87,7 @@ export const StampBadge: React.FC<StampBadgeProps> = ({
           {/* "도전" Badge for current uncompleted stage */}
           {isCurrent && stars === 0 && (
             <div className="absolute -top-1.5 z-20 bg-rose-500 text-white font-black text-[9px] px-2 py-0.5 rounded-full shadow-sm animate-pulse">
-              도전
+              {language === 'en' ? 'PLAY' : language === 'ja' ? '挑戦' : language === 'zh' ? '挑战' : '도전'}
             </div>
           )}
         </div>

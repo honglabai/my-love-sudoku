@@ -7,7 +7,7 @@ import { Badge } from '../components/Badge';
 import { StarRating } from '../components/StarRating';
 import { StampBadge } from '../components/StampBadge';
 import { LevelTestModal } from '../components/LevelTestModal';
-import { useI18n } from '../i18n';
+import { useI18n, getLocalizedWorld, getLocalizedStageTitle, getLocalizedDifficulty } from '../i18n';
 
 interface StageMapPageProps {
   progression: PlayerProgression;
@@ -92,7 +92,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
               }`}
             >
               <div>{w.id}{language === 'en' ? ' World' : language === 'ja' ? '界' : language === 'zh' ? '卷' : '월드'}</div>
-              <div className="text-[11px] font-medium truncate opacity-90">{w.name}</div>
+              <div className="text-[11px] font-medium truncate opacity-90">{getLocalizedWorld(w.id, language).name}</div>
               {!isWorldUnlocked && <div className="text-xs mt-0.5">🔒</div>}
             </button>
           );
@@ -108,13 +108,13 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                 {activeWorld.id === 1 ? '🌸' : activeWorld.id === 2 ? '🎋' : activeWorld.id === 3 ? '🏯' : activeWorld.id === 4 ? '🍁' : '☀️'}
               </span>
               <h3 className="text-base font-black text-slate-900 dark:text-slate-100">
-                {activeWorld.id}{language === 'en' ? ' World. ' : language === 'ja' ? '界. ' : language === 'zh' ? '卷. ' : '월드. '}{activeWorld.name}
+                {activeWorld.id}{language === 'en' ? ' World. ' : language === 'ja' ? '界. ' : language === 'zh' ? '卷. ' : '월드. '}{getLocalizedWorld(activeWorld.id, language).name}
               </h3>
               <Badge variant={activeWorld.id === 5 ? 'rose' : activeWorld.id >= 3 ? 'amber' : 'blue'} size="sm">
-                {activeWorld.difficulty}
+                {getLocalizedDifficulty(activeWorld.difficulty, language)}
               </Badge>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{activeWorld.description}</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{getLocalizedWorld(activeWorld.id, language).description}</p>
           </div>
           <div className="text-right">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{language === 'en' ? 'Clear' : language === 'ja' ? 'クリア' : language === 'zh' ? '通关' : '클리어'}</div>
@@ -171,7 +171,13 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
       {viewMode === 'roadmap' && (
         <Card className="relative p-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-blue-200/60 dark:border-blue-900/40">
           <div className="text-center text-xs font-bold text-slate-500 dark:text-slate-400 mb-6">
-            단계별 스탬프를 획득하여 월드를 정복하세요!
+            {language === 'en'
+              ? 'Collect stage stamps to conquer each world!'
+              : language === 'ja'
+              ? 'ステージごとのスタンプを集めて世界を制覇しましょう！'
+              : language === 'zh'
+              ? '收集每关印章，征服各个世界！'
+              : '단계별 스탬프를 획득하여 월드를 정복하세요!'}
           </div>
 
           {/* Staggered S-Curve Stamp Grid */}
@@ -186,7 +192,7 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                   key={stage.id}
                   stageId={stage.id}
                   stageNumberInWorld={stage.stageNumberInWorld}
-                  title={stage.title}
+                  title={getLocalizedStageTitle(stage.id, language)}
                   isUnlocked={isUnlocked}
                   isCurrent={isCurrent}
                   isBoss={stage.isBoss}
@@ -240,22 +246,22 @@ export const StageMapPage: React.FC<StageMapPageProps> = ({
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                          {stage.title}
+                          {getLocalizedStageTitle(stage.id, language)}
                         </span>
                         {stage.isBoss && (
                           <Badge variant="amber" size="sm">
-                            보스
+                            {t('map.boss')}
                           </Badge>
                         )}
                         {stage.hasTutorial && (
                           <Badge variant="emerald" size="sm">
-                            가이드
+                            {language === 'en' ? 'Guide' : language === 'ja' ? '案内' : language === 'zh' ? '指南' : '가이드'}
                           </Badge>
                         )}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">
-                        단서 {stage.cluesCount}개 · {stage.difficulty}
-                        {record && ` · 최고기록: ${formatTime(record.bestTime)}`}
+                        {language === 'en' ? 'Clues' : language === 'ja' ? 'ヒント' : language === 'zh' ? '线索' : '단서'} {stage.cluesCount} · {getLocalizedDifficulty(stage.difficulty, language)}
+                        {record && ` · ${t('map.bestTime')}: ${formatTime(record.bestTime)}`}
                       </div>
                     </div>
                   </div>

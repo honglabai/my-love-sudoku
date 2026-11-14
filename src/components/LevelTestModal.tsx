@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { useI18n, getLocalizedDiagnosticTier } from '../i18n';
 
 interface LevelTestModalProps {
   isOpen: boolean;
@@ -69,6 +70,7 @@ export const LevelTestModal: React.FC<LevelTestModalProps> = ({
   onClose,
   onSelectPlacementStage
 }) => {
+  const { language } = useI18n();
   const [step, setStep] = useState<'intro' | 'testing' | 'result' | 'manual'>('intro');
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
@@ -97,28 +99,8 @@ export const LevelTestModal: React.FC<LevelTestModalProps> = ({
     }
   };
 
-  // Determine recommendation based on score
-  let recommendedStage = 1;
-  let tierTitle = '스도쿠 입문자';
-  let tierDesc = '스도쿠의 기초 규칙부터 한 걸음씩 차근차근 시작해보세요.';
-  let worldName = '월드 1 (평온의 정원)';
-
-  if (score === 3) {
-    recommendedStage = 31;
-    tierTitle = '스도쿠 마스터 (고급)';
-    tierDesc = '고난도 추론과 후보수 기법을 완벽히 이해하고 계십니다! 4월드부터 바로 시작하세요.';
-    worldName = '월드 4 (설산과 백매화 · 31단계)';
-  } else if (score === 2) {
-    recommendedStage = 21;
-    tierTitle = '스도쿠 수집가 (중급)';
-    tierDesc = '스도쿠의 주요 논리 기법을 잘 활용하고 계십니다! 3월드부터 바로 시작하세요.';
-    worldName = '월드 3 (황혼의 석탑 · 21단계)';
-  } else if (score === 1) {
-    recommendedStage = 11;
-    tierTitle = '스도쿠 탐험가 (초급)';
-    tierDesc = '기본기를 갖추셨습니다! 지루한 입문 단계를 건너뛰고 2월드부터 시작하세요.';
-    worldName = '월드 2 (푸른 대나무숲 · 11단계)';
-  }
+  // Determine recommendation based on score and language
+  const { recommendedStage, tierTitle, tierDesc, worldName } = getLocalizedDiagnosticTier(score, language);
 
   const handleApplyPlacement = (stageId: number) => {
     onSelectPlacementStage(stageId);
@@ -129,7 +111,11 @@ export const LevelTestModal: React.FC<LevelTestModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={step === 'testing' ? `실력 테스트 (${currentQIndex + 1}/3)` : '🎯 스도쿠 실력 진단 레벨 테스트'}
+      title={
+        step === 'testing'
+          ? `${language === 'en' ? 'Skill Test' : language === 'ja' ? '実力テスト' : language === 'zh' ? '实力测试' : '실력 테스트'} (${currentQIndex + 1}/3)`
+          : `🎯 ${language === 'en' ? 'Sudoku Diagnostic Level Test' : language === 'ja' ? '数独実力診断テスト' : language === 'zh' ? '数独水平诊断测试' : '스도쿠 실력 진단 레벨 테스트'}`
+      }
     >
       <div className="space-y-4 text-slate-800 dark:text-slate-200">
         {/* VIEW 1: INTRO */}

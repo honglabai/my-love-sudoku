@@ -11,7 +11,7 @@ import { TermsOfServiceModal } from '../components/TermsOfServiceModal';
 import { SudokuGuideModal } from '../components/SudokuGuideModal';
 import { AboutContactModal } from '../components/AboutContactModal';
 import { AdSenseUnit } from '../components/AdSenseUnit';
-import { useI18n } from '../i18n';
+import { useI18n, getLocalizedTitle, getLocalizedStageTitle } from '../i18n';
 
 interface HomePageProps {
   progression: PlayerProgression;
@@ -67,7 +67,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               {t('profile.titleTitle')}
             </div>
             <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              {progression.equippedTitle}
+              {getLocalizedTitle(progression.equippedTitle, language)}
             </div>
           </div>
 
@@ -145,7 +145,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     {t('home.activeGameTitle')}
                   </div>
                   <div className="text-xs font-black text-slate-900 dark:text-slate-100">
-                    {t('common.stage')} {activeStage.id}. {activeStage.title}
+                    {t('common.stage')} {activeStage.id}. {getLocalizedStageTitle(activeStage.id, language)}
                   </div>
                   <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                     {t('home.activeGameProgress')}: {formatTime(activeGame.elapsedSeconds)} · {t('game.mistakes')}: {activeGame.mistakes}
