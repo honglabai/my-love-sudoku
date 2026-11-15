@@ -6,7 +6,9 @@ import {
   applyXPGain,
   claimStageReward,
   createInitialProgression,
-  applyLevelTestPlacement
+  applyLevelTestPlacement,
+  buyItem,
+  ITEM_PRICES
 } from '../src/features/progression/progression';
 
 describe('Step 6: RPG Progression and Reward System', () => {
@@ -151,5 +153,64 @@ describe('Step 6: RPG Progression and Reward System', () => {
     expect(placed31.level).toBeGreaterThanOrEqual(30);
     expect(placed31.equippedTitle).toBe('스도쿠 마스터');
     expect(placed31.totalStars).toBe(90); // 30 stages * 3 stars
+  });
+
+  it('initializes progression with default credits of 100', () => {
+    const prog = createInitialProgression();
+    expect(prog.credits).toBe(100);
+  });
+
+  it('awards credits and bonus items upon stage completion', () => {
+    let prog = createInitialProgression();
+    expect(prog.credits).toBe(100);
+    const initialInventory = { ...prog.inventory };
+
+    // Stage 1 (World 1) first clear with 3 stars:
+    // baseCredits = 40 + (1-1)*10 = 40
+    // starCredits = 40 (for 3 stars)
+    // firstClear = 50
+    // Total credits earned = 40 + 40 + 50 = 130
+    const res1 = claimStageReward(prog, 1, 1, 0, 0, 120);
+    expect(res1.isFirstClear).toBe(true);
+    expect(res1.creditsEarned).toBe(130);
+    expect(res1.updatedProgression.credits).toBe(230); // 100 + 130
+
+    // Bonus item awarded on 3 stars
+    expect(res1.bonusItemAwarded).not.toBeNull();
+    if (res1.bonusItemAwarded) {
+      expect(res1.bonusItemAwarded.count).toBe(1);
+      const itemKey = res1.bonusItemAwarded.item;
+      expect(res1.updatedProgression.inventory[itemKey]).toBe(initialInventory[itemKey] + 1);
+    }
+
+    // Replay Stage 1 with 3 stars:
+    // baseCredits = 40, starCredits = 40, firstClear = 0
+    // Total credits earned = 80
+    const res2 = claimStageReward(res1.updatedProgression, 1, 1, 0, 0, 90);
+    expect(res2.isFirstClear).toBe(false);
+    expect(res2.creditsEarned).toBe(80);
+    expect(res2.updatedProgression.credits).toBe(310); // 230 + 80
+    expect(res2.bonusItemAwarded).not.toBeNull();
+  });
+
+  it('handles item purchasing system and credit deductions accurately', () => {
+    let prog = createInitialProgression(); // credits: 100
+    expect(prog.inventory.healMistake).toBe(3);
+
+    // healMistake price is 80 credits
+    expect(ITEM_PRICES.healMistake).toBe(80);
+
+    // Successful purchase
+    const buyRes1 = buyItem(prog, 'healMistake', 1);
+    expect(buyRes1.success).toBe(true);
+    expect(buyRes1.updatedProgression.credits).toBe(20); // 100 - 80
+    expect(buyRes1.updatedProgression.inventory.healMistake).toBe(4); // 3 + 1
+
+    // Failed purchase: only 20 credits left, healMistake requires 80
+    const buyRes2 = buyItem(buyRes1.updatedProgression, 'healMistake', 1);
+    expect(buyRes2.success).toBe(false);
+    expect(buyRes2.error).toBe('NOT_ENOUGH_CREDITS');
+    expect(buyRes2.updatedProgression.credits).toBe(20); // unchanged
+    expect(buyRes2.updatedProgression.inventory.healMistake).toBe(4); // unchanged
   });
 });

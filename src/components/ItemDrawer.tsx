@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
-import { PlayerInventory } from '../features/progression/progression';
+import { PlayerInventory, ITEM_PRICES } from '../features/progression/progression';
 import { useI18n } from '../i18n';
 
 interface ItemDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   inventory: PlayerInventory;
+  credits?: number;
+  onBuyItem?: (itemType: keyof PlayerInventory) => boolean;
   mistakes: number;
   hasErrorsOnBoard: boolean;
   onUseItem: (itemType: keyof PlayerInventory) => void;
@@ -17,11 +19,14 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
   isOpen,
   onClose,
   inventory,
+  credits = 0,
+  onBuyItem,
   mistakes,
   hasErrorsOnBoard,
   onUseItem
 }) => {
   const { t, language } = useI18n();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const getLocalizedItem = (id: keyof PlayerInventory) => {
     switch (id) {
@@ -56,11 +61,24 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
     }
   };
 
+  const handleBuy = (id: keyof PlayerInventory) => {
+    if (!onBuyItem) return;
+    const ok = onBuyItem(id);
+    if (ok) {
+      setToastMessage(t('item.buySuccess'));
+      setTimeout(() => setToastMessage(null), 2000);
+    } else {
+      setToastMessage(t('item.notEnoughCredits'));
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  };
+
   const items = [
     {
       id: 'autoSolve' as keyof PlayerInventory,
       ...getLocalizedItem('autoSolve'),
       icon: '🔍',
+      price: ITEM_PRICES.autoSolve,
       count: inventory.autoSolve,
       badgeColor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
       disabled: inventory.autoSolve <= 0
@@ -69,6 +87,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
       id: 'healMistake' as keyof PlayerInventory,
       ...getLocalizedItem('healMistake'),
       icon: '💊',
+      price: ITEM_PRICES.healMistake,
       count: inventory.healMistake,
       badgeColor: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300',
       disabled: inventory.healMistake <= 0 || mistakes === 0
@@ -77,6 +96,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
       id: 'clearErrors' as keyof PlayerInventory,
       ...getLocalizedItem('clearErrors'),
       icon: '🧹',
+      price: ITEM_PRICES.clearErrors,
       count: inventory.clearErrors,
       badgeColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
       disabled: inventory.clearErrors <= 0 || !hasErrorsOnBoard
@@ -85,6 +105,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
       id: 'autoCandidates' as keyof PlayerInventory,
       ...getLocalizedItem('autoCandidates'),
       icon: '📜',
+      price: ITEM_PRICES.autoCandidates,
       count: inventory.autoCandidates,
       badgeColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
       disabled: inventory.autoCandidates <= 0
@@ -94,14 +115,33 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`🎒 ${t('game.itemDrawerTitle')}`}>
       <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
+        {/* Credit Balance Header Card */}
+        <div className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 shadow-2xs">
+          <div className="flex items-center gap-1.5 text-xs font-black text-amber-950 dark:text-amber-100">
+            <span className="text-base">🪙</span>
+            <span>{t('result.currentCredits')}:</span>
+            <span className="text-amber-700 dark:text-amber-300 font-black">{credits} {t('common.credits')}</span>
+          </div>
+          <span className="text-[10px] text-amber-700 dark:text-amber-400 font-semibold truncate">
+            {language === 'en' ? 'Clear puzzles to earn' : language === 'ja' ? 'クリアで銅銭獲得' : language === 'zh' ? '通关可赚铜钱' : '클리어 시 엽전 획득'}
+          </span>
+        </div>
+
+        {/* Dynamic Toast Message Banner */}
+        {toastMessage && (
+          <div className="p-2 bg-blue-600 text-white text-xs font-bold rounded-xl text-center shadow-md animate-pop">
+            {toastMessage}
+          </div>
+        )}
+
         <p className="text-xs text-center text-slate-600 dark:text-slate-400 font-medium">
           {language === 'en'
-            ? 'Use your special ink items to overcome difficult situations!'
+            ? 'Use or buy ink items with credits to conquer difficult puzzles!'
             : language === 'ja'
-            ? 'アイテムを賢く使って、難関パズルを突破しましょう！'
+            ? '銅銭でアイテムを購入・使用して難関パズルを突破しましょう！'
             : language === 'zh'
-            ? '善用锦囊中的水墨道具，化险为夷突破难关！'
-            : '기본 지급된 신비로운 아이템을 사용하여 위기의 순간을 지혜롭게 돌파하세요!'}
+            ? '使用通关所获铜钱购买或使用墨宝，助您从容解局！'
+            : '클리어하고 모은 엽전으로 아이템을 구매하여 위기의 순간을 돌파하세요!'}
         </p>
 
         <div className="space-y-2.5">
@@ -110,18 +150,18 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
               key={item.id}
               className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-sm flex flex-col justify-between gap-2"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-2xl shadow-inner">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-2xl shadow-inner shrink-0">
                     {item.icon}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100 truncate">
                         {item.name}
                       </span>
                       {item.badge && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${item.badgeColor}`}>
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${item.badgeColor} shrink-0`}>
                           {item.badge}
                         </span>
                       )}
@@ -137,12 +177,26 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Direct Buy Button for this item */}
+                {onBuyItem && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    pill
+                    onClick={() => handleBuy(item.id)}
+                    className="py-1 px-2.5 text-xs font-black bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 shadow-2xs shrink-0"
+                  >
+                    🪙 {item.price} {t('item.buy')}
+                  </Button>
+                )}
               </div>
 
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-tight">
                 {item.desc}
               </p>
 
+              {/* Use Item Button */}
               <Button
                 variant={item.disabled ? 'ghost' : 'primary'}
                 size="sm"

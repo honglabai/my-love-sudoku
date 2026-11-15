@@ -18,6 +18,7 @@ export const ko: Translations = {
   'common.stars': '별점',
   'common.xp': '경험치',
   'common.loading': '불러오는 중...',
+  'common.credits': '엽전',
 
   // Navigation
   'nav.home': '홈',
@@ -39,6 +40,7 @@ export const ko: Translations = {
   'home.statsLevel': '나의 레벨',
   'home.statsCleared': '클리어 스테이지',
   'home.statsStars': '획득 별점',
+  'home.statsCredits': '보유 엽전',
   'home.quickStart': '빠른 시작',
 
   // Game Page
@@ -74,6 +76,11 @@ export const ko: Translations = {
   'result.perfectLogic': '완벽한 추론! ★★★',
   'result.greatLogic': '훌륭한 논리! ★★',
   'result.clear': '스테이지 클리어! ★',
+  'result.clearRewards': '스테이지 클리어 달성 보상',
+  'result.creditsEarned': '획득 엽전',
+  'result.currentCredits': '현재 보유 엽전',
+  'result.bonusItem': '보너스 아이템 지급',
+  'result.bonusItemDesc': '3성 완벽 클리어 기념 특별 보너스!',
   'result.clearTime': '클리어 시간',
   'result.mistakes': '실수 횟수',
   'result.hintsUsed': '사용한 힌트',
@@ -154,6 +161,20 @@ export const ko: Translations = {
   'item.eraseDesc': '현재 보드에 잘못 입력된 숫자들을 자동으로 찾아 지워줍니다.',
   'item.inspect': '감식의 거울 (오류 진단)',
   'item.inspectDesc': '현재까지 입력한 숫자 중 틀린 칸이 있는지 검사합니다.',
+  'item.buy': '구매',
+  'item.buyPrice': '{price}냥',
+  'item.buySuccess': '아이템을 성공적으로 구매했습니다!',
+  'item.notEnoughCredits': '엽전이 부족합니다. 퍼즐을 클리어하여 획득하세요!',
+  'item.shopTitle': '수묵 만물상 (아이템 상점)',
+  'item.shopDesc': '퍼즐을 풀고 모은 엽전으로 유용한 비급 아이템을 구매하세요.',
+  'item.autoSolveName': '천리안 돋보기',
+  'item.autoSolveDesc': '선택한 빈칸에 100% 올바른 정답 숫자를 즉시 채워 넣습니다.',
+  'item.healMistakeName': '정심환',
+  'item.healMistakeDesc': '실수 횟수를 1회 차감합니다. (3번 실패 시에도 즉시 부활하여 이어서 플레이!)',
+  'item.clearErrorsName': '정화의 향',
+  'item.clearErrorsDesc': '보드 위에 잘못 입력된 모든 충돌 숫자들을 한 번에 감지하여 깨끗이 지워줍니다.',
+  'item.autoCandidatesName': '통찰의 부적',
+  'item.autoCandidatesDesc': '모든 빈칸에 들어갈 수 있는 유효한 후보 숫자를 계산하여 메모로 가득 채워줍니다.',
 
   // Modals
   'modal.guideTitle': '스도쿠 공식 가이드',

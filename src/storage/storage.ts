@@ -78,6 +78,9 @@ export function migrateOrSanitize(parsed: unknown): SaveDataV1 {
   progression.level = Math.max(1, Number(progression.level) || 1);
   progression.currentXP = Math.max(0, Number(progression.currentXP) || 0);
   progression.totalXP = Math.max(0, Number(progression.totalXP) || 0);
+  progression.credits = typeof progression.credits === 'number' && !isNaN(progression.credits)
+    ? Math.max(0, Math.floor(progression.credits))
+    : 100;
 
   // Ensure inventory is valid with default values
   progression.inventory = {

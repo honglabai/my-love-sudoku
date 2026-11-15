@@ -18,6 +18,7 @@ export const en: Translations = {
   'common.stars': 'Stars',
   'common.xp': 'XP',
   'common.loading': 'Loading...',
+  'common.credits': 'Credits',
 
   // Navigation
   'nav.home': 'Home',
@@ -39,6 +40,7 @@ export const en: Translations = {
   'home.statsLevel': 'My Level',
   'home.statsCleared': 'Cleared Stages',
   'home.statsStars': 'Stars Earned',
+  'home.statsCredits': 'Credits',
   'home.quickStart': 'Quick Start',
 
   // Game Page
@@ -74,6 +76,11 @@ export const en: Translations = {
   'result.perfectLogic': 'Flawless Deduction! ★★★',
   'result.greatLogic': 'Great Logic! ★★',
   'result.clear': 'Stage Cleared! ★',
+  'result.clearRewards': 'Stage Clear Rewards',
+  'result.creditsEarned': 'Credits Earned',
+  'result.currentCredits': 'Total Credits',
+  'result.bonusItem': 'Bonus Item Rewarded',
+  'result.bonusItemDesc': 'Special bonus item for exceptional 3-star play!',
   'result.clearTime': 'Clear Time',
   'result.mistakes': 'Mistakes',
   'result.hintsUsed': 'Hints Used',
@@ -154,6 +161,20 @@ export const en: Translations = {
   'item.eraseDesc': 'Automatically clears all incorrectly placed digits on the board.',
   'item.inspect': 'Mirror of Inspection (Check)',
   'item.inspectDesc': 'Diagnoses whether any filled cells currently violate the puzzle solution.',
+  'item.buy': 'Buy',
+  'item.buyPrice': '{price} Coins',
+  'item.buySuccess': 'Item purchased successfully!',
+  'item.notEnoughCredits': 'Not enough credits. Clear more stages to earn credits!',
+  'item.shopTitle': 'Ink Item Shop',
+  'item.shopDesc': 'Use your earned credits to purchase helpful puzzle items.',
+  'item.autoSolveName': 'Clairvoyant Magnifier',
+  'item.autoSolveDesc': 'Fills the correct digit into a selected cell instantly.',
+  'item.healMistakeName': 'Heart-Calming Pill',
+  'item.healMistakeDesc': 'Reduces mistake count by 1 and revives on defeat.',
+  'item.clearErrorsName': 'Incense of Purification',
+  'item.clearErrorsDesc': 'Clears all conflicting digits currently on the board.',
+  'item.autoCandidatesName': 'Talisman of Insight',
+  'item.autoCandidatesDesc': 'Calculates and populates all pencil marks for empty cells.',
 
   // Modals
   'modal.guideTitle': 'Sudoku Official Guide',

@@ -20,10 +20,18 @@ export const DEFAULT_INVENTORY: PlayerInventory = {
   autoCandidates: 3
 };
 
+export const ITEM_PRICES: Record<keyof PlayerInventory, number> = {
+  autoSolve: 60,      // 천리안 돋보기 (정답 1칸 입력) - 60 엽전
+  healMistake: 80,    // 정심환 (실수 회복/부활) - 80 엽전
+  clearErrors: 50,    // 정화의 향 (오답 일괄 제거) - 50 엽전
+  autoCandidates: 40  // 통찰의 부적 (후보수 자동 메모) - 40 엽전
+};
+
 export interface PlayerProgression {
   level: number;
   currentXP: number; // XP within current level
   totalXP: number; // Lifetime cumulative XP
+  credits: number; // 엽전/크레딧 (Item purchase currency)
   stageRecords: Record<number, StageRecord>;
   unlockedStageMax: number; // highest unlocked stage ID (1..50)
   totalStars: number;
@@ -37,6 +45,7 @@ export function createInitialProgression(): PlayerProgression {
     level: 1,
     currentXP: 0,
     totalXP: 0,
+    credits: 100, // Initial starter credits: 100 엽전
     stageRecords: {},
     unlockedStageMax: 1, // Stage 1 starts unlocked
     totalStars: 0,
@@ -116,6 +125,11 @@ export interface RewardResult {
   updatedProgression: PlayerProgression;
   starsEarned: number;
   xpEarned: number;
+  creditsEarned: number;
+  bonusItemAwarded?: {
+    item: keyof PlayerInventory;
+    count: number;
+  };
   isFirstClear: boolean;
   isNewStarRecord: boolean;
   leveledUp: boolean;
@@ -126,7 +140,7 @@ export interface RewardResult {
 
 /**
  * Idempotent, transaction-like reward processor.
- * Prevents duplicate XP payout on repeated clicks or refreshes.
+ * Awards XP, stars, credits, and bonus items upon stage completion.
  */
 export function claimStageReward(
   progression: PlayerProgression,
@@ -157,6 +171,24 @@ export function claimStageReward(
     xpEarned = 0;
   }
 
+  // Calculate credits earned:
+  // Base clear: 40 + (world - 1) * 10
+  // Star bonus: 1-star = 10, 2-star = 20, 3-star = 40
+  // First clear bonus: +50 credits
+  const baseCredits = 40 + Math.max(0, worldId - 1) * 10;
+  const starCredits = stars === 3 ? 40 : stars === 2 ? 20 : 10;
+  const firstClearCredits = isFirstClear ? 50 : 0;
+  const creditsEarned = baseCredits + starCredits + firstClearCredits;
+
+  // Bonus item reward:
+  // On first clear or 3-star clear, award 1 bonus item to help the player!
+  let bonusItemAwarded: { item: keyof PlayerInventory; count: number } | undefined;
+  if (isFirstClear || stars === 3) {
+    const itemKeys: (keyof PlayerInventory)[] = ['autoSolve', 'healMistake', 'clearErrors', 'autoCandidates'];
+    const awardedItem = itemKeys[(stageId - 1) % itemKeys.length];
+    bonusItemAwarded = { item: awardedItem, count: 1 };
+  }
+
   // Calculate level up
   const levelResult = applyXPGain(progression.level, progression.currentXP, xpEarned);
 
@@ -184,11 +216,25 @@ export function claimStageReward(
   // Calculate total stars across all cleared stages
   const totalStars = Object.values(newRecords).reduce((acc, rec) => acc + rec.stars, 0);
 
+  // Update inventory with bonus item if awarded
+  const updatedInventory: PlayerInventory = {
+    ...progression.inventory,
+    ...(bonusItemAwarded
+      ? { [bonusItemAwarded.item]: (progression.inventory?.[bonusItemAwarded.item] || 0) + bonusItemAwarded.count }
+      : {})
+  };
+
+  const currentCredits = typeof progression.credits === 'number' && !isNaN(progression.credits)
+    ? progression.credits
+    : 100;
+
   const updatedProgression: PlayerProgression = {
     ...progression,
     level: levelResult.newLevel,
     currentXP: levelResult.newXP,
     totalXP: progression.totalXP + xpEarned,
+    credits: currentCredits + creditsEarned,
+    inventory: updatedInventory,
     stageRecords: newRecords,
     unlockedStageMax: newUnlockedMax,
     totalStars
@@ -198,12 +244,47 @@ export function claimStageReward(
     updatedProgression,
     starsEarned: stars,
     xpEarned,
+    creditsEarned,
+    bonusItemAwarded,
     isFirstClear,
     isNewStarRecord,
     leveledUp: levelResult.leveledUp,
     oldLevel: progression.level,
     newLevel: levelResult.newLevel,
     nextUnlockedStage
+  };
+}
+
+/**
+ * Purchases an item using credits from progression.
+ * Returns success flag and updated progression.
+ */
+export function buyItem(
+  progression: PlayerProgression,
+  item: keyof PlayerInventory,
+  count: number = 1
+): { success: boolean; updatedProgression: PlayerProgression; error?: 'NOT_ENOUGH_CREDITS' } {
+  const price = (ITEM_PRICES[item] || 50) * count;
+  const currentCredits = typeof progression.credits === 'number' && !isNaN(progression.credits)
+    ? progression.credits
+    : 100;
+
+  if (currentCredits < price) {
+    return { success: false, updatedProgression: progression, error: 'NOT_ENOUGH_CREDITS' };
+  }
+
+  const currentInventory = progression.inventory || DEFAULT_INVENTORY;
+
+  return {
+    success: true,
+    updatedProgression: {
+      ...progression,
+      credits: currentCredits - price,
+      inventory: {
+        ...currentInventory,
+        [item]: (currentInventory[item] || 0) + count
+      }
+    }
   };
 }
 
@@ -256,9 +337,14 @@ export function applyLevelTestPlacement(
     titles.add('스도쿠 탐험가');
   }
 
+  const baseCredits = typeof progression.credits === 'number' && !isNaN(progression.credits)
+    ? progression.credits
+    : 100;
+
   return {
     ...progression,
     level,
+    credits: Math.max(baseCredits, targetStageId * 50),
     stageRecords: newRecords,
     unlockedStageMax: Math.max(progression.unlockedStageMax, targetStageId),
     totalStars: newTotalStars,

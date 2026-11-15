@@ -18,6 +18,7 @@ export const zh: Translations = {
   'common.stars': '星级',
   'common.xp': '经验值',
   'common.loading': '加载中...',
+  'common.credits': '铜钱',
 
   // Navigation
   'nav.home': '首页',
@@ -39,6 +40,7 @@ export const zh: Translations = {
   'home.statsLevel': '我的等级',
   'home.statsCleared': '通关关卡',
   'home.statsStars': '获得星级',
+  'home.statsCredits': '持有铜钱',
   'home.quickStart': '快速开始',
 
   // Game Page
@@ -74,6 +76,11 @@ export const zh: Translations = {
   'result.perfectLogic': '完美推理！ ★★★',
   'result.greatLogic': '绝妙逻辑！ ★★',
   'result.clear': '顺利通关！ ★',
+  'result.clearRewards': '关卡通关奖励结算',
+  'result.creditsEarned': '获得铜钱',
+  'result.currentCredits': '当前持有铜钱',
+  'result.bonusItem': '特别赠送道具',
+  'result.bonusItemDesc': '3星完美通关特别奖励！',
   'result.clearTime': '通关时间',
   'result.mistakes': '失误次数',
   'result.hintsUsed': '使用提示',
@@ -154,6 +161,20 @@ export const zh: Translations = {
   'item.eraseDesc': '自动找出并清除棋盘上所有填错的数字。',
   'item.inspect': '鉴别镜 (诊断错误)',
   'item.inspectDesc': '检查目前填入的所有数字中是否有错误。',
+  'item.buy': '购买',
+  'item.buyPrice': '{price}文',
+  'item.buySuccess': '道具购买成功！',
+  'item.notEnoughCredits': '铜钱不足。多通关数独谜题即可赚取！',
+  'item.shopTitle': '水墨万物斋 (道具店)',
+  'item.shopDesc': '使用通关积累的铜钱，换取助您破局的墨韵奇珍。',
+  'item.autoSolveName': '千里眼放大镜',
+  'item.autoSolveDesc': '立即在所选空格填入正确的答案。',
+  'item.healMistakeName': '定心丸',
+  'item.healMistakeDesc': '消除1次失误记录，挑战失败时亦可复活。',
+  'item.clearErrorsName': '清净檀香',
+  'item.clearErrorsDesc': '自动检测并清除棋盘上所有填错的数字。',
+  'item.autoCandidatesName': '洞察符文',
+  'item.autoCandidatesDesc': '自动计算并在所有空格中填入可能的候选笔记。',
 
   // Modals
   'modal.guideTitle': '数独官方指南',

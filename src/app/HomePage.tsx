@@ -56,7 +56,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md w-full mx-auto px-2 sm:px-4 py-1 pb-14 overflow-x-hidden">
       {/* Top Header: Title Logo Image with App Install Button */}
-      <TopHeader />
+      <TopHeader credits={progression.credits} />
 
       {/* Main Profile & Gamification Card */}
       <main className="w-full space-y-2 my-auto">
@@ -110,19 +110,25 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Cumulative Stats Grid */}
-          <div className="grid grid-cols-2 gap-1.5 text-center">
-            <div className="p-2 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-xl">
-              <div className="text-[10.5px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 truncate tracking-tight">{t('home.statsStars')}</div>
-              <div className="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-0.5">
-                ⭐ {progression.totalStars} <span className="text-[10px] font-semibold text-slate-400">/ 150</span>
+          <div className="grid grid-cols-3 gap-1.5 text-center">
+            <div className="p-2 bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-slate-800/80 dark:to-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 rounded-xl min-w-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 truncate tracking-tight">{t('home.statsStars')}</div>
+              <div className="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400 mt-0.5 truncate">
+                ⭐ {progression.totalStars}
               </div>
             </div>
 
-            <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-xl">
-              <div className="text-[10.5px] sm:text-[11px] font-bold text-blue-700 dark:text-blue-400 truncate tracking-tight">{t('home.statsCleared')}</div>
-              <div className="text-base sm:text-lg font-black text-blue-600 dark:text-blue-400 mt-0.5">
-                🧩 {Object.keys(progression.stageRecords).length}{' '}
-                <span className="text-[10px] font-semibold text-slate-400">/ 50</span>
+            <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-blue-950/20 border border-blue-200/70 dark:border-blue-900/40 rounded-xl min-w-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-blue-700 dark:text-blue-400 truncate tracking-tight">{t('home.statsCleared')}</div>
+              <div className="text-sm sm:text-base font-black text-blue-600 dark:text-blue-400 mt-0.5 truncate">
+                🧩 {Object.keys(progression.stageRecords).length} / 50
+              </div>
+            </div>
+
+            <div className="p-2 bg-gradient-to-br from-yellow-50 to-amber-50/70 dark:from-slate-800/80 dark:to-amber-900/30 border border-amber-300/80 dark:border-amber-700/60 rounded-xl min-w-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-amber-800 dark:text-amber-300 truncate tracking-tight">{t('home.statsCredits')}</div>
+              <div className="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400 mt-0.5 truncate">
+                🪙 {progression.credits ?? 100}
               </div>
             </div>
           </div>

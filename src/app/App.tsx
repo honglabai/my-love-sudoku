@@ -7,7 +7,7 @@ import {
   ActiveGameSave,
   UserSettings
 } from '../storage/storage';
-import { claimStageReward, RewardResult, applyLevelTestPlacement } from '../features/progression/progression';
+import { claimStageReward, RewardResult, applyLevelTestPlacement, buyItem, PlayerInventory } from '../features/progression/progression';
 import { evaluateAchievements, Achievement } from '../features/achievements/achievements';
 import { getStageById } from '../features/stages/stageData';
 import { sound } from '../audio/sound';
@@ -201,6 +201,19 @@ export const App: React.FC = () => {
     }));
   };
 
+  const handleBuyItem = useCallback((itemType: keyof PlayerInventory, count: number = 1): boolean => {
+    const result = buyItem(data.progression, itemType, count);
+    if (result.success) {
+      sound.playPurchase();
+      updateData(prev => ({
+        ...prev,
+        progression: result.updatedProgression
+      }));
+      return true;
+    }
+    return false;
+  }, [data.progression, updateData]);
+
   const handleResetData = () => {
     const fresh = resetAllData();
     setData(fresh);
@@ -283,6 +296,8 @@ export const App: React.FC = () => {
           activeGameSave={data.activeGame}
           settings={data.settings}
           inventory={data.progression.inventory}
+          credits={data.progression.credits}
+          onBuyItem={handleBuyItem}
           onUpdateInventory={(nextInv) => {
             updateData(prev => ({
               ...prev,
@@ -307,6 +322,7 @@ export const App: React.FC = () => {
           mistakes={lastResult.mistakes}
           hintsUsed={lastResult.hintsUsed}
           reducedMotion={data.settings.reducedMotion}
+          onBuyItem={handleBuyItem}
           onNextStage={(nextId) => {
             setSelectedStageId(nextId);
             const st = getStageById(nextId);
@@ -326,6 +342,7 @@ export const App: React.FC = () => {
           progression={data.progression}
           achievements={data.achievements}
           settings={data.settings}
+          onBuyItem={handleBuyItem}
           onUpdateSettings={handleUpdateSettings}
           onEquipTitle={handleEquipTitle}
           onResetData={handleResetData}
@@ -340,6 +357,7 @@ export const App: React.FC = () => {
           progression={data.progression}
           achievements={data.achievements}
           settings={data.settings}
+          onBuyItem={handleBuyItem}
           onUpdateSettings={handleUpdateSettings}
           onEquipTitle={handleEquipTitle}
           onResetData={handleResetData}

@@ -8,7 +8,11 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-export const TopHeader: React.FC = () => {
+interface TopHeaderProps {
+  credits?: number;
+}
+
+export const TopHeader: React.FC<TopHeaderProps> = ({ credits }) => {
   const { t, language } = useI18n();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
@@ -78,6 +82,12 @@ export const TopHeader: React.FC = () => {
 
         {/* Right: Language Selector & Install App Button on the Same Row */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-1.5">
+          {typeof credits === 'number' && (
+            <div className="flex items-center gap-1 px-1.5 sm:px-2 py-1 min-h-[30px] sm:min-h-[34px] rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300/80 dark:border-amber-700/60 text-amber-900 dark:text-amber-200 text-[11px] sm:text-xs font-black shadow-2xs shrink-0">
+              <span>🪙</span>
+              <span>{credits}</span>
+            </div>
+          )}
           <LanguageSelector variant="header" />
           <button
             onClick={handleInstallClick}

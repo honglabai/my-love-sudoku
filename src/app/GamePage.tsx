@@ -77,6 +77,8 @@ interface GamePageProps {
   activeGameSave: ActiveGameSave | null;
   settings: UserSettings;
   inventory?: PlayerInventory;
+  credits?: number;
+  onBuyItem?: (itemType: keyof PlayerInventory, count?: number) => boolean;
   onUpdateInventory?: (inv: PlayerInventory) => void;
   onGameComplete: (result: {
     stageId: number;
@@ -94,6 +96,8 @@ export const GamePage: React.FC<GamePageProps> = ({
   activeGameSave,
   settings,
   inventory,
+  credits = 0,
+  onBuyItem,
   onUpdateInventory,
   onGameComplete,
   onSaveActiveGame,
@@ -880,6 +884,8 @@ export const GamePage: React.FC<GamePageProps> = ({
         isOpen={showItemDrawer}
         onClose={() => setShowItemDrawer(false)}
         inventory={currentInventory}
+        credits={credits}
+        onBuyItem={onBuyItem}
         mistakes={state.mistakes}
         hasErrorsOnBoard={hasErrorsOnBoard}
         onUseItem={handleUseItem}

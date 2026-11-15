@@ -18,6 +18,7 @@ export const ja: Translations = {
   'common.stars': 'スター',
   'common.xp': '経験値',
   'common.loading': '読み込み中...',
+  'common.credits': '銅銭',
 
   // Navigation
   'nav.home': 'ホーム',
@@ -39,6 +40,7 @@ export const ja: Translations = {
   'home.statsLevel': 'マイレベル',
   'home.statsCleared': 'クリアステージ',
   'home.statsStars': '獲得スター',
+  'home.statsCredits': '所持銅銭',
   'home.quickStart': 'ゲーム開始',
 
   // Game Page
@@ -74,6 +76,11 @@ export const ja: Translations = {
   'result.perfectLogic': '完璧な論理推理！ ★★★',
   'result.greatLogic': '見事な論理！ ★★',
   'result.clear': 'ステージクリア！ ★',
+  'result.clearRewards': 'ステージクリア達成報酬',
+  'result.creditsEarned': '獲得銅銭',
+  'result.currentCredits': '現在の所持銅銭',
+  'result.bonusItem': 'ボーナスアイテム獲得',
+  'result.bonusItemDesc': '3つ星パーフェクトクリア記念ボーナス！',
   'result.clearTime': 'クリアタイム',
   'result.mistakes': 'ミス回数',
   'result.hintsUsed': '使用ヒント',
@@ -154,6 +161,20 @@ export const ja: Translations = {
   'item.eraseDesc': '盤面上の間違った数字を自動で検出して消去します。',
   'item.inspect': '鑑定の鏡 (エラー検知)',
   'item.inspectDesc': '現在までに入力した数字に間違いがないか診断します。',
+  'item.buy': '購入',
+  'item.buyPrice': '{price}銭',
+  'item.buySuccess': 'アイテムを購入しました！',
+  'item.notEnoughCredits': '銅銭が不足しています。ステージをクリアして獲得しましょう！',
+  'item.shopTitle': '水墨の道具屋 (ショップ)',
+  'item.shopDesc': '集めた銅銭を使って、難問を解く便利な道具を購入しましょう。',
+  'item.autoSolveName': '千里眼の虫眼鏡',
+  'item.autoSolveDesc': '選択したマスに正しい答えを即座に入力します。',
+  'item.healMistakeName': '清心丸',
+  'item.healMistakeDesc': 'ミス回数を1回減らし、失敗時にも即座に復活可能。',
+  'item.clearErrorsName': '浄化の香',
+  'item.clearErrorsDesc': '盤面上で間違って入力された数字をすべて消去します。',
+  'item.autoCandidatesName': '洞察の護符',
+  'item.autoCandidatesDesc': 'すべての空きマスの候補数字を自動計算してメモします。',
 
   // Modals
   'modal.guideTitle': '数独公式ガイド',

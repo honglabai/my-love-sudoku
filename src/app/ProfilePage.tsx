@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlayerProgression, getRequiredXPForLevel } from '../features/progression/progression';
+import { PlayerProgression, getRequiredXPForLevel, ITEM_PRICES, PlayerInventory } from '../features/progression/progression';
 import { ACHIEVEMENTS } from '../features/achievements/achievements';
 import { UserSettings } from '../storage/storage';
 import { Card } from '../components/Card';
@@ -25,6 +25,7 @@ interface ProfilePageProps {
   onResetData: () => void;
   onBack: () => void;
   onApplyLevelTest?: (stageId: number) => void;
+  onBuyItem?: (itemType: keyof PlayerInventory) => boolean;
   initialTab?: 'profile' | 'settings';
 }
 
@@ -37,12 +38,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onResetData,
   onBack,
   onApplyLevelTest,
+  onBuyItem,
   initialTab = 'profile'
 }) => {
   const { t, language } = useI18n();
   const [activeTab, setActiveTab] = useState<'profile' | 'settings'>(initialTab);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showLevelTest, setShowLevelTest] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -170,7 +173,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-center">
               <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
                 <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
                   {language === 'en' ? 'Total Stars' : language === 'ja' ? '獲得スター' : language === 'zh' ? '获得星数' : '총 획득 별점'}
@@ -181,7 +184,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
               <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
                 <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
-                  {language === 'en' ? 'Cleared' : language === 'ja' ? 'クリア数' : language === 'zh' ? '通关数' : '클리어 스테이지'}
+                  {language === 'en' ? 'Cleared' : language === 'ja' ? 'クリア数' : language === 'zh' ? '通关数' : '클리어'}
                 </div>
                 <div className="text-sm sm:text-base font-extrabold text-blue-600 dark:text-blue-400 truncate">
                   {totalCleared} / 50
@@ -189,71 +192,190 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
               <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
                 <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
-                  {language === 'en' ? 'Perfects' : language === 'ja' ? 'ノーミス' : language === 'zh' ? '完美通关' : '3성 완벽 클리어'}
+                  {language === 'en' ? 'Perfects' : language === 'ja' ? 'ノーミス' : language === 'zh' ? '完美通关' : '3성 완벽'}
                 </div>
                 <div className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400 truncate">
                   {perfectClears}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
                 </div>
               </div>
+              <div className="p-1.5 sm:p-2 bg-white/70 dark:bg-slate-800/60 rounded-xl min-w-0">
+                <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold truncate">
+                  {t('home.statsCredits')}
+                </div>
+                <div className="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 truncate">
+                  🪙 {progression.credits ?? 100}
+                </div>
+              </div>
             </div>
           </Card>
 
-          {/* Item Inventory Section */}
+          {/* Item Inventory & Shop Section */}
           <Card className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-amber-200/80 dark:border-amber-900/50 shadow-md">
-            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center justify-between">
-              <span>🎒 {language === 'en' ? 'Item Inventory' : language === 'ja' ? '所持アイテム' : language === 'zh' ? '持有道具' : '보유 중인 아이템'}</span>
-              <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-semibold truncate max-w-[170px]">
-                {language === 'en' ? 'In-game items' : language === 'ja' ? '数独ゲームで使用可能' : language === 'zh' ? '数独局内可使用' : '스도쿠 인게임에서 사용 가능'}
-              </span>
-            </h3>
+            <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <span>🎒</span>
+                <span>{language === 'en' ? 'Item Shop & Bag' : language === 'ja' ? '道具屋・所持アイテム' : language === 'zh' ? '万物斋·持有道具' : '수묵 만물상 & 보유 보따리'}</span>
+              </h3>
+              <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-black shadow-2xs">
+                <span>🪙</span>
+                <span>{progression.credits ?? 100}</span>
+                <span className="text-[10px] opacity-80">{t('common.credits')}</span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2.5">
+              {t('item.shopDesc')}
+            </p>
+
+            {toastMessage && (
+              <div className="p-2 mb-2.5 bg-blue-600 text-white text-xs font-bold rounded-xl text-center shadow-md animate-pop">
+                {toastMessage}
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-2 text-center">
-              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
-                <div className="text-xl mb-0.5">🔍</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {language === 'en' ? 'Clairvoyance Lens' : language === 'ja' ? '千里眼の虫眼鏡' : language === 'zh' ? '千里眼放大镜' : '천리안 돋보기'}
+              {/* Item 1: autoSolve */}
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div className="text-xl mb-0.5">🔍</div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                    {language === 'en' ? 'Clairvoyance Lens' : language === 'ja' ? '千里眼の虫眼鏡' : language === 'zh' ? '千里眼放大镜' : '천리안 돋보기'}
+                  </div>
+                  <div className="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400 my-0.5">
+                    {progression.inventory?.autoSolve ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                  </div>
+                  <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate mb-2">
+                    {language === 'en' ? 'Reveals 1 cell' : language === 'ja' ? '正解を1マス入力' : language === 'zh' ? '填入1格正确数' : '정답 1칸 입력'}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-blue-600 dark:text-blue-400">
-                  {progression.inventory?.autoSolve ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
-                </div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
-                  {language === 'en' ? 'Reveals 1 cell' : language === 'ja' ? '正解を1マス入力' : language === 'zh' ? '填入1格正确数' : '정답 1칸 입력'}
-                </div>
+                {onBuyItem && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    pill
+                    onClick={() => {
+                      const ok = onBuyItem('autoSolve');
+                      if (ok) {
+                        setToastMessage(t('item.buySuccess'));
+                        setTimeout(() => setToastMessage(null), 2000);
+                      } else {
+                        setToastMessage(t('item.notEnoughCredits'));
+                        setTimeout(() => setToastMessage(null), 2500);
+                      }
+                    }}
+                    className="py-1 px-1.5 text-xs font-black w-full bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 shadow-2xs"
+                  >
+                    🪙 {ITEM_PRICES.autoSolve} {t('item.buy')}
+                  </Button>
+                )}
               </div>
-              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
-                <div className="text-xl mb-0.5">💊</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {language === 'en' ? 'Revival Pill' : language === 'ja' ? '清心丸 (復活)' : language === 'zh' ? '清心丸 (复活)' : '정심환 (부활)'}
+
+              {/* Item 2: healMistake */}
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div className="text-xl mb-0.5">💊</div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                    {language === 'en' ? 'Revival Pill' : language === 'ja' ? '清心丸 (復活)' : language === 'zh' ? '清心丸 (复活)' : '정심환 (부활)'}
+                  </div>
+                  <div className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400 my-0.5">
+                    {progression.inventory?.healMistake ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                  </div>
+                  <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate mb-2">
+                    {language === 'en' ? 'Revives mistakes' : language === 'ja' ? 'ミス回復 / 復活' : language === 'zh' ? '消除失误 / 复活' : '실수 회복 / 부활'}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">
-                  {progression.inventory?.healMistake ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
-                </div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
-                  {language === 'en' ? 'Revives mistakes' : language === 'ja' ? 'ミス回復 / 復活' : language === 'zh' ? '消除失误 / 复活' : '실수 회복 / 부활'}
-                </div>
+                {onBuyItem && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    pill
+                    onClick={() => {
+                      const ok = onBuyItem('healMistake');
+                      if (ok) {
+                        setToastMessage(t('item.buySuccess'));
+                        setTimeout(() => setToastMessage(null), 2000);
+                      } else {
+                        setToastMessage(t('item.notEnoughCredits'));
+                        setTimeout(() => setToastMessage(null), 2500);
+                      }
+                    }}
+                    className="py-1 px-1.5 text-xs font-black w-full bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 shadow-2xs"
+                  >
+                    🪙 {ITEM_PRICES.healMistake} {t('item.buy')}
+                  </Button>
+                )}
               </div>
-              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
-                <div className="text-xl mb-0.5">🧹</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {language === 'en' ? 'Purifying Incense' : language === 'ja' ? '浄化の香' : language === 'zh' ? '净化之香' : '정화의 향'}
+
+              {/* Item 3: clearErrors */}
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div className="text-xl mb-0.5">🧹</div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                    {language === 'en' ? 'Purifying Incense' : language === 'ja' ? '浄化の香' : language === 'zh' ? '净化之香' : '정화의 향'}
+                  </div>
+                  <div className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400 my-0.5">
+                    {progression.inventory?.clearErrors ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                  </div>
+                  <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate mb-2">
+                    {language === 'en' ? 'Clears errors' : language === 'ja' ? '誤答を一括消去' : language === 'zh' ? '一键清除错数' : '오답 일괄 제거'}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400">
-                  {progression.inventory?.clearErrors ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
-                </div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
-                  {language === 'en' ? 'Clears errors' : language === 'ja' ? '誤答を一括消去' : language === 'zh' ? '一键清除错数' : '오답 일괄 제거'}
-                </div>
+                {onBuyItem && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    pill
+                    onClick={() => {
+                      const ok = onBuyItem('clearErrors');
+                      if (ok) {
+                        setToastMessage(t('item.buySuccess'));
+                        setTimeout(() => setToastMessage(null), 2000);
+                      } else {
+                        setToastMessage(t('item.notEnoughCredits'));
+                        setTimeout(() => setToastMessage(null), 2500);
+                      }
+                    }}
+                    className="py-1 px-1.5 text-xs font-black w-full bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 shadow-2xs"
+                  >
+                    🪙 {ITEM_PRICES.clearErrors} {t('item.buy')}
+                  </Button>
+                )}
               </div>
-              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0">
-                <div className="text-xl mb-0.5">📜</div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {language === 'en' ? 'Insight Talisman' : language === 'ja' ? '洞察のお札' : language === 'zh' ? '洞察之符' : '통찰의 부적'}
+
+              {/* Item 4: autoCandidates */}
+              <div className="p-2 sm:p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div className="text-xl mb-0.5">📜</div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                    {language === 'en' ? 'Insight Talisman' : language === 'ja' ? '洞察のお札' : language === 'zh' ? '洞察之符' : '통찰의 부적'}
+                  </div>
+                  <div className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400 my-0.5">
+                    {progression.inventory?.autoCandidates ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
+                  </div>
+                  <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate mb-2">
+                    {language === 'en' ? 'Auto notes' : language === 'ja' ? '候補数を自動メモ' : language === 'zh' ? '候选数自动填注' : '후보수 자동 메모'}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">
-                  {progression.inventory?.autoCandidates ?? 3}{language === 'en' ? '' : language === 'ja' ? '個' : language === 'zh' ? '个' : '개'}
-                </div>
-                <div className="text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
-                  {language === 'en' ? 'Auto notes' : language === 'ja' ? '候補数を自動メモ' : language === 'zh' ? '候选数自动填注' : '후보수 자동 메모'}
-                </div>
+                {onBuyItem && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    pill
+                    onClick={() => {
+                      const ok = onBuyItem('autoCandidates');
+                      if (ok) {
+                        setToastMessage(t('item.buySuccess'));
+                        setTimeout(() => setToastMessage(null), 2000);
+                      } else {
+                        setToastMessage(t('item.notEnoughCredits'));
+                        setTimeout(() => setToastMessage(null), 2500);
+                      }
+                    }}
+                    className="py-1 px-1.5 text-xs font-black w-full bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 shadow-2xs"
+                  >
+                    🪙 {ITEM_PRICES.autoCandidates} {t('item.buy')}
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

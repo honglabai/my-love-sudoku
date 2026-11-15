@@ -369,6 +369,71 @@ class SoundManager {
       // AudioContext error ignored
     }
   }
+
+  public playCoin() {
+    if (!this.enabled) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      // Crisp oriental coin jingling / ding sound
+      const t = this.ctx.currentTime;
+      [987.77, 1318.51].forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const startTime = t + idx * 0.06;
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.05, startTime + 0.14);
+
+        gain.gain.setValueAtTime(0.14, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.14);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + 0.14);
+      });
+    } catch {
+      // AudioContext error ignored
+    }
+  }
+
+  public playPurchase() {
+    if (!this.enabled) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      // Satisfying upbeat purchase fanfare
+      const freqs = [523.25, 659.25, 783.99, 1046.5];
+      const t = this.ctx.currentTime;
+
+      freqs.forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteStart = t + idx * 0.05;
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, noteStart);
+
+        gain.gain.setValueAtTime(0.12, noteStart);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.22);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(noteStart);
+        osc.stop(noteStart + 0.22);
+      });
+    } catch {
+      // AudioContext error ignored
+    }
+  }
 }
 
 export const sound = new SoundManager();

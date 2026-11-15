@@ -32,6 +32,7 @@ export type TranslationKey =
   | 'common.stars'
   | 'common.xp'
   | 'common.loading'
+  | 'common.credits'
 
   // Navigation
   | 'nav.home'
@@ -53,6 +54,7 @@ export type TranslationKey =
   | 'home.statsLevel'
   | 'home.statsCleared'
   | 'home.statsStars'
+  | 'home.statsCredits'
   | 'home.quickStart'
 
   // Game Page
@@ -88,6 +90,11 @@ export type TranslationKey =
   | 'result.perfectLogic'
   | 'result.greatLogic'
   | 'result.clear'
+  | 'result.clearRewards'
+  | 'result.creditsEarned'
+  | 'result.currentCredits'
+  | 'result.bonusItem'
+  | 'result.bonusItemDesc'
   | 'result.clearTime'
   | 'result.mistakes'
   | 'result.hintsUsed'
@@ -168,6 +175,20 @@ export type TranslationKey =
   | 'item.eraseDesc'
   | 'item.inspect'
   | 'item.inspectDesc'
+  | 'item.buy'
+  | 'item.buyPrice'
+  | 'item.buySuccess'
+  | 'item.notEnoughCredits'
+  | 'item.shopTitle'
+  | 'item.shopDesc'
+  | 'item.autoSolveName'
+  | 'item.autoSolveDesc'
+  | 'item.healMistakeName'
+  | 'item.healMistakeDesc'
+  | 'item.clearErrorsName'
+  | 'item.clearErrorsDesc'
+  | 'item.autoCandidatesName'
+  | 'item.autoCandidatesDesc'
 
   // Modals
   | 'modal.guideTitle'
