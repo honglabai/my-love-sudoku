@@ -1,4 +1,1 @@
-# Google AdSense Authorized Digital Sellers (ads.txt)
-# 서비스 도메인: sudoku.honglabai.com 및 honglabai.com
-# 구글 애드센스 승인 및 광고 송출을 위해 본인의 게시자 ID(pub-XXXXXXXXXXXXXXXX)로 변경하세요.
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-8675047967209162, DIRECT, f08c47fec0942fa0
