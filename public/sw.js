@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-love-sudoku-v20';
+const CACHE_NAME = 'my-love-sudoku-v21';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -18,8 +18,15 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Network-First for HTML & Page Navigation: Always get the freshest HTML from Vercel
-  if (event.request.mode === 'navigate' || url.pathname === '/' || url.pathname.endsWith('.html')) {
+  // Network-First for HTML, Page Navigation, ads.txt, robots.txt, sitemap: Always get the freshest from server
+  if (
+    event.request.mode === 'navigate' ||
+    url.pathname === '/' ||
+    url.pathname.endsWith('.html') ||
+    url.pathname === '/ads.txt' ||
+    url.pathname === '/robots.txt' ||
+    url.pathname === '/sitemap.xml'
+  ) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
