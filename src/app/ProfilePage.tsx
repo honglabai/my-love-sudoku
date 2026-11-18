@@ -154,22 +154,22 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             />
 
             {/* Checkpoint Tier Markers */}
-            <div className="grid grid-cols-4 gap-1 text-xs text-center mb-3 font-bold text-slate-500 dark:text-slate-400">
-              <div className={progression.level >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>
+            <div className="grid grid-cols-4 gap-1 text-xs text-center mb-3 font-bold text-slate-700 dark:text-slate-300">
+              <div className={progression.level >= 1 ? 'text-blue-700 dark:text-blue-400 font-black' : 'text-slate-600 dark:text-slate-400'}>
                 <div>{language === 'en' ? 'Novice' : language === 'ja' ? '入門者' : language === 'zh' ? '初学者' : '입문자'}</div>
-                <div className="text-[10px] opacity-75">Lv.1</div>
+                <div className="text-[10px] font-bold">Lv.1</div>
               </div>
-              <div className={progression.level >= 5 ? 'text-blue-600 dark:text-blue-400' : ''}>
+              <div className={progression.level >= 5 ? 'text-blue-700 dark:text-blue-400 font-black' : 'text-slate-600 dark:text-slate-400'}>
                 <div>{language === 'en' ? 'Explorer' : language === 'ja' ? '探検家' : language === 'zh' ? '探索者' : '탐험가'}</div>
-                <div className="text-[10px] opacity-75">Lv.5</div>
+                <div className="text-[10px] font-bold">Lv.5</div>
               </div>
-              <div className={progression.level >= 15 ? 'text-blue-600 dark:text-blue-400' : ''}>
+              <div className={progression.level >= 15 ? 'text-blue-700 dark:text-blue-400 font-black' : 'text-slate-600 dark:text-slate-400'}>
                 <div>{language === 'en' ? 'Collector' : language === 'ja' ? '収集家' : language === 'zh' ? '收集家' : '수집가'}</div>
-                <div className="text-[10px] opacity-75">Lv.15</div>
+                <div className="text-[10px] font-bold">Lv.15</div>
               </div>
-              <div className={progression.level >= 30 ? 'text-blue-600 dark:text-blue-400' : ''}>
+              <div className={progression.level >= 30 ? 'text-blue-700 dark:text-blue-400 font-black' : 'text-slate-600 dark:text-slate-400'}>
                 <div>{language === 'en' ? 'Master' : language === 'ja' ? '達人' : language === 'zh' ? '宗师' : '마스터'}</div>
-                <div className="text-[10px] opacity-75">Lv.30+</div>
+                <div className="text-[10px] font-bold">Lv.30+</div>
               </div>
             </div>
 

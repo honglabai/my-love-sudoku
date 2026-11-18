@@ -3,7 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+
+    <!-- Performance: Preconnect & DNS-Prefetch for Candidate AdSense Origins -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+    <link rel="preconnect" href="https://ep1.adtrafficquality.google" crossorigin />
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+    <link rel="dns-prefetch" href="https://ep1.adtrafficquality.google" />
+
+    <!-- LCP Preload: High Priority Initial Hero Title Banner -->
+    <link rel="preload" as="image" href="/assets/logo/title_banner_ko.webp" type="image/webp" fetchpriority="high" />
 
     <!-- Google AdSense Verification & Script (소유권 인증 메타 태그 및 광고 코드 스니펫) -->
     <meta name="google-adsense-account" content="ca-pub-8675047967209162" />

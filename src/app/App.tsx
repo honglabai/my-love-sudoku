@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import {
   loadGameData,
   saveGameData,
@@ -16,11 +16,13 @@ import { I18nProvider, Language } from '../i18n';
 import { ThemeBackground } from '../components/ThemeBackground';
 import { BottomNavigationBar } from '../components/BottomNavigationBar';
 import { HomePage } from './HomePage';
-import { StageMapPage } from './StageMapPage';
-import { DailyQuestPage } from './DailyQuestPage';
-import { GamePage } from './GamePage';
-import { ResultPage } from './ResultPage';
-import { ProfilePage } from './ProfilePage';
+
+// Code-splitting via lazy loading for non-initial views to optimize LCP and bundle size
+const StageMapPage = lazy(() => import('./StageMapPage').then(m => ({ default: m.StageMapPage })));
+const DailyQuestPage = lazy(() => import('./DailyQuestPage').then(m => ({ default: m.DailyQuestPage })));
+const GamePage = lazy(() => import('./GamePage').then(m => ({ default: m.GamePage })));
+const ResultPage = lazy(() => import('./ResultPage').then(m => ({ default: m.ResultPage })));
+const ProfilePage = lazy(() => import('./ProfilePage').then(m => ({ default: m.ProfilePage })));
 
 export type AppView = 'home' | 'stage-map' | 'daily-quest' | 'game' | 'result' | 'profile' | 'settings';
 
@@ -272,100 +274,108 @@ export const App: React.FC = () => {
         />
       )}
 
-      {currentView === 'stage-map' && (
-        <StageMapPage
-          progression={data.progression}
-          onSelectStage={handleSelectStage}
-          onBack={() => setCurrentView('home')}
-          onWorldChange={(wId) => setSelectedWorldId(wId)}
-          onApplyLevelTest={handleApplyLevelTest}
-        />
-      )}
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+          </div>
+        }
+      >
+        {currentView === 'stage-map' && (
+          <StageMapPage
+            progression={data.progression}
+            onSelectStage={handleSelectStage}
+            onBack={() => setCurrentView('home')}
+            onWorldChange={(wId) => setSelectedWorldId(wId)}
+            onApplyLevelTest={handleApplyLevelTest}
+          />
+        )}
 
-      {currentView === 'daily-quest' && (
-        <DailyQuestPage
-          progression={data.progression}
-          onStartDailyStage={handleStartDailyStage}
-          onBack={() => setCurrentView('home')}
-        />
-      )}
+        {currentView === 'daily-quest' && (
+          <DailyQuestPage
+            progression={data.progression}
+            onStartDailyStage={handleStartDailyStage}
+            onBack={() => setCurrentView('home')}
+          />
+        )}
 
-      {currentView === 'game' && (
-        <GamePage
-          stageId={selectedStageId}
-          activeGameSave={data.activeGame}
-          settings={data.settings}
-          inventory={data.progression.inventory}
-          credits={data.progression.credits}
-          onBuyItem={handleBuyItem}
-          onUpdateInventory={(nextInv) => {
-            updateData(prev => ({
-              ...prev,
-              progression: {
-                ...prev.progression,
-                inventory: nextInv
-              }
-            }));
-          }}
-          onGameComplete={handleGameComplete}
-          onSaveActiveGame={handleSaveActiveGame}
-          onExit={() => setCurrentView('stage-map')}
-        />
-      )}
+        {currentView === 'game' && (
+          <GamePage
+            stageId={selectedStageId}
+            activeGameSave={data.activeGame}
+            settings={data.settings}
+            inventory={data.progression.inventory}
+            credits={data.progression.credits}
+            onBuyItem={handleBuyItem}
+            onUpdateInventory={(nextInv) => {
+              updateData(prev => ({
+                ...prev,
+                progression: {
+                  ...prev.progression,
+                  inventory: nextInv
+                }
+              }));
+            }}
+            onGameComplete={handleGameComplete}
+            onSaveActiveGame={handleSaveActiveGame}
+            onExit={() => setCurrentView('stage-map')}
+          />
+        )}
 
-      {currentView === 'result' && lastResult && (
-        <ResultPage
-          stageId={lastResult.stageId}
-          rewardResult={lastResult.rewardResult}
-          newAchievements={lastResult.newAchievements}
-          elapsedSeconds={lastResult.elapsedSeconds}
-          mistakes={lastResult.mistakes}
-          hintsUsed={lastResult.hintsUsed}
-          reducedMotion={data.settings.reducedMotion}
-          onBuyItem={handleBuyItem}
-          onNextStage={(nextId) => {
-            setSelectedStageId(nextId);
-            const st = getStageById(nextId);
-            if (st) setSelectedWorldId(st.worldId);
-            setCurrentView('game');
-          }}
-          onReplay={(stageId) => {
-            setSelectedStageId(stageId);
-            setCurrentView('game');
-          }}
-          onGoToMap={() => setCurrentView('stage-map')}
-        />
-      )}
+        {currentView === 'result' && lastResult && (
+          <ResultPage
+            stageId={lastResult.stageId}
+            rewardResult={lastResult.rewardResult}
+            newAchievements={lastResult.newAchievements}
+            elapsedSeconds={lastResult.elapsedSeconds}
+            mistakes={lastResult.mistakes}
+            hintsUsed={lastResult.hintsUsed}
+            reducedMotion={data.settings.reducedMotion}
+            onBuyItem={handleBuyItem}
+            onNextStage={(nextId) => {
+              setSelectedStageId(nextId);
+              const st = getStageById(nextId);
+              if (st) setSelectedWorldId(st.worldId);
+              setCurrentView('game');
+            }}
+            onReplay={(stageId) => {
+              setSelectedStageId(stageId);
+              setCurrentView('game');
+            }}
+            onGoToMap={() => setCurrentView('stage-map')}
+          />
+        )}
 
-      {currentView === 'profile' && (
-        <ProfilePage
-          progression={data.progression}
-          achievements={data.achievements}
-          settings={data.settings}
-          onBuyItem={handleBuyItem}
-          onUpdateSettings={handleUpdateSettings}
-          onEquipTitle={handleEquipTitle}
-          onResetData={handleResetData}
-          onBack={() => setCurrentView('home')}
-          onApplyLevelTest={handleApplyLevelTest}
-          initialTab="profile"
-        />
-      )}
+        {currentView === 'profile' && (
+          <ProfilePage
+            progression={data.progression}
+            achievements={data.achievements}
+            settings={data.settings}
+            onBuyItem={handleBuyItem}
+            onUpdateSettings={handleUpdateSettings}
+            onEquipTitle={handleEquipTitle}
+            onResetData={handleResetData}
+            onBack={() => setCurrentView('home')}
+            onApplyLevelTest={handleApplyLevelTest}
+            initialTab="profile"
+          />
+        )}
 
-      {currentView === 'settings' && (
-        <ProfilePage
-          progression={data.progression}
-          achievements={data.achievements}
-          settings={data.settings}
-          onBuyItem={handleBuyItem}
-          onUpdateSettings={handleUpdateSettings}
-          onEquipTitle={handleEquipTitle}
-          onResetData={handleResetData}
-          onBack={() => setCurrentView('home')}
-          onApplyLevelTest={handleApplyLevelTest}
-          initialTab="settings"
-        />
-      )}
+        {currentView === 'settings' && (
+          <ProfilePage
+            progression={data.progression}
+            achievements={data.achievements}
+            settings={data.settings}
+            onBuyItem={handleBuyItem}
+            onUpdateSettings={handleUpdateSettings}
+            onEquipTitle={handleEquipTitle}
+            onResetData={handleResetData}
+            onBack={() => setCurrentView('home')}
+            onApplyLevelTest={handleApplyLevelTest}
+            initialTab="settings"
+          />
+        )}
+      </Suspense>
 
       {/* Pin 3 Protruding Bottom Navigation Dock Bar */}
       {currentView !== 'game' && currentView !== 'result' && (

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-love-sudoku-v21';
+const CACHE_NAME = 'my-love-sudoku-v22';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -18,14 +18,17 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Network-First for HTML, Page Navigation, ads.txt, robots.txt, sitemap: Always get the freshest from server
+  // Network-First for HTML, Page Navigation, ads.txt, robots.txt, sitemap, llms.txt, ai-catalog: Always get the freshest from server
   if (
     event.request.mode === 'navigate' ||
     url.pathname === '/' ||
     url.pathname.endsWith('.html') ||
     url.pathname === '/ads.txt' ||
     url.pathname === '/robots.txt' ||
-    url.pathname === '/sitemap.xml'
+    url.pathname === '/sitemap.xml' ||
+    url.pathname === '/llms.txt' ||
+    url.pathname === '/ai-catalog.json' ||
+    url.pathname.startsWith('/.well-known/')
   ) {
     event.respondWith(
       fetch(event.request)

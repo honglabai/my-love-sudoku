@@ -1,0 +1,29 @@
+{
+  "specVersion": "0.91",
+  "host": {
+    "displayName": "HongLab AI - 내사랑 스도쿠",
+    "identifier": "did:web:sudoku.honglabai.com",
+    "documentationUrl": "https://sudoku.honglabai.com/llms.txt"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:sudoku.honglabai.com:service:sudoku-web-app",
+      "displayName": "내사랑 스도쿠 (My Love Sudoku)",
+      "type": "text/html",
+      "url": "https://sudoku.honglabai.com/",
+      "description": "5개 월드 50개 엄선 스테이지와 일일 퍼즐, 스도쿠 풀이 공식 가이드를 제공하는 무료 수묵화풍 스도쿠 웹 애플리케이션",
+      "representativeQueries": [
+        "스도쿠 게임 플레이",
+        "스도쿠 풀이 공식 및 가이드",
+        "Play sudoku puzzle online",
+        "Sudoku solving techniques and guide"
+      ],
+      "trustManifest": {
+        "identity": {
+          "publisher": "HongLab AI (홍랩)",
+          "contact": "honglabai@gmail.com"
+        }
+      }
+    }
+  ]
+}

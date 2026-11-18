@@ -70,11 +70,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ credits }) => {
             <img
               src={`/assets/logo/title_banner_${language}.webp`}
               alt={t('brand.title')}
+              width={240}
+              height={64}
+              fetchPriority="high"
+              loading="eager"
               className="dark:hidden h-9 xs:h-10 sm:h-12 w-auto max-w-full object-contain block select-none pointer-events-none"
             />
             <img
               src={`/assets/logo/title_banner_${language}_dark.webp`}
               alt={t('brand.title')}
+              width={240}
+              height={64}
+              fetchPriority="high"
+              loading="eager"
               className="hidden dark:block h-9 xs:h-10 sm:h-12 w-auto max-w-full object-contain block select-none pointer-events-none"
             />
           </div>

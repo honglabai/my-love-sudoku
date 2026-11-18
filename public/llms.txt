@@ -1,0 +1,11 @@
+# 내사랑 스도쿠 (My Love Sudoku)
+
+> 5개 월드 50개 엄선 스테이지와 일일 도전 과제, 직관적인 단계별 풀이 공식을 제공하는 무료 수묵화풍 스도쿠 웹 애플리케이션입니다.
+
+## 주요 서비스 및 공식 링크
+
+- [내사랑 스도쿠 웹게임 홈](https://sudoku.honglabai.com/): 50개 엄선 스테이지 및 무한 일일 도전 과제 플레이
+- [스도쿠 단계별 풀이 공식 가이드](https://sudoku.honglabai.com/#guide): 초급 행열 검사부터 중급 후보수, 고급 논리 풀이법 안내
+- [공식 사이트맵](https://sudoku.honglabai.com/sitemap.xml): 검색엔진 및 AI 크롤러를 위한 정적 색인 지도
+- [RSS 피드](https://sudoku.honglabai.com/rss.xml): 신규 퍼즐 업데이트 및 스테이지 정보 피드
+- [AI 에이전트 카탈로그](https://sudoku.honglabai.com/ai-catalog.json): 머신러닝 및 자율 에이전트용 ARD 사양 서비스 매니페스트
