@@ -109,18 +109,12 @@
     }
     </script>
   </head>
-  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased select-none min-h-screen">
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased select-none min-h-screen min-h-dvh">
     <div id="root"></div>
 
     <section id="sudoku-guide" aria-labelledby="sudoku-guide-title">
       <style>
-        #sudoku-guide { max-width: 56rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; color: #334155; font-family: system-ui, sans-serif; line-height: 1.7; }
-        #sudoku-guide h1 { margin: 0 0 .75rem; font-size: clamp(1.45rem, 3vw, 2rem); color: #0f172a; }
-        #sudoku-guide h2 { margin: 1.5rem 0 .5rem; font-size: 1.1rem; color: #1e2cb0; }
-        #sudoku-guide p, #sudoku-guide ul, #sudoku-guide ol { margin: .5rem 0; }
-        #sudoku-guide a { color: #1e40af; text-underline-offset: 2px; }
-        #sudoku-guide .sudoku-links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1rem; font-size: .95rem; }
-        @media (prefers-color-scheme: dark) { #sudoku-guide { color: #cbd5e1; } #sudoku-guide h1 { color: #f8fafc; } #sudoku-guide a { color: #93c5fd; } }
+        #sudoku-guide { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
       </style>
       <h1 id="sudoku-guide-title">내사랑 스도쿠: 무료 스도쿠 게임</h1>
       <p>내사랑 스도쿠는 5개 월드, 50개 스테이지로 구성된 무료 온라인 스도쿠 게임입니다. 각 단계를 풀며 숫자 배치 규칙과 논리 퍼즐의 재미를 즐겨 보세요.</p>

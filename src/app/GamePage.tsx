@@ -440,7 +440,7 @@ export const GamePage: React.FC<GamePageProps> = ({
   const selectedBox = state.selectedCell !== null ? getBox(state.selectedCell) : -1;
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen w-full max-w-md mx-auto pt-1 px-1 pb-0 sm:pt-2 sm:px-2 sm:pb-0 select-none overflow-x-hidden">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen min-h-dvh w-full max-w-md mx-auto pt-1 px-1 pb-0 sm:pt-2 sm:px-2 sm:pb-0 select-none overflow-x-hidden">
       {/* Top Sleek Control Bar - Compact Rounded-xl Buttons, Zero Text Wrapping */}
       <header className="w-full flex items-center justify-between gap-1.5 pt-1 pb-1.5 px-0.5">
         <button

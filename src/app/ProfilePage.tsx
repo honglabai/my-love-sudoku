@@ -77,7 +77,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen w-full max-w-md mx-auto p-3 sm:p-4 pb-20 select-none overflow-x-hidden">
+    <div className="relative z-10 flex flex-col min-h-screen min-h-dvh w-full max-w-md mx-auto p-3 sm:p-4 pb-16 select-none overflow-x-hidden">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-3 pt-1">
         <Button variant="ghost" size="sm" onClick={onBack} className="text-xs">

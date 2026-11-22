@@ -54,7 +54,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const percent = Math.min(100, Math.max(0, Math.round((progression.currentXP / Math.max(1, reqXP)) * 100)));
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen max-w-md w-full mx-auto px-2 sm:px-4 py-1 pb-14 overflow-x-hidden">
+    <div className="relative z-10 flex flex-col items-center justify-between min-h-screen min-h-dvh max-w-md w-full mx-auto px-2 sm:px-4 py-1 pb-16 overflow-x-hidden">
       {/* Top Header: Title Logo Image with App Install Button */}
       <TopHeader credits={progression.credits} />
 
